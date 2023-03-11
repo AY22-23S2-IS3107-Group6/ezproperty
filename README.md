@@ -40,6 +40,7 @@ The project is structured by business functions.
 Run this on WSL or bash
 ```
 # Create environment and download packages
+> sed -i 's/\r$//' ./build.sh
 > ./build.sh
 
 # Enter environment
