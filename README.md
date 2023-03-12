@@ -6,19 +6,20 @@ The project is structured by business functions.
 ```
 ./
 ├── README.md
-├── requirements.txt            # pip libraries needed
 ├── env
 ├── db
-│   ├── __init__.py                # Main DB script
-│   ├── data_loader.py          # Initialises database
+│   ├── __init__.py             # Main DB script
 │   ├── warehouse
+│   │   ├── __init__.py
 │   │   ├── mysql_connector.py  # Connects to localhost:3306
 │   │   └── schemas
-│   │       ├── property_transaction.py
-│   │       ├── hdb_info.py
-│   │       └── etc. 
+│   │       ├── __init__.py
+│   │       ├── main.py         # Schemas for main database
+│   │       ├── ref.py          # Schemas for reference database
+│   │       └── amn.py          # Schemas for amenities database
 │   └── lake
-│       └──mongo_connector.py   # Connects to localhost:27017
+│       ├── __init__.py
+│       └── mongo_connector.py   # Connects to localhost:27017
 ├── airflow
 │   ├── index.py
 │   ├── data_gov_api.py

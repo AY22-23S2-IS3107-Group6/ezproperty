@@ -17,4 +17,3 @@ def connect_to_mysql(database: str = None):
             password="password",
             database=database,
         )
-
