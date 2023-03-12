@@ -32,7 +32,7 @@ class DataWarehouse:
             else:
                 print(f"Table {schema_name} already exists.")
 
-    def create_table(self, schema_name):
+    def create_schema(self, schema_name):
         try:
             self.cursor.execute(self.schemas[schema_name])
             print(f"Table {schema_name} created successfully.")
