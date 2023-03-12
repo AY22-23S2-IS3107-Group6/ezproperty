@@ -1,3 +1,4 @@
-from .amn import amn
+from .amn import amn_create, amn_insert
 
-schemas = amn
+create_queries = amn_create
+insert_queries = amn_insert
