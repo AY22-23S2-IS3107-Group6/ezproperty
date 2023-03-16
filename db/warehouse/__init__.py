@@ -50,7 +50,7 @@ class DataWarehouse:
         except mysql.connector.Error as err:
             print(f"Failed creating table: {err}")
 
-    def execute(self, query):
+    def query(self, query):
         try:
             self.cursor.execute(query)
             print(f"Query executed successfully.")

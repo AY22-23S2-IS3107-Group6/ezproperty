@@ -15,3 +15,9 @@ class DataLake:
             self.cursor[schema_name].insert_many(objects)
         except:
             print(f"Failed inserting")
+
+    def query(self, schema_name, query):
+        try:
+            return self.cursor[schema_name].aggregate(query)
+        except:
+            print(f"Failed querying")

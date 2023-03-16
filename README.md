@@ -1,8 +1,11 @@
 # AY22/23 Semester 2 IS3107 Group 6: EZ Property
+
 EZ Property is your one-stop shop to figuring out the best places to buy your new property in Singapore.
 
 ## File Structure
+
 The project is structured by business functions.
+
 ```
 ./
 ├── README.md
@@ -34,12 +37,15 @@ The project is structured by business functions.
 ## Deploy and Building the project
 
 ### Dependencies
+
 1. Ensure MySQL database service is running on `localhost:3306`
 2. Ensure MongoDB database is running on `localhost:27017`
 
 ### Commands
+
 Run this on WSL or bash
-```
+
+```bash
 # Create environment and download packages
 > sed -i 's/\r$//' ./build.sh
 > ./build.sh
@@ -59,4 +65,55 @@ Run this on WSL or bash
 
 # Run the frontend
 > cd app && npm start
+```
+
+## Using the Data Lake and Data Warehouse
+
+To insert documents without a specified schema and query from it, import the data lake
+
+```python
+from ..db import DataLake
+
+# Transform data to list of objects
+data = [{ "col1": "row1", "col2": "row2"}]
+
+# Insert data
+db = DataLake()
+db.insert_to_schema("Collection Name", data)
+
+# Query data using aggregate
+result = db.query([
+    {"$match": {"col1": "row1"}},
+    {"$project": {"_id": 0, "col2": 1}}
+])
+
+for x in result:
+    print(x)
+
+# Out[1]: {'col2': 'row2'}
+```
+
+
+To insert documents with a specified schema and query from it, import the data warehouse
+
+```python
+from ..db import DataWarehouse
+
+# Transform data to list of tuples arranged by the column definition
+data = [{ "col1": "row1", "col2": "row2"}]
+data = data.map(lambda x: x.values())
+
+# Insert data
+db = DataWarehouse()
+db.insert_to_schema("subschema__Collection", data)
+
+# Query data using SQL
+result = db.query('''
+    SELECT * FROM subschema__Collection
+''')
+
+for x in result:
+    print(x)
+
+# Out[1]: {'col1': 'row1', 'col2': 'row2'}
 ```
