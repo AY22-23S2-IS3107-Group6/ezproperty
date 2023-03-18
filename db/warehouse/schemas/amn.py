@@ -21,3 +21,25 @@ amn_insert['amn__TrainStation'] = ('''
     VALUES
     (%d, %s, %s, %d, %d, %d, %d, %s)
 ''')
+
+amn_create['amn__PrimarySchool'] = ('''
+    CREATE TABLE `amn__PrimarySchool` (
+    id                      int              NOT NULL,
+    schoolName              varchar(50)      NOT NULL,
+    schoolChineseName       varchar(30)      NOT NULL,
+    sap                     varchar(3)       NULL,
+    gep                     varchar(3)       NULL,
+    gender                  varchar(5)       NOT NULL,
+    affiliatedSecondary     varchar(100)     NOT NULL,
+    area                    varchar(20)      NOT NULL,
+    address                 varchar(50)      NOT NULL
+    PRIMARY KEY (id,schoolName)
+)
+''')
+
+amn_insert['amn__PrimarySchool'] = ('''
+    INSERT INTO `amn__PrimarySchool`
+    (id, schoolName, schoolChineseName, sap, gep, gender, affiliatedSecondary, area, address)
+    VALUES
+    (%d, %s, %s, %s, %s, %s, %s, %s, %s)
+''')
