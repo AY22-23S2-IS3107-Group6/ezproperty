@@ -67,7 +67,7 @@ amn_create['amn__Carpark'] = ('''
         'B'
     )                                   NOT NULL,
     parkCapacity        int             NOT NULL,
-    seasonParkingHrs    varchat(100)    NOT NULL, # might want to grab the time out of this
+    seasonParkingHrs    varchar(100)    NOT NULL, # might want to grab the time out of this
     seasonTicketType    enum(
         'Commercial',
         'Residential',
