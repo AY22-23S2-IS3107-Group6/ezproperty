@@ -67,6 +67,17 @@ Run this on WSL or bash
 > cd app && npm start
 ```
 
+### Running ETL
+
+```bash
+# Download required packages
+> pip install -r requirements.txt
+
+# Run ETL file
+> python3 -m db.etl.[etl file name]
+
+```
+
 ## Using the Data Lake and Data Warehouse
 
 To insert documents without a specified schema and query from it, import the data lake
@@ -100,7 +111,7 @@ from ..db import DataWarehouse
 
 # Transform data to list of tuples arranged by the column definition
 data = [{ "col1": "row1", "col2": "row2"}]
-data = data.map(lambda x: x.values())
+data = list(map(lambda x: tuple(x.values()), data))
 
 # Insert data
 db = DataWarehouse()

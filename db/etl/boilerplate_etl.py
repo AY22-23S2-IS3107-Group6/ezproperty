@@ -3,15 +3,6 @@ import pandas as pd
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
 
-# Other thoughts
-# Where does the data init into mongodb happen? Assuming it's from data_loader or is it airflow? But I'll need to look more into airflow functionality first. Need to prevent duplicate inputs in. Then extract will just fetch from mongodb.
-# Added a find query along with aggregate into DataLake
-# Installations - need to make sure have correct ones
-# Updated readme - there was missing argument for collection name for db.query
-# Calling the file - python3 -m db.etl.boilerplate_etl
-# __init__.py for warehouse - updated create_table function call to create_schema
-# schemas - ive commented out your schemas, but just need to make sure they can run properly
-
 def extract():
 
     # Feed data into lake / mongoDB
