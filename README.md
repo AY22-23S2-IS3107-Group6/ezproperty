@@ -82,7 +82,7 @@ db = DataLake()
 db.insert_to_schema("Collection Name", data)
 
 # Query data using aggregate
-result = db.query([
+result = db.query("Collection Name", [
     {"$match": {"col1": "row1"}},
     {"$project": {"_id": 0, "col2": 1}}
 ])
@@ -92,7 +92,6 @@ for x in result:
 
 # Out[1]: {'col2': 'row2'}
 ```
-
 
 To insert documents with a specified schema and query from it, import the data warehouse
 

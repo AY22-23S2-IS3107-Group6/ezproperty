@@ -44,6 +44,8 @@ amn_insert['amn__PrimarySchool'] = ('''
     (%d, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
                                     
+
+# primary keys will be both ppCode and boolean
 amn_create['amn__Carpark'] = ('''
     CREATE TABLE `amn__Carpark` (
     ppCode              int             NOT NULL,
