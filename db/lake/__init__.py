@@ -22,7 +22,7 @@ class DataLake:
         except:
             print(f"Failed querying")
 
-    def queryFind(self, schema_name, query):
+    def query_find(self, schema_name, query):
         try:
             return self.cursor[schema_name].find(query)
         except:
