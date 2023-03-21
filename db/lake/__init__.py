@@ -21,3 +21,9 @@ class DataLake:
             return self.cursor[schema_name].aggregate(query)
         except:
             print(f"Failed querying")
+
+    def query_find(self, schema_name, query):
+        try:
+            return self.cursor[schema_name].find(query)
+        except:
+            print(f"Failed querying")
