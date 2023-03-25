@@ -67,6 +67,17 @@ Run this on WSL or bash
 > cd app && npm start
 ```
 
+### Running ETL
+
+```bash
+# Download required packages
+> pip install -r requirements.txt
+
+# Run ETL file
+> python3 -m db.etl.[etl file name]
+
+```
+
 ## Using the Data Lake and Data Warehouse
 
 To insert documents without a specified schema and query from it, import the data lake
@@ -82,7 +93,7 @@ db = DataLake()
 db.insert_to_schema("Collection Name", data)
 
 # Query data using aggregate
-result = db.query([
+result = db.query("Collection Name", [
     {"$match": {"col1": "row1"}},
     {"$project": {"_id": 0, "col2": 1}}
 ])
@@ -93,7 +104,6 @@ for x in result:
 # Out[1]: {'col2': 'row2'}
 ```
 
-
 To insert documents with a specified schema and query from it, import the data warehouse
 
 ```python
@@ -101,7 +111,7 @@ from ..db import DataWarehouse
 
 # Transform data to list of tuples arranged by the column definition
 data = [{ "col1": "row1", "col2": "row2"}]
-data = data.map(lambda x: x.values())
+data = list(map(lambda x: tuple(x.values()), data))
 
 # Insert data
 db = DataWarehouse()
