@@ -60,6 +60,26 @@ amn_insert['amn__PrimarySchool'] = ('''
     (%d, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
+amn_create['amn__SuperMarket'] = ('''
+    licence_num     varchar(50)          NOT NULL,
+    licensee_name   varchar(50)          NOT NULL,
+    building_name   varchar(50)          NOT NULL,
+    block_house_num varchar(50)          NOT NULL,
+    level_num       varchar(50)          NOT NULL,
+    unit_num        varchar(50)          NOT NULL,
+    street_name     varchar(50)          NOT NULL,           
+    postal_code     int                  NOT NULL,
+    district        int                  NULL,
+    PRIMARY KEY (licence_num)
+)
+''')
+
+amn_insert['amn__SuperMarket'] = ('''
+    INSERT INTO `amn__SuperMarket`
+    (licence_num, licensee_name, building_name, block_house_num, level_num, unit_num, street_name, postal_code, district)
+    VALUES
+    (%s, %s, %s, %s, %s, %s, %s, %d, %d)
+    
 amn_create['amn__HawkerCenter'] = ('''
     name_of_centre  varchar(50)          NOT NULL,
     location_of_centre varchar(50)       NOT NULL,
