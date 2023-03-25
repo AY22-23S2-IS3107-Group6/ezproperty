@@ -4,7 +4,9 @@ from typing import List
 from .mysql_connector import connect_to_mysql
 from .schemas import create_queries, insert_queries
 
+
 class DataWarehouse:
+
     def __init__(self):
         self.db = connect_to_mysql()
         self.cursor = self.db.cursor(buffered=True)
@@ -16,11 +18,11 @@ class DataWarehouse:
     def start_db(self, database: str):
         self.cursor.execute("SHOW DATABASES")
         databases = self.cursor.fetchall()
-        
-        if (database,) not in databases:
-            self.cursor.execute(f"CREATE DATABASE {database}") 
+
+        if (database, ) not in databases:
+            self.cursor.execute(f"CREATE DATABASE {database}")
             print(f"Database {database} created successfully.")
-        
+
         self.cursor.execute(f"USE {database}")
         print(f"Using database {database}.")
 
@@ -28,7 +30,7 @@ class DataWarehouse:
         self.cursor.execute("SHOW TABLES")
         tables = self.cursor.fetchall()
         for schema_name in self.schemas:
-            if (schema_name.lower(),) not in tables:
+            if (schema_name.lower(), ) not in tables:
                 print(f"Table {schema_name} does not exist.")
                 self.create_schema(schema_name)
             else:
@@ -46,7 +48,9 @@ class DataWarehouse:
         try:
             self.cursor.executemany(self.insert_queries[schema_name], objects)
             self.db.commit()
-            print(f"{self.cursor.rowcount} values were inserted to {schema_name} successfully.")
+            print(
+                f"{self.cursor.rowcount} values were inserted to {schema_name} successfully."
+            )
         except mysql.connector.Error as err:
             print(f"Failed to insert: {err}")
 
@@ -57,3 +61,11 @@ class DataWarehouse:
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
             print(f"Failed creating table: {err}")
+
+    def update(self, update_query):
+        try:
+            self.cursor.execute(update_query)
+            print(f"Update executed successfully.")
+            return self.cursor.fetchall()
+        except mysql.connector.Error as err:
+            print(f"Failed updating: {err}")

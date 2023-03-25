@@ -17,6 +17,23 @@ amn_insert['test__Test'] = ('''
     (%s, %s, %s)
 ''')
 
+amn_create['test__Test2'] = ('''
+    CREATE TABLE `test__Test2` (
+    id           int     NOT NULL,
+    district             int      NULL,
+    x            int     NULL,
+    y            int      NULL,
+    PRIMARY KEY (id)
+)
+''')
+
+amn_insert['test__Test2'] = ('''
+    INSERT INTO `test__Test2`
+    (id, district, x, y)
+    VALUES
+    (%d, %d, %d, %d)
+''')
+
 amn_create['amn__TrainStation'] = ('''
     CREATE TABLE `amn__TrainStation` (
     id              int             NOT NULL,
@@ -59,8 +76,6 @@ amn_insert['amn__PrimarySchool'] = ('''
     VALUES
     (%d, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
-                                
-                                    
 
 # primary keys will be both ppCode and boolean
 # amn_create['amn__Carpark'] = ('''
@@ -80,7 +95,7 @@ amn_insert['amn__PrimarySchool'] = ('''
 #     satdayMin           int             NOT NULL,
 #     sunPHRate           decimal(7,2)    NOT NULL,
 #     sunPHMin            int             NOT NULL,
-#     remarks             varchar(100)    NOT NULL, 
+#     remarks             varchar(100)    NOT NULL,
 #     parkingSystem       enum(
 #         'C',
 #         'B'
