@@ -15,10 +15,10 @@ ReactDOM.render(
       <ThemeEditorProvider>
         <HashRouter>
           <Switch>
-            <Route path={`/auth`} component={AuthLayout} />
+            <Route path={`/`} exact component={AdminLayout} />
+            {/* <Route path={`/auth`} component={AuthLayout} /> */}
             <Route path={`/admin`} component={AdminLayout} />
-            <Route path={`/rtl`} component={RTLLayout} />
-            <Redirect from='/' to='/admin' />
+            {/* <Route path={`/rtl`} component={RTLLayout} /> */}
           </Switch>
         </HashRouter>
       </ThemeEditorProvider>
