@@ -79,4 +79,24 @@ amn_insert['amn__SuperMarket'] = ('''
     (licence_num, licensee_name, building_name, block_house_num, level_num, unit_num, street_name, postal_code, district)
     VALUES
     (%s, %s, %s, %s, %s, %s, %s, %d, %d)
+    
+amn_create['amn__HawkerCenter'] = ('''
+    name_of_centre  varchar(50)          NOT NULL,
+    location_of_centre varchar(50)       NOT NULL,
+    type_of_centre  varchar(50)          NOT NULL,
+    block           varchar(50)          NOT NULL,
+    owner           varchar(50)          NOT NULL,
+    no_of_stalls    int             NOT NULL,
+    no_of_cooked_food_stalls int    NOT NULL,
+    no_of_mkt_produce_stalls int    NOT NULL,
+    district        int                  NULL,
+    PRIMARY KEY (name_of_centre)
+)
+''')
+
+amn_insert['amn__HawkerCenter'] = ('''
+    INSERT INTO `amn__HawkerCenter`
+    (name_of_centre, location_of_centre, type_of_centre, block, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls, district)
+    VALUES
+    (%s, %s, %s, %s, %s, %d, %d, %d, %d)
 ''')

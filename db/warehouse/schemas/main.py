@@ -41,7 +41,7 @@ main_create['main__PropertyTransaction'] = ('''
 
 main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
-    (district, street, block, floorRangeStart, floorRangeEnd, propertyType,noOfRoom, area, price, transactionDate, tenure, resale, x, y) 
+    (district, street, block, floorRangeStart, floorRangeEnd, propertyType, noOfRoom, area, price, transactionDate, tenure, resale, x, y) 
     VALUES
     (%s, %d, %d, %s, %s, %d, %s, %s, %s, %d, %s, %d, %s, %s)
 ''')
