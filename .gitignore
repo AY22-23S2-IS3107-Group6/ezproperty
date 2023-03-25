@@ -25,6 +25,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+SHOW
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -128,6 +129,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Sean's local env
+ezproperty/
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -151,6 +155,12 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# node_modules
+node_modules/
+
+
+
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
