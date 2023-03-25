@@ -1,6 +1,22 @@
 amn_create = {}
 amn_insert = {}
 
+amn_create['test__Test'] = ('''
+    CREATE TABLE `test__Test` (
+    _id             varchar(50)     NOT NULL,
+    col1            varchar(50)     NOT NULL,
+    col2            varchar(50)     NOT NULL,
+    PRIMARY KEY (_id)
+)
+''')
+
+amn_insert['test__Test'] = ('''
+    INSERT INTO `test__Test`
+    (_id, col1, col2)
+    VALUES
+    (%s, %s, %s)
+''')
+
 amn_create['amn__TrainStation'] = ('''
     CREATE TABLE `amn__TrainStation` (
     id              int             NOT NULL,
@@ -32,7 +48,7 @@ amn_create['amn__PrimarySchool'] = ('''
     gender                  varchar(5)       NOT NULL,
     affiliatedSecondary     varchar(100)     NOT NULL,
     area                    varchar(20)      NOT NULL,
-    address                 varchar(50)      NOT NULL
+    address                 varchar(50)      NOT NULL,
     PRIMARY KEY (id,schoolName)
 )
 ''')
