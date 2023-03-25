@@ -76,7 +76,7 @@ amn_create['amn__HawkerCenter'] = ('''
 
 amn_insert['amn__HawkerCenter'] = ('''
     INSERT INTO `amn__HawkerCenter`
-    (name_of_centre, location_of_centre, type_of_centre, block, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls)
+    (name_of_centre, location_of_centre, type_of_centre, block, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls, district)
     VALUES
     (%s, %s, %s, %s, %s, %d, %d, %d, %d)
 ''')
