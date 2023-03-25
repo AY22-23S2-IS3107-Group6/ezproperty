@@ -1,7 +1,9 @@
-# import pandas as pd
 import requests
 from sqlalchemy import create_engine
 import json
+import pandas as pd
+from ..lake import DataLake
+from ..warehouse import DataWarehouse
 
 
 # Define the JSON object
@@ -47,7 +49,7 @@ def findCentroids():
   }
   '''
 
-# Load Private Non-Landed Residential Properties Median Rentals by Name
+    # Load Private Non-Landed Residential Properties Median Rentals by Name
     non_landed_properties_median_rentals_json_str = '''
       {
       "Result": [{
@@ -112,7 +114,7 @@ def findCentroids():
     
     '''
 
-# Load Residential Properties Rental Contract
+    # Load Residential Properties Rental Contract
     private_properties_rental_contract_json_str = '''
     {
       "Result": [{
@@ -205,6 +207,7 @@ def findCentroids():
 
     '''
 
+    # JSON implementation
     # Parse the JSON object into a Python dictionary
     data = json.loads(private_properties_rental_contract_json_str)
 
