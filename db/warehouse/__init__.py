@@ -30,7 +30,7 @@ class DataWarehouse:
         for schema_name in self.schemas:
             if (schema_name.lower(),) not in tables:
                 print(f"Table {schema_name} does not exist.")
-                self.create_table(schema_name)
+                self.create_schema(schema_name)
             else:
                 print(f"Table {schema_name} already exists.")
 
@@ -48,7 +48,7 @@ class DataWarehouse:
             self.db.commit()
             print(f"{self.cursor.rowcount} values were inserted to {schema_name} successfully.")
         except mysql.connector.Error as err:
-            print(f"Failed creating table: {err}")
+            print(f"Failed to insert: {err}")
 
     def query(self, query):
         try:
