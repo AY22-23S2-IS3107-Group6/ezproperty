@@ -60,8 +60,8 @@ ref_create['ref__PropertyInformation'] = ('''
 )
 ''')
 
-ref_insert['main__PropertyInformation'] = ('''
-    INSERT INTO `main__PropertyInformation`
+ref_insert['ref__PropertyInformation'] = ('''
+    INSERT INTO `ref__PropertyInformation`
     (block, street, maxFloorLevel, yearCompleted, residentialTag, commericalTag, marketHawkerTag, miscTag, mscpTag, precinctPavilionTag, bldgContractTown,
     totalDwellingUnits, oneRoomSold, twoRoomSold, threeRoomSold, fourRoomSold, fiveRoomSold, execSold, multigenSold, studioAptSold, oneRoomRental, twoRoomRental, threeRoomRental, otherRoomRental)  
     VALUES
