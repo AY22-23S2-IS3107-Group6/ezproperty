@@ -2,7 +2,7 @@ ref_create = {}
 ref_insert = {}
 
 ref_create['ref__PropertyInformation'] = ('''
-    CREATE TABLE `main__PropertyInformation` (
+    CREATE TABLE `ref__PropertyInformation` (
     id                      int             AUTO_INCREMENT,
     block                   varchar(50)     NOT NULL,
     street                  varchar(100)    NOT NULL,
@@ -77,7 +77,7 @@ ref_create['ref__District'] = ('''
     y                decimal(9,4)    NOT NULL,
     postalCodeStart  int             NOT NULL,
     postalCodeEnd    int             NOT NULL,
-    PRIMARY KEY (id,districtNo)
+    PRIMARY KEY (id, district)
 )
 ''')
 

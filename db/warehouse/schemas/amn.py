@@ -61,6 +61,7 @@ amn_insert['amn__PrimarySchool'] = ('''
 ''')
 
 amn_create['amn__SuperMarket'] = ('''
+    CREATE TABLE `amn__SuperMarket` (
     licence_num     varchar(50)          NOT NULL,
     licensee_name   varchar(50)          NOT NULL,
     building_name   varchar(50)          NOT NULL,
@@ -81,22 +82,23 @@ amn_insert['amn__SuperMarket'] = ('''
     (%s, %s, %s, %s, %s, %s, %s, %d, %d)
 ''')
     
-amn_create['amn__HawkerCenter'] = ('''
+amn_create['amn__HawkerCentre'] = ('''
+    CREATE TABLE `amn__HawkerCentre` (
     name_of_centre  varchar(50)          NOT NULL,
     location_of_centre varchar(50)       NOT NULL,
     type_of_centre  varchar(50)          NOT NULL,
     block           varchar(50)          NOT NULL,
     owner           varchar(50)          NOT NULL,
-    no_of_stalls    int             NOT NULL,
-    no_of_cooked_food_stalls int    NOT NULL,
-    no_of_mkt_produce_stalls int    NOT NULL,
+    no_of_stalls    int                  NOT NULL,
+    no_of_cooked_food_stalls int         NOT NULL,
+    no_of_mkt_produce_stalls int         NOT NULL,
     district        int                  NULL,
     PRIMARY KEY (name_of_centre)
 )
 ''')
 
-amn_insert['amn__HawkerCenter'] = ('''
-    INSERT INTO `amn__HawkerCenter`
+amn_insert['amn__HawkerCentre'] = ('''
+    INSERT INTO `amn__HawkerCentre`
     (name_of_centre, location_of_centre, type_of_centre, block, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls, district)
     VALUES
     (%s, %s, %s, %s, %s, %d, %d, %d, %d)
