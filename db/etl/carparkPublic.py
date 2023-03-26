@@ -1,7 +1,6 @@
 import pymongo
 import pandas as pd
 import requests
-import json
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
 
@@ -64,7 +63,6 @@ def transform(result):
     for carpark in temp:
         if ('weekdayMin' in carpark) and ('weekdayRate' in carpark) and ('ppCode' in carpark) and ('parkingSystem' in carpark) and ('ppName' in carpark) and ('vehCat' in carpark) and ('satdayMin' in carpark) and ('satdayRate' in carpark) and ('sunPHMin' in carpark) and ('sunPHRate' in carpark) and ('startTime' in carpark) and ('parkCapacity' in carpark) and ('endTime' in carpark):
             if carpark['geometries'] != []:
-
                 filteredCarparks.append(carpark)
 
 
@@ -75,7 +73,7 @@ def transform(result):
         carpark['y'] = float(carpark['geometries'][0]['coordinates'].split(",")[1])
         carpark['_id'] = id(carpark['_id']) # using python generated _id for now since cant find a suitable pkey
         del carpark['geometries']
-        # del carpark['_id'] # don't need _id if we using our own pkeys
+        # del carpark['_id'] # uncomment this code if we decide we don't need _id if we using our own pkeys
         if 'remarks' in carpark:
             del carpark['remarks']
 
@@ -103,8 +101,6 @@ def load(result):
 
     # Transform data to list of values
     result = list(map(lambda x: tuple(x.values()), result))
-
-    print(result[20])
 
     # Insert data
     db = DataWarehouse()
