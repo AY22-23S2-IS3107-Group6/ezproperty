@@ -6,15 +6,15 @@ from ..lake import DataLake
 from ..warehouse import DataWarehouse
 
 
+# Feed data into lake / mongoDB
 def extract():
 
-    # Feed data into lake / mongoDB
     print("Carpark Public: Feeding data into lake")
 
     URA_API_ACCESSKEY = '84d7c27b-8dc6-4a34-9ea3-7769c174007c'
 
     # Fetches daily token which is needed along with access key for API calls
-    fetchTokenHeader = {'Content-Type': 'application/json', 'AccessKey': URA_API_ACCESSKEY, 'Accept': 'application/json', 'User-Agent': 'PostmanRuntime/7.28.4'} # returns html without user agent postman
+    fetchTokenHeader = {'Content-Type': 'application/json', 'AccessKey': URA_API_ACCESSKEY, 'Accept': 'application/json', 'User-Agent': 'PostmanRuntime/7.28.4'} # returns html if i dont include user agent postman
     resp = requests.get('https://www.ura.gov.sg/uraDataService/insertNewToken.action', headers = fetchTokenHeader) 
 
     print(resp)
@@ -27,15 +27,13 @@ def extract():
 
     # Fetch both data sets
     respPublic = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Car_Park_Details', headers = apiHeader)
-    # respSeason = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Season_Car_Park_Details', headers = apiHeader) 
 
     carparkPublic = respPublic.json()['Result']
     # carparkSeason = respSeason.json()['Result']
 
     # Insert data
     db = DataLake()
-    # db.insert_to_schema("amn__CarparkPublic", carparkPublic) UNCOMMENT LATER
-    # db.insert_to_schema("amn__CarparkSeason", carparkSeason)
+    db.insert_to_schema("amn__CarparkPublic", carparkPublic) # no logic currently to manage reloading data, so uncomment this after populating db
 
     # Test query
     testResult = db.query_find("amn__CarparkPublic", 
@@ -54,26 +52,32 @@ def extract():
     transform(result)
 
 
+# Transform data accordingly
 def transform(result):
    
-    # Transform data accordingly
     print("Carpark Public: Transforming data")
 
     temp = list(result)
     filteredCarparks = []
 
-    # Remove carparks with missing geometry or coordinates
+    # Remove carparks with missing data
     for carpark in temp:
-        if 'geometries' in carpark:
+        if ('weekdayMin' in carpark) and ('weekdayRate' in carpark) and ('ppCode' in carpark) and ('parkingSystem' in carpark) and ('ppName' in carpark) and ('vehCat' in carpark) and ('satdayMin' in carpark) and ('satdayRate' in carpark) and ('sunPHMin' in carpark) and ('sunPHRate' in carpark) and ('startTime' in carpark) and ('parkCapacity' in carpark) and ('endTime' in carpark):
             if carpark['geometries'] != []:
+
                 filteredCarparks.append(carpark)
+
 
     # Flatten coordinates
     # Bring out into x and y key
     for carpark in filteredCarparks:
         carpark['x'] = float(carpark['geometries'][0]['coordinates'].split(",")[0])
         carpark['y'] = float(carpark['geometries'][0]['coordinates'].split(",")[1])
+        carpark['_id'] = id(carpark['_id']) # using python generated _id for now since cant find a suitable pkey
         del carpark['geometries']
+        # del carpark['_id'] # don't need _id if we using our own pkeys
+        if 'remarks' in carpark:
+            del carpark['remarks']
 
     # Typecast appropriately to feed into sql
     for carpark in filteredCarparks:
@@ -92,28 +96,19 @@ def transform(result):
     load(filteredCarparks)
 
 
+# Load data into MySQL accordingly
 def load(result):
 
-    # Load data into MySQL accordingly
     print("Carpark Public: Loading data")
 
-    # result = result.map(lambda x: tuple(x.values()))
+    # Transform data to list of values
+    result = list(map(lambda x: tuple(x.values()), result))
 
-    # print(result)
+    print(result[20])
 
     # Insert data
     db = DataWarehouse()
-    # db.insert_to_schema("amn__CarparkPublic", result)
-
-    # # Query data using SQL
-    # result = db.query('''
-    #     SELECT * FROM test__Test
-    # ''')
-
-    # for x in result:
-    #     print(x)
-
-
+    db.insert_to_schema("amn__CarparkPublic", result)
 
 
 extract()

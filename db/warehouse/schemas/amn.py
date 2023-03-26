@@ -107,38 +107,33 @@ amn_insert['amn__HawkerCentre'] = ('''
 
 amn_create['amn__CarparkPublic'] = ('''
     CREATE TABLE `amn__CarparkPublic` (
-    ppCode              varchar(20)     NOT NULL,
-    ppName              varchar(50)     NOT NULL,
-    vehCat              enum(
-        'Car',
-        'Motorcycle',
-        'Heavy Vehicle'
-    )                                   NOT NULL,
-    startTime           varchar(50)     NOT NULL,
-    endTime             varchar(50)     NOT NULL,
-    weekdayRate         decimal(7,2)    NOT NULL,
+    _id                 varchar(24)     NOT NULL,
     weekdayMin          int             NOT NULL,
-    satdayRate          decimal(7,2)    NOT NULL,
+    weekdayRate         decimal(7,2)    NOT NULL,
+    ppCode              varchar(20)     NOT NULL,
+    parkingSystem       varchar(20)     NOT NULL,
+    ppName              varchar(50)     NOT NULL,
+    vehCat              varchar(20)     NOT NULL,
     satdayMin           int             NOT NULL,
-    sunPHRate           decimal(7,2)    NOT NULL,
+    satdayRate          decimal(7,2)    NOT NULL,
     sunPHMin            int             NOT NULL,
-    remarks             varchar(100)    NOT NULL, 
-    parkingSystem       enum(
-        'C',
-        'B'
-    )                                   NOT NULL,
+    sunPHRate           decimal(7,2)    NOT NULL,
+    startTime           varchar(50)     NOT NULL,
     parkCapacity        int             NOT NULL,
+    endTime             varchar(50)     NOT NULL,
     x                   decimal(7,2)    NOT NULL,
     y                   decimal(7,2)    NOT NULL,
-    PRIMARY KEY (ppCode, vehCat)
+    PRIMARY KEY (_id)
 )
 ''')
 
+# don't think this is a suitable primary key - but will figure out an alternative down the road
+
 amn_insert['amn__CarparkPublic'] = ('''
     INSERT INTO `amn__CarparkPublic`
-    (ppCode, ppName, vehCat, startTime, endTime, weekdayRate, weekdayMin, satdayRate, satdayMin, sunPHRate, sunPHMin, remarks, parkingSystem, parkCapacity, x, y)
+    (_id, weekdayMin, weekdayRate, ppCode, parkingSystem, ppName, vehCat, satdayMin, satdayRate, sunPHMin, sunPHRate, startTime, parkCapacity, endTime, x, y)
     VALUES
-    (%s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %s, %s, %d, %d, %d)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 # amn_create['amn__CarparkPublic'] = ('''
