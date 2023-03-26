@@ -5,14 +5,14 @@ from .mysql_connector import connect_to_mysql
 from .schemas import create_queries, insert_queries
 
 class DataWarehouse:
-    def __init__(self, regenerate_tables: bool = False):
+    def __init__(self, create_tables: bool = False, drop_tables: bool = False):
         self.db = connect_to_mysql()
         self.cursor = self.db.cursor(buffered=True)
         self.schemas = create_queries
         self.insert_queries = insert_queries
         self.start_db("is3107g6")
-        if regenerate_tables: self.drop_schemas()
-        self.load_schemas()
+        if drop_tables: self.drop_schemas()
+        if create_tables: self.load_schemas()
 
     def start_db(self, database: str):
         self.cursor.execute("SHOW DATABASES")
