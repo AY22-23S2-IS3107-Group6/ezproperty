@@ -79,6 +79,7 @@ amn_insert['amn__SuperMarket'] = ('''
     (licence_num, licensee_name, building_name, block_house_num, level_num, unit_num, street_name, postal_code, district)
     VALUES
     (%s, %s, %s, %s, %s, %s, %s, %d, %d)
+''')
     
 amn_create['amn__HawkerCenter'] = ('''
     name_of_centre  varchar(50)          NOT NULL,
