@@ -101,3 +101,46 @@ amn_insert['amn__HawkerCenter'] = ('''
     VALUES
     (%s, %s, %s, %s, %s, %d, %d, %d, %d)
 ''')
+                                   
+amn_create['amn__Carpark'] = ('''
+    CREATE TABLE `amn__Carpark` (
+    ppCode              int             NOT NULL,
+    ppName              varchar(50)     NOT NULL,
+    vehCat              enum(
+        'C',
+        'M',
+        'H'
+    )                                   NOT NULL,
+    startTime           varchar(50)     NOT NULL,
+    endTime             varchar(50)     NOT NULL,
+    weekdayRate         decimal(7,2)    NOT NULL,
+    weekdayMin          int             NOT NULL,
+    satdayRate          decimal(7,2)    NOT NULL,
+    satdayMin           int             NOT NULL,
+    sunPHRate           decimal(7,2)    NOT NULL,
+    sunPHMin            int             NOT NULL,
+    remarks             varchar(100)    NOT NULL, 
+    parkingSystem       enum(
+        'C',
+        'B'
+    )                                   NOT NULL,
+    parkCapacity        int             NOT NULL,
+    seasonParkingHrs    varchar(100)    NOT NULL,
+    seasonTicketType    enum(
+        'Commercial',
+        'Residential',
+    )                                   NOT NULL,
+    seasonMonthlyRate   int             NOT NULL,
+    x                   decimal(7,2)    NOT NULL,
+    y                   decimal(7,2)    NOT NULL,
+    isSeasonParking     boolean         NOT NULL,
+    PRIMARY KEY (ppCode, isSeasonParking)
+)
+''')
+
+amn_insert['amn__Carpark'] = ('''
+    INSERT INTO `amn__Carpark`
+    (ppCode, ppName, vehCat, startTime, endTime, weekdayRate, weekdayMin, satdayRate, satdayMin, sunPHRate, sunPHMin, remarks, parkingSystem, parkCapacity, seasonParkingHrs, seasonTicketType, seasonMonthlyRate, x, y, isSeasonParking)
+    VALUES
+    (%d, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %s, %s, %d, %s, %s, %d, %d, %d, %s)
+''')
