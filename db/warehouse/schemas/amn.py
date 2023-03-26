@@ -61,6 +61,7 @@ amn_insert['amn__PrimarySchool'] = ('''
 ''')
 
 amn_create['amn__SuperMarket'] = ('''
+    CREATE TABLE `amn__SuperMarket` (
     licence_num     varchar(50)          NOT NULL,
     licensee_name   varchar(50)          NOT NULL,
     building_name   varchar(50)          NOT NULL,
@@ -81,35 +82,37 @@ amn_insert['amn__SuperMarket'] = ('''
     (%s, %s, %s, %s, %s, %s, %s, %d, %d)
 ''')
     
-amn_create['amn__HawkerCenter'] = ('''
+amn_create['amn__HawkerCentre'] = ('''
+    CREATE TABLE `amn__HawkerCentre` (
     name_of_centre  varchar(50)          NOT NULL,
     location_of_centre varchar(50)       NOT NULL,
     type_of_centre  varchar(50)          NOT NULL,
     block           varchar(50)          NOT NULL,
     owner           varchar(50)          NOT NULL,
-    no_of_stalls    int             NOT NULL,
-    no_of_cooked_food_stalls int    NOT NULL,
-    no_of_mkt_produce_stalls int    NOT NULL,
+    no_of_stalls    int                  NOT NULL,
+    no_of_cooked_food_stalls int         NOT NULL,
+    no_of_mkt_produce_stalls int         NOT NULL,
     district        int                  NULL,
     PRIMARY KEY (name_of_centre)
 )
 ''')
 
-amn_insert['amn__HawkerCenter'] = ('''
-    INSERT INTO `amn__HawkerCenter`
+amn_insert['amn__HawkerCentre'] = ('''
+    INSERT INTO `amn__HawkerCentre`
     (name_of_centre, location_of_centre, type_of_centre, block, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls, district)
     VALUES
     (%s, %s, %s, %s, %s, %d, %d, %d, %d)
 ''')
-                                   
-amn_create['amn__Carpark'] = ('''
-    CREATE TABLE `amn__Carpark` (
-    ppCode              int             NOT NULL,
+
+
+amn_create['amn__CarparkPublic'] = ('''
+    CREATE TABLE `amn__CarparkPublic` (
+    ppCode              varchar(20)     NOT NULL,
     ppName              varchar(50)     NOT NULL,
     vehCat              enum(
-        'C',
-        'M',
-        'H'
+        'Car',
+        'Motorcycle',
+        'Heavy Vehicle'
     )                                   NOT NULL,
     startTime           varchar(50)     NOT NULL,
     endTime             varchar(50)     NOT NULL,
@@ -125,22 +128,51 @@ amn_create['amn__Carpark'] = ('''
         'B'
     )                                   NOT NULL,
     parkCapacity        int             NOT NULL,
-    seasonParkingHrs    varchar(100)    NOT NULL,
-    seasonTicketType    enum(
-        'Commercial',
-        'Residential',
-    )                                   NOT NULL,
-    seasonMonthlyRate   int             NOT NULL,
     x                   decimal(7,2)    NOT NULL,
     y                   decimal(7,2)    NOT NULL,
-    isSeasonParking     boolean         NOT NULL,
-    PRIMARY KEY (ppCode, isSeasonParking)
+    PRIMARY KEY (ppCode, vehCat)
 )
 ''')
 
-amn_insert['amn__Carpark'] = ('''
-    INSERT INTO `amn__Carpark`
-    (ppCode, ppName, vehCat, startTime, endTime, weekdayRate, weekdayMin, satdayRate, satdayMin, sunPHRate, sunPHMin, remarks, parkingSystem, parkCapacity, seasonParkingHrs, seasonTicketType, seasonMonthlyRate, x, y, isSeasonParking)
+amn_insert['amn__CarparkPublic'] = ('''
+    INSERT INTO `amn__CarparkPublic`
+    (ppCode, ppName, vehCat, startTime, endTime, weekdayRate, weekdayMin, satdayRate, satdayMin, sunPHRate, sunPHMin, remarks, parkingSystem, parkCapacity, x, y)
     VALUES
-    (%d, %d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %s, %s, %d, %s, %s, %d, %d, %d, %s)
+    (%s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %s, %s, %d, %d, %d)
 ''')
+
+# amn_create['amn__CarparkPublic'] = ('''
+#     CREATE TABLE `amn__CarparkPublic` (
+#     ppCode              int             NOT NULL,
+#     ppName              varchar(50)     NOT NULL,
+#     vehCat              enum(
+#         'C',
+#         'M',
+#         'H'
+#     )                                   NOT NULL,
+#     startTime           varchar(50)     NOT NULL,
+#     endTime             varchar(50)     NOT NULL,
+#     weekdayRate         decimal(7,2)    NOT NULL,
+#     weekdayMin          int             NOT NULL,
+#     satdayRate          decimal(7,2)    NOT NULL,
+#     satdayMin           int             NOT NULL,
+#     sunPHRate           decimal(7,2)    NOT NULL,
+#     sunPHMin            int             NOT NULL,
+#     remarks             varchar(100)    NOT NULL, 
+#     parkingSystem       enum(
+#         'C',
+#         'B'
+#     )                                   NOT NULL,
+#     parkCapacity        int             NOT NULL,
+#     seasonParkingHrs    varchar(100)    NOT NULL,
+#     seasonTicketType    enum(
+#         'Commercial',
+#         'Residential',
+#     )                                   NOT NULL,
+#     seasonMonthlyRate   int             NOT NULL,
+#     x                   decimal(7,2)    NOT NULL,
+#     y                   decimal(7,2)    NOT NULL,
+#     isSeasonParking     boolean         NOT NULL,
+#     PRIMARY KEY (ppCode, vehCat)
+# )
+# ''')
