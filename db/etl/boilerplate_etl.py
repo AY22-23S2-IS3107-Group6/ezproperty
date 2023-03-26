@@ -14,7 +14,7 @@ def extract():
     db = DataLake()
     db.insert_to_schema("Test collection", data)
 
-    result = db.query("Test collection", [
+    result = db.query("amn__Carpark", [
         {"$match": {"col1": "row1"}},
         {"$project": {"_id": 0, "col2": 1}}
     ])
@@ -23,7 +23,7 @@ def extract():
     for x in result:
         print(x)
     
-    transform(data)
+    transform(result)
 
 
 def transform(result):
