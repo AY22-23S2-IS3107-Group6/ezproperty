@@ -38,8 +38,11 @@ def load(result):
 
     # Load data into MySQL accordingly
     print("Test: Loading data")
+    print(result)
 
-    result = list(map(lambda x: tuple(x.values()), result))
+    # result = list(map(lambda x: tuple(x.values()), result))
+    result = result.map(lambda x: tuple(x.values()))
+    
 
     print(result)
 

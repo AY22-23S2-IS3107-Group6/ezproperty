@@ -2,7 +2,7 @@ ref_create = {}
 ref_insert = {}
 
 ref_create['ref__PropertyInformation'] = ('''
-    CREATE TABLE `main__PropertyInformation` (
+    CREATE TABLE `ref__PropertyInformation` (
     id                      int             AUTO_INCREMENT,
     block                   varchar(50)     NOT NULL,
     street                  varchar(100)    NOT NULL,
@@ -60,8 +60,8 @@ ref_create['ref__PropertyInformation'] = ('''
 )
 ''')
 
-ref_insert['main__PropertyInformation'] = ('''
-    INSERT INTO `main__PropertyInformation`
+ref_insert['ref__PropertyInformation'] = ('''
+    INSERT INTO `ref__PropertyInformation`
     (block, street, maxFloorLevel, yearCompleted, residentialTag, commericalTag, marketHawkerTag, miscTag, mscpTag, precinctPavilionTag, bldgContractTown,
     totalDwellingUnits, oneRoomSold, twoRoomSold, threeRoomSold, fourRoomSold, fiveRoomSold, execSold, multigenSold, studioAptSold, oneRoomRental, twoRoomRental, threeRoomRental, otherRoomRental)  
     VALUES
@@ -77,7 +77,7 @@ ref_create['ref__District'] = ('''
     y                decimal(9,4)    NOT NULL,
     postalCodeStart  int             NOT NULL,
     postalCodeEnd    int             NOT NULL,
-    PRIMARY KEY (id,districtNo)
+    PRIMARY KEY (id, district)
 )
 ''')
 
