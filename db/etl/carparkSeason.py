@@ -60,7 +60,7 @@ def transform(result):
 
     # Remove carparks with missing data
     for carpark in temp:
-        if ('weekdayMin' in carpark) and ('weekdayRate' in carpark) and ('ppCode' in carpark) and ('parkingSystem' in carpark) and ('ppName' in carpark) and ('vehCat' in carpark) and ('satdayMin' in carpark) and ('satdayRate' in carpark) and ('sunPHMin' in carpark) and ('sunPHRate' in carpark) and ('startTime' in carpark) and ('parkCapacity' in carpark) and ('endTime' in carpark):
+        if ('ppCode' in carpark) and ('ppName' in carpark) and ('vehCat' in carpark) and ('monthlyRate' in carpark) and ('parkingHrs' in carpark) and ('ticketType' in carpark):
             if carpark['geometries'] != []:
                 filteredCarparks.append(carpark)
 
@@ -73,20 +73,12 @@ def transform(result):
         carpark['_id'] = id(carpark['_id']) # using python generated _id for now since cant find a suitable pkey
         del carpark['geometries']
         # del carpark['_id'] # uncomment this code if we decide we don't need _id if we using our own pkeys
-        if 'remarks' in carpark:
-            del carpark['remarks']
 
     # Typecast appropriately to feed into sql
     for carpark in filteredCarparks:
-        carpark['weekdayRate'] = float(carpark['weekdayRate'][1:]) # removing $ sign
-        carpark['weekdayMin'] = int(carpark['weekdayMin'][:-5]) # removing mins from back
-        carpark['satdayRate'] = float(carpark['satdayRate'][1:])
-        carpark['satdayMin'] = int(carpark['satdayMin'][:-5])
-        carpark['sunPHRate'] = float(carpark['sunPHRate'][1:])
-        carpark['sunPHMin'] = int(carpark['sunPHMin'][:-5])
+        carpark['monthlyRate'] = int(carpark['monthlyRate'])
 
     print(filteredCarparks[0])
-
 
     load(filteredCarparks)
 

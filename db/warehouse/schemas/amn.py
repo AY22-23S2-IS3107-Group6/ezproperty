@@ -139,7 +139,7 @@ amn_insert['amn__CarparkPublic'] = ('''
 amn_create['amn__CarparkSeason'] = ('''
     CREATE TABLE `amn__CarparkSeason` (
     _id                 varchar(24)     NOT NULL,
-    ppCode              int             NOT NULL,
+    ppCode              varchar(20)     NOT NULL,
     ppName              varchar(50)     NOT NULL,
     vehCat              varchar(20)     NOT NULL,
     monthlyRate         int             NOT NULL,
