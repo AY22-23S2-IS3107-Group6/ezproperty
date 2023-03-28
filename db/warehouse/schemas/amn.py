@@ -103,3 +103,57 @@ amn_insert['amn__HawkerCentre'] = ('''
     VALUES
     (%s, %s, %s, %s, %s, %d, %d, %d, %d)
 ''')
+
+
+amn_create['amn__CarparkPublic'] = ('''
+    CREATE TABLE `amn__CarparkPublic` (
+    _id                 varchar(24)     NOT NULL,
+    weekdayMin          int             NOT NULL,
+    weekdayRate         decimal(7,2)    NOT NULL,
+    ppCode              varchar(20)     NOT NULL,
+    parkingSystem       varchar(20)     NOT NULL,
+    ppName              varchar(50)     NOT NULL,
+    vehCat              varchar(20)     NOT NULL,
+    satdayMin           int             NOT NULL,
+    satdayRate          decimal(7,2)    NOT NULL,
+    sunPHMin            int             NOT NULL,
+    sunPHRate           decimal(7,2)    NOT NULL,
+    startTime           varchar(50)     NOT NULL,
+    parkCapacity        int             NOT NULL,
+    endTime             varchar(50)     NOT NULL,
+    x                   decimal(7,2)    NOT NULL,
+    y                   decimal(7,2)    NOT NULL,
+    PRIMARY KEY (_id)
+)
+''')
+
+# don't think this is a suitable primary key - but will figure out an alternative down the road
+
+amn_insert['amn__CarparkPublic'] = ('''
+    INSERT INTO `amn__CarparkPublic`
+    (_id, weekdayMin, weekdayRate, ppCode, parkingSystem, ppName, vehCat, satdayMin, satdayRate, sunPHMin, sunPHRate, startTime, parkCapacity, endTime, x, y)
+    VALUES
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+''')
+
+amn_create['amn__CarparkSeason'] = ('''
+    CREATE TABLE `amn__CarparkSeason` (
+    _id                 varchar(24)     NOT NULL,
+    ppCode              varchar(20)     NOT NULL,
+    ppName              varchar(50)     NOT NULL,
+    vehCat              varchar(20)     NOT NULL,
+    monthlyRate         int             NOT NULL,
+    parkingHrs          varchar(100)    NOT NULL,
+    ticketType          varchar(20)     NOT NULL,
+    x                   decimal(7,2)    NOT NULL,
+    y                   decimal(7,2)    NOT NULL,
+    PRIMARY KEY (_id)
+)
+''')
+
+amn_insert['amn__CarparkSeason'] = ('''
+    INSERT INTO `amn__CarparkSeason`
+    (_id, ppCode, ppName, vehCat, monthlyRate, parkingHrs, ticketType, x, y)
+    VALUES
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+''')
