@@ -31,10 +31,10 @@ def extract():
 
     # Insert data
     db = DataLake()
-    db.insert_to_schema("main__RentralTransactions", rentalTransactions) # no logic currently to manage reloading data, so uncomment this after populating db
+    db.insert_to_schema("main__RentalPropertyMedian", rentalTransactions) # no logic currently to manage reloading data, so uncomment this after populating db
 
     # Test query
-    testResult = db.query_find("main__RentralTransactions", 
+    testResult = db.query_find("main__RentalPropertyMedian", 
         { "project": "ELLIOT AT THE EAST COAST" }
     )
 
@@ -43,7 +43,7 @@ def extract():
         print(x)
 
     # Query to get data - not super needed since currently fetching all, but just in case want to modify query
-    result = db.query_find("main__RentralTransactions", 
+    result = db.query_find("main__RentalPropertyMedian", 
         {}
     )
     
@@ -69,7 +69,7 @@ def transform(result):
         project['x'] = float(project['x'])
         project['y'] = float(project['y'])
 
-    mediansOnly = []
+    rentalMedian = []
 
     # Break into two tables
     for project in rentalProject:
@@ -81,29 +81,31 @@ def transform(result):
 
         # Bring out all the rental medians (flatten) into a new json object
         for median in tempMedians:
-            mediansOnly.append(median)
+            rentalMedian.append(median)
             # add foreign key linking to project
             median['rentalProject'] = project['_id']
 
         del project['rentalMedian']
 
     print(rentalProject[0])
-    print(mediansOnly[0])
+    print(rentalMedian[0])
 
-    load(rentalProject, mediansOnly)
+    load(rentalProject, rentalMedian)
 
 
 # Load data into MySQL accordingly
-def load(rentalProject, medianOnly):
+def load(rentalProject, rentalMedian):
 
     print("Rental Transactions: Loading data")
 
-    # # Transform data to list of values
-    # result = list(map(lambda x: tuple(x.values()), result))
+    # Transform data to list of values
+    rentalProject = list(map(lambda x: tuple(x.values()), rentalProject))
+    rentalMedian = list(map(lambda x: tuple(x.values()), rentalMedian))
 
-    # # Insert data
-    # db = DataWarehouse()
-    # db.insert_to_schema("main__RentralTransactions", result)
+    # Insert data
+    db = DataWarehouse(True, False)
+    db.insert_to_schema("main__RentalProject", rentalProject)
+    db.insert_to_schema("main__RentalMedian", rentalMedian)
 
 
 extract()

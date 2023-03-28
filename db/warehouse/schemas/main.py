@@ -66,13 +66,14 @@ main_insert['main__RentalProject'] = ('''
 
 main_create['main__RentalMedian'] = ('''
     CREATE TABLE `main__RentalMedian` (
-    refPeriod       varchar(24)     NOT NULL,
-    psf75           decimal(12,2)   NOT NULL,
-    median          decimal(12,2)   NOT NULL,
-    psf25           decimal(12,2)   NOT NULL,   
-    district        varchar(10)     NOT NULL
-    rentalProjectId varchar(24)     NOT NULL,
-    PRIMARY KEY (refPeriod, rentalProjectId)
+    _id              int             AUTO_INCREMENT,
+    refPeriod        varchar(24)     NOT NULL,
+    psf75            decimal(12,2)   NOT NULL,
+    median           decimal(12,2)   NOT NULL,
+    psf25            decimal(12,2)   NOT NULL,   
+    district         varchar(10)     NOT NULL,
+    rentalProjectId  varchar(24)     NOT NULL,
+    PRIMARY KEY (_id)
 )
 ''')
 
