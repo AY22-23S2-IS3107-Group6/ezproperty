@@ -94,7 +94,7 @@ def transform(resultPrivate, resultResale):
     tempPrivate = list(resultPrivate)
 
     filteredResale = []
-    filteredPrivate = []
+    tempPrivate2 = []
 
 
     for transaction in tempResale:
@@ -193,16 +193,17 @@ def transform(resultPrivate, resultResale):
             del transaction['typeOfArea']
             del transaction['floorRange']
 
+            tempPrivate2.append(transaction)
+
+    print(tempPrivate2[0])
+
+    filteredPrivate = []
+
+    for transaction in tempPrivate2:
+        if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
             filteredPrivate.append(transaction)
 
-    print(filteredPrivate[0])
-
-    combinedTransactions = tempResale + filteredPrivate
-
-    # # Test
-    # db = DataLake()
-    # print("FIRST ONE")
-    # db.insert_to_schema("main__PropertyTransaction", combinedTransactions)
+    combinedTransactions = filteredResale + filteredPrivate
     
     print(combinedTransactions[0])
 
