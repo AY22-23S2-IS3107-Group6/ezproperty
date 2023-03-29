@@ -7,7 +7,7 @@ from .schemas import create_queries, insert_queries
 
 class DataWarehouse:
 
-    def __init__(self):
+    def __init__(self, create_tables: bool = False, drop_tables: bool = False):
         self.db = connect_to_mysql()
         self.cursor = self.db.cursor(buffered=True)
         self.schemas = create_queries
