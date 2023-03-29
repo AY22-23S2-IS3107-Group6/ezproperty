@@ -17,22 +17,22 @@ amn_insert['test__Test'] = ('''
     (%s, %s, %s)
 ''')
 
-amn_create['test__Test2'] = ('''
-    CREATE TABLE `test__Test2` (
-    id           int     NOT NULL,
-    district             int      NULL,
-    x            int     NULL,
-    y            int      NULL,
-    PRIMARY KEY (id)
-)
-''')
+# amn_create['test__Test2'] = ('''
+#     CREATE TABLE `test__Test2` (
+#     id           int     NOT NULL,
+#     district             int      NULL,
+#     x            int     NULL,
+#     y            int      NULL,
+#     PRIMARY KEY (id)
+# )
+# ''')
 
-amn_insert['test__Test2'] = ('''
-    INSERT INTO `test__Test2`
-    (id, district, x, y)
-    VALUES
-    (%d, %d, %d, %d)
-''')
+# amn_insert['test__Test2'] = ('''
+#     INSERT INTO `test__Test2`
+#     (id, district, x, y)
+#     VALUES
+#     (%d, %d, %d, %d)
+# ''')
 
 amn_create['amn__TrainStation'] = ('''
     CREATE TABLE `amn__TrainStation` (
@@ -75,6 +75,49 @@ amn_insert['amn__PrimarySchool'] = ('''
     (id, schoolName, schoolChineseName, sap, gep, gender, affiliatedSecondary, area, address)
     VALUES
     (%d, %s, %s, %s, %s, %s, %s, %s, %s)
+''')
+
+amn_create['amn__HawkerCentre'] = ('''
+    CREATE TABLE `amn__HawkerCentre` (
+    name_of_centre  varchar(50)          NOT NULL,
+    location_of_centre varchar(50)       NOT NULL,
+    type_of_centre  varchar(50)          NOT NULL,
+    owner           varchar(50)          NOT NULL,
+    no_of_stalls    int                  NOT NULL,
+    no_of_cooked_food_stalls int         NOT NULL,
+    no_of_mkt_produce_stalls int         NOT NULL,
+    district        int                  NULL,
+    PRIMARY KEY (name_of_centre)
+)
+''')
+
+amn_insert['amn__HawkerCentre'] = ('''
+    INSERT INTO `amn__HawkerCentre`
+    (name_of_centre, location_of_centre, type_of_centre, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls, district)
+    VALUES
+    (%s, %s, %s, %s, %d, %d, %d, %d)
+''')
+
+amn_create['amn__SuperMarket'] = ('''
+    CREATE TABLE `amn__SuperMarket` (
+    licence_num     varchar(50)          NOT NULL,
+    licensee_name   varchar(50)          NOT NULL,
+    building_name   varchar(50)          NOT NULL,
+    block_house_num varchar(50)          NOT NULL,
+    level_num       varchar(50)          NOT NULL,
+    unit_num        varchar(50)          NOT NULL,
+    street_name     varchar(50)          NOT NULL,           
+    postal_code     int                  NOT NULL,
+    district        int                  NULL,
+    PRIMARY KEY (licence_num)
+)
+''')
+
+amn_insert['amn__SuperMarket'] = ('''
+    INSERT INTO `amn__SuperMarket`
+    (licence_num, licensee_name, building_name, block_house_num, level_num, unit_num, street_name, postal_code, district)
+    VALUES
+    (%s, %s, %s, %s, %s, %s, %s, %d, %d)
 ''')
 
 # primary keys will be both ppCode and boolean
