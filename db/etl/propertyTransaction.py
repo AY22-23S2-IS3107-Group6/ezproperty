@@ -44,17 +44,6 @@ def extract():
     resale2014 = respResale2014.json()["result"]["records"]
     resale2012 = respResale2012.json()["result"]["records"]
 
-    # print("Private1",private1[0])
-    # print("Private2",private2[0])
-    # print("Private3",private3[0])
-    # print("Private4",private4[0])
-
-    # print("Resale2017",resale2017[0])
-    # print("Resale2016",resale2016[0])
-    # print("Resale2014",resale2014[0])
-    # print("Resale2012",resale2012[0])
-
-
     # Insert data
     db = DataLake()
     print("FIRST ONE")
@@ -75,14 +64,14 @@ def extract():
     # db.insert_to_schema("main__PropertyTransactionsResale", resale2012)
 
 
-    # Test query
-    testResult = db.query_find("main__PropertyTransactionsPrivate", 
-        { "y": "30589.1070785135" }
-    )
+    # # Test query
+    # testResult = db.query_find("main__PropertyTransactionsPrivate", 
+    #     { "y": "30589.1070785135" }
+    # )
 
-    # Proof that query works
-    for x in testResult:
-        print(x)
+    # # Proof that query works
+    # for x in testResult:
+    #     print(x)
 
     # Query to get data - not super needed since currently fetching all, but just in case want to modify query
     resultPrivate = db.query_find("main__PropertyTransactionsPrivate", 
@@ -107,38 +96,117 @@ def transform(resultPrivate, resultResale):
     filteredResale = []
     filteredPrivate = []
 
+
+    for transaction in tempResale:
+        if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
+            filteredResale.append(transaction)
+
+    # for result in tempPrivate:
+    #     for transaction in result['transaction']:
+    #         print
+
+# removed block
+# removed x y
+# removed number of rooms
+# changed date to varchar for now
+# need map town to district
+# tenure doing math
+# executive flat types assume 3 BRs
+# replacing enum for now
+
     # Resale: Getting key/values we want
     for transaction in filteredResale:
-        # need to map town to district
+        # tempBlock = transaction['block']
+        # del transaction['block']
+
+        transaction['district'] = 1 # need to map town to district
         transaction['street'] = transaction['street_name']
+        # transaction['block'] = tempBlock # just for ordering for tuple down the road
         transaction['floorRangeStart'] = int(transaction['storey_range'].split(" ")[0])
         transaction['floorRangeEnd'] = int(transaction['storey_range'].split(" ")[2])
         transaction['propertyType'] = transaction['flat_type'] + "HDB"
-        transaction['noOfRoom'] = int(transaction['flat_type'].split(" ")[0])
-        transaction['area'] = transaction['floor_area_sqm']
-        transaction['price'] = transaction['resale_price']
+        # transaction['noOfRoom'] = int(3 if transaction['flat_type'].split(" ")[0] == "EXECUTIVE" else transaction['flat_type'].split(" ")[0])
+        transaction['area'] = float(transaction['floor_area_sqm'])
+        transaction['price'] = float(transaction['resale_price'])
         transaction['transactionDate'] = transaction['month'] # need to convert to date
-        transaction['tenure'] = transaction['remaining_lease']
+        transaction['tenure'] = int(transaction['remaining_lease'].split(" ")[0]) # only taking year for now
         transaction['resale'] = True
 
+        del transaction['block']
+        del transaction['_id']
+        del transaction['town']
         del transaction['street_name']
         del transaction['flat_type']
         del transaction['flat_model']
         del transaction['floor_area_sqm']
-        del transaction['street_name']
         del transaction['resale_price']
         del transaction['month']
         del transaction['remaining_lease']
         del transaction['lease_commence_date']
         del transaction['storey_range']
 
-    # Typecast appropriately to feed into sql
-    for carpark in filteredCarparks:
-        carpark['monthlyRate'] = int(carpark['monthlyRate'])
+    print(tempResale[0])
 
-    print(filteredCarparks[0])
+    for result in tempPrivate:
+        for transaction in result['transaction']:
 
-    load(filteredCarparks)
+            # for reordering
+            tempType = transaction['propertyType']
+            del transaction['propertyType']
+            tempArea = transaction['area']
+            del transaction['area']
+            tempPrice = transaction['price']
+            del transaction['price']
+            tempTenure = transaction['tenure']
+            del transaction['tenure']
+
+            # logic to manage B levels in floor range
+            if (transaction['floorRange'].split("-")[0] == ""):
+                floorRangeStart = 0
+                floorRangeEnd = 0
+            else:
+                if ("B" in transaction['floorRange'].split("-")[0]):
+                    floorRangeStart = -int(transaction['floorRange'].split("-")[0][1:])
+                else:
+                    floorRangeStart = int(transaction['floorRange'].split("-")[0])
+                
+                if ("B" in transaction['floorRange'].split("-")[1]):
+                    floorRangeEnd = -int(transaction['floorRange'].split("-")[1][1:])
+                else:
+                    floorRangeEnd = int(transaction['floorRange'].split("-")[1])
+                    
+
+            transaction['district'] = int(transaction['district'])
+            transaction['street'] = result['street']
+            transaction['floorRangeStart'] = floorRangeStart
+            transaction['floorRangeEnd'] = floorRangeEnd
+            transaction['propertyType'] = tempType
+            transaction['area'] = float(tempArea)
+            transaction['price'] = float(tempPrice)
+            transaction['transactionDate'] = transaction['contractDate']
+            transaction['tenure'] = int(1000000 if tempTenure == "Freehold" else 10) # ill do the math later
+            transaction['resale'] = False
+
+            del transaction['noOfUnits']
+            del transaction['contractDate']
+            del transaction['typeOfSale']
+            del transaction['typeOfArea']
+            del transaction['floorRange']
+
+            filteredPrivate.append(transaction)
+
+    print(filteredPrivate[0])
+
+    combinedTransactions = tempResale + filteredPrivate
+
+    # # Test
+    # db = DataLake()
+    # print("FIRST ONE")
+    # db.insert_to_schema("main__PropertyTransaction", combinedTransactions)
+    
+    print(combinedTransactions[0])
+
+    load(combinedTransactions)
 
 
 # Load data into MySQL accordingly
@@ -146,12 +214,14 @@ def load(result):
 
     print("Property Transaction: Loading data")
 
-    # # Transform data to list of values
-    # result = list(map(lambda x: tuple(x.values()), result))
+    # Transform data to list of values
+    result = list(map(lambda x: tuple(x.values()), result))
 
-    # # Insert data
-    # db = DataWarehouse()
-    # db.insert_to_schema("amn__CarparkSeason", result)
+    print(result[0])
+
+    # Insert data
+    db = DataWarehouse(True, False)
+    db.insert_to_schema("main__PropertyTransaction", result)
 
 
 extract()

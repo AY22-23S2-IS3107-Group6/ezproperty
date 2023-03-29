@@ -3,28 +3,26 @@ main_insert = {}
 
 main_create['main__PropertyTransaction'] = ('''
     CREATE TABLE `main__PropertyTransaction` (
-    id              int             AUTO_INCREMENT,
+    _id             int            AUTO_INCREMENT,
     district        int             NOT NULL,
     street          varchar(100)    NOT NULL,
-    block           varchar(50)     NOT NULL,
     floorRangeStart int             NOT NULL,
     floorRangeEnd   int             NOT NULL,
     propertyType    varchar(50)     NOT NULL,
-    noOfRoom        int                     ,
-    area            int             NOT NULL,
+    area            decimal(12,2)   NOT NULL,
     price           decimal(12,2)   NOT NULL,
-    transactionDate date                    ,
+    transactionDate varchar(10)             ,
     tenure          int                     ,
     resale          boolean                 ,
-    PRIMARY KEY (id)
+    PRIMARY KEY (_id)
 )
 ''')
 
 main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
-    (district, street, block, floorRangeStart, floorRangeEnd, propertyType, noOfRoom, area, price, transactionDate, tenure, resale, x, y) 
+    (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale) 
     VALUES
-    (%d, %s, %s, %d, %d, %s, %d, %d, %d, %s, %d, %s, %d, %d)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
                                             
 main_create['main__RentalProject'] = ('''
