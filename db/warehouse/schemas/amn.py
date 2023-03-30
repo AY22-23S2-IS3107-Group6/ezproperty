@@ -17,22 +17,22 @@ amn_insert['test__Test'] = ('''
     (%s, %s, %s)
 ''')
 
-# amn_create['test__Test2'] = ('''
-#     CREATE TABLE `test__Test2` (
-#     id           int     NOT NULL,
-#     district             int      NULL,
-#     x            int     NULL,
-#     y            int      NULL,
-#     PRIMARY KEY (id)
-# )
-# ''')
+amn_create['test__Test2'] = ('''
+    CREATE TABLE `test__Test2` (
+    id           int     NOT NULL,
+    district             int      NULL,
+    x            int     NULL,
+    y            int      NULL,
+    PRIMARY KEY (id)
+)
+''')
 
-# amn_insert['test__Test2'] = ('''
-#     INSERT INTO `test__Test2`
-#     (id, district, x, y)
-#     VALUES
-#     (%d, %d, %d, %d)
-# ''')
+amn_insert['test__Test2'] = ('''
+    INSERT INTO `test__Test2`
+    (id, district, x, y)
+    VALUES
+    (%s, %s, %s, %s)
+''')
 
 amn_create['amn__TrainStation'] = ('''
     CREATE TABLE `amn__TrainStation` (

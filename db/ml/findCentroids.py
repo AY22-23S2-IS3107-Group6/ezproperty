@@ -41,32 +41,32 @@ def findCentroids():
 
     print(result)
 
-    # # Test data
-    # print("Test: Feeding data into lake")
+    # Test data
+    print("Test: Feeding data into lake")
 
-    # insert_data = [{'district': 1, 'x': 12345, 'y': 67899}]
+    insert_data = [{'district': 1, 'x': 12345, 'y': 67899}]
 
-    # db = DataLake()
-    # db.insert_to_schema("Test collection", insert_data)
+    db = DataLake()
+    db.insert_to_schema("Test collection", insert_data)
 
-    # result = db.query("Test collection", [{
-    #     "$match": {
-    #         "district": 1
-    #     }
-    # }, {
-    #     "$project": {
-    #         "x": 12345,
-    #         "y": 67899
-    #     }
-    # }])
+    result = db.query("Test collection", [{
+        "$match": {
+            "district": 1
+        }
+    }, {
+        "$project": {
+            "x": 12345,
+            "y": 67899
+        }
+    }])
 
     db = DataWarehouse()
     print("Test: sql data")
     db.insert_to_schema("test__Test2", result)
 
-    # insert_data = [{'district': 2, 'x': 11111, 'y': 22222}]
-    # result = list(map(lambda x: tuple(x.values()), insert_data))
-    # db.insert_to_schema("test__Test2", result)
+    insert_data = [{'district': 2, 'x': 11111, 'y': 22222}]
+    result = list(map(lambda x: tuple(x.values()), insert_data))
+    db.insert_to_schema("test__Test2", result)
 
     data = db.query('''
       SELECT district, x, y FROM main__PropertyTransaction
