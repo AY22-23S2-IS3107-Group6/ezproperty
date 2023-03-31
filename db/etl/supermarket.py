@@ -8,9 +8,9 @@ def extract():
 
     # Fetch data sets
     # Seems to be limited by MongoDB's 100 BSON limit
-    resp = requests.get(
-        'https://data.gov.sg/api/action/datastore_search?resource_id=3561a136-4ee4-4029-a5cd-ddf591cce643'
-    )
+    # resp = requests.get(
+    #     'https://data.gov.sg/api/action/datastore_search?resource_id=3561a136-4ee4-4029-a5cd-ddf591cce643'
+    # )
 
     # But this works and I can insert 228 records
     resp = requests.get(
