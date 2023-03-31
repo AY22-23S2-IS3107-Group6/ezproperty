@@ -66,7 +66,8 @@ class DataWarehouse:
     def query(self, query):
         try:
             self.cursor.execute(query)
+            columns = self.cursor.description 
             print(f"Query executed successfully.")
-            return self.cursor.fetchall()
+            return [{columns[index][0]:column for index, column in enumerate(value)} for value in self.cursor.fetchall()]
         except mysql.connector.Error as err:
             print(f"Failed creating table: {err}")

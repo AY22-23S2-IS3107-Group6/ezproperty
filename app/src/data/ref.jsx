@@ -32,7 +32,7 @@ export const propertyInformationColumns = [
     accessor: "commercialTag",
   },
   {
-    Header: "MARKET HAWKER",
+    Header: "MKT HAWKER",
     accessor: "marketHawkerTag",
   },
   {
@@ -46,5 +46,9 @@ export const propertyInformationColumns = [
   {
     Header: "PAVILLION",
     accessor: "precinctPavillionTag",
+  },
+  {
+    Header: "TOTAL DWELLING UNITS",
+    accessor: "totalDwellingUnits",
   },
 ];
