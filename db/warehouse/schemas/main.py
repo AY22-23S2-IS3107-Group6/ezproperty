@@ -1,6 +1,7 @@
 main_create = {}
 main_insert = {}
 
+# included x and y for testing
 main_create['main__PropertyTransaction'] = ('''
     CREATE TABLE `main__PropertyTransaction` (
     _id             int            AUTO_INCREMENT,
@@ -14,17 +15,20 @@ main_create['main__PropertyTransaction'] = ('''
     transactionDate varchar(10)             ,
     tenure          int                     ,
     resale          boolean                 ,
+    x               decimal(9,4)    NULL,
+    y               decimal(9,4)    NULL,
     PRIMARY KEY (_id)
 )
 ''')
 
+# included x and y for testing
 main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
-    (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale) 
+    (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale, x, y) 
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
-                                            
+
 main_create['main__RentalProject'] = ('''
     CREATE TABLE `main__RentalProject` (
     _id             varchar(24)     NOT NULL,
@@ -63,7 +67,6 @@ main_insert['main__RentalMedian'] = ('''
     (%s, %s, %s, %s, %s, %s)
 ''')
 
-
 # main_create['main__PropertyTransaction'] = ('''
 #     CREATE TABLE `main__PropertyTransaction` (
 #     id              int             AUTO_INCREMENT,
@@ -101,7 +104,6 @@ main_insert['main__RentalMedian'] = ('''
 #     PRIMARY KEY (id)
 # )
 # ''')
-
 
 # main_create['main__RentalTransaction'] = ('''
 #     CREATE TABLE `main__RentalTransaction` (
@@ -142,7 +144,7 @@ main_insert['main__RentalMedian'] = ('''
 
 # main_insert['main__RentalTransaction'] = ('''
 #     INSERT INTO `main__RentalTransaction`
-#     (district, street, block, propertyType, noOfRoom, area, rent, psf25, median, psf75, transactionDate, x, y) 
+#     (district, street, block, propertyType, noOfRoom, area, rent, psf25, median, psf75, transactionDate, x, y)
 #     VALUES
 #     (%d, %s, %s, %s, %d, %d, %d, %d, %d, %d, %s, %d, %d)
 # ''')
