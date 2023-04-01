@@ -47,7 +47,7 @@ def extract():
     print(df.head())
 
     db = DataLake()
-    db.insert_to_schema("amn__TrainStation", df)
+    db.insert_to_schema("amn__TrainStation", df.to_dict('records'))
 
     testResult = db.query_find("amn__TrainStation", 
         { "stationNo": "EW5" }
@@ -76,13 +76,13 @@ def load(result):
 
     # Load data into MySQL accordingly
     print("Test: Loading data")
-    print(result)
+    # print(result)
 
     result = list(map(lambda x: tuple(x.values()), result))
     # result = result.map(lambda x: tuple(x.values()))
     
 
-    print(result)
+    # print(result)
 
     # Insert data
     db = DataWarehouse()

@@ -23,7 +23,7 @@ def extract():
     # web scraping
     table = soup.find('table', class_='tablepress tablepress-id-66 dataTable no-footer')
 
-    df = pd.DataFrame(columns=['id', 'schoolName', 'schoolChineseName', 'sap', 'gep', 'gender', 'affiliatedSecondary', 'area', 'address'])
+    df = pd.DataFrame(columns=['schoolName', 'schoolChineseName', 'sap', 'gep', 'gender', 'affiliatedSecondary', 'area', 'address'])
 
     for row in table.tbody.find_all('tr'):
         # find all data for each column
@@ -40,7 +40,6 @@ def extract():
             address = columns[7].text.strip()
 
             df = pd.concat([df, pd.DataFrame.from_records([{
-                'id': id,
                 'schoolName': schoolName,
                 'schoolChineseName': schoolChineseName,
                 'sap': sap,
@@ -56,7 +55,7 @@ def extract():
     print(df.head())
 
     db = DataLake()
-    db.insert_to_schema("amn__PrimarySchool", df)
+    db.insert_to_schema("amn__PrimarySchool", df.to_dict('records'))
 
     testResult = db.query_find("amn__PrimarySchool", 
         { "schoolName": "Ai Tong School" }
@@ -85,13 +84,13 @@ def load(result):
 
     # Load data into MySQL accordingly
     print("Test: Loading data")
-    print(result)
+    # print(result)
 
     result = list(map(lambda x: tuple(x.values()), result))
     # result = result.map(lambda x: tuple(x.values()))
     
 
-    print(result)
+    # print(result)
 
     # Insert data
     db = DataWarehouse()
