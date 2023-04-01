@@ -52,3 +52,34 @@ export const propertyInformationColumns = [
     accessor: "totalDwellingUnits",
   },
 ];
+
+export const trainStationColumns = [
+  {
+    Header: "STATION NAME",
+    accessor: "stationName",
+  },
+  {
+    Header: "STATION NUMBER",
+    accessor: "stationNo",
+  },
+  {
+    Header: "X COORDINATE (SVY21)",
+    accessor: "x",
+  },
+  {
+    Header: "Y COORDINATE (SVY21)",
+    accessor: "y",
+  },
+  {
+    Header: "LATITUDE",
+    accessor: "latitude",
+  },
+  {
+    Header: "LONGITUDE",
+    accessor: "longitude",
+  },
+  {
+    Header: "COLOR",
+    accessor: "color",
+  },
+]

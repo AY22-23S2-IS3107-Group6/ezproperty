@@ -47,24 +47,28 @@ Run this on WSL or bash
 
 ```bash
 # Create environment and download packages
-> sed -i 's/\r$//' ./build.sh
-> ./build.sh
+> virtualenv env
 
 # Enter environment
 > source env/bin/activate
+> pip install -r requirements.txt
 
 # Start Airflow
 > airflow webserver --port 8080 -D
 > airflow scheduler -D
 
-# Initialises database
-> python data_loader.py
-
 # Run data injection
 > airflow dags init_load 2023-XX-YY
 
+# Run the backend
+> export FLASK_APP=db/app
+> export FLASK_ENV=development
+> flask run
+
 # Run the frontend
-> cd app && npm start
+> cd app
+> npm install
+> npm start
 ```
 
 ### Running ETL
