@@ -1,9 +1,9 @@
 import pymongo
 import pandas as pd
-import requests
 from bs4 import BeautifulSoup
 from time import sleep
 from selenium import webdriver
+from enum import Enum
 
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
@@ -73,9 +73,31 @@ def extract():
 
 
 def transform(result):
+    # Enum for gender
+    class Gender(Enum):
+        Girls = "Girls"
+        Boys = "Boys"
+        Mixed = "Mixed"
 
     # Transform data accordingly
     print("Test: Transforming data")
+    for school in result:
+        if not school['sap']:
+            school['sap'] = False
+        else:
+            school['sap'] = True
+
+        if not school['gep']:
+            school['gep'] = False
+        else:
+            school['gep'] = True
+
+        if school['gender'] == "Girls":
+            school['gender'] = Gender['Girls']
+        elif school['gender'] == "Boys":
+            school['gender'] = Gender['Boys']
+        else:
+            school['gender'] = Gender['Mixed']
 
     load(result)
 
@@ -94,11 +116,11 @@ def load(result):
 
     # Insert data
     db = DataWarehouse()
-    db.insert_to_schema("test__Test", result)
+    db.insert_to_schema("amn__PrimarySchool", result)
 
     # Query data using SQL
     result = db.query('''
-        SELECT * FROM test__Test
+        SELECT * FROM amn__PrimarySchool
     ''')
 
     for x in result:

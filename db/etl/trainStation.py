@@ -2,6 +2,8 @@ import pymongo
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from decimal import Decimal
+
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
 
@@ -68,6 +70,11 @@ def transform(result):
 
     # Transform data accordingly
     print("Test: Transforming data")
+    for trainStation in result:
+        trainStation['x'] = Decimal(trainStation['x'])
+        trainStation['y'] = Decimal(trainStation['y'])
+        trainStation['latitude'] = float(trainStation['latitude'])
+        trainStation['longitude'] = float(trainStation['longitude'])
 
     load(result)
 
@@ -86,11 +93,11 @@ def load(result):
 
     # Insert data
     db = DataWarehouse()
-    db.insert_to_schema("test__Test", result)
+    db.insert_to_schema("amn__TrainStation", result)
 
     # Query data using SQL
     result = db.query('''
-        SELECT * FROM test__Test
+        SELECT * FROM amn__TrainStation
     ''')
 
     for x in result:
