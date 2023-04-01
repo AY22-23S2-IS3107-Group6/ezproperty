@@ -71,8 +71,6 @@ def extract():
     resale2014 = respResale2014.json()["result"]["records"]
     resale2012 = respResale2012.json()["result"]["records"]
 
-    print(private1)
-
     # Insert data
     db = DataLake()
     print("FIRST ONE")
@@ -84,8 +82,7 @@ def extract():
     print("FOURTH ONE")
     db.insert_to_schema("main__PropertyTransactionsPrivate", private4)
     print("FIFTH ONE")
-    # db.insert_to_schema("main__PropertyTransactionsResale", resale2017)
-
+    db.insert_to_schema("main__PropertyTransactionsResale", resale2017)
     # print("SIX ONE") - bug not inserting more than one schema in
     # db.insert_to_schema("main__PropertyTransactionsResale", resale2016)
     # print("SEVEN ONE")
@@ -166,6 +163,10 @@ def transform(resultPrivate, resultResale):
                                     [0])  # only taking year for now
         transaction['resale'] = True
 
+        # To test centroids and district
+        transaction['x'] = 10000.0000
+        transaction['y'] = 10000.0000
+
         del transaction['block']
         del transaction['_id']
         del transaction['town']
@@ -183,10 +184,6 @@ def transform(resultPrivate, resultResale):
 
     for result in tempPrivate:
         for transaction in result['transaction']:
-
-            # testing
-            transaction['x'] = result['x']
-            transaction['y'] = result['y']
 
             # for reordering
             tempType = transaction['propertyType']
@@ -228,6 +225,10 @@ def transform(resultPrivate, resultResale):
             transaction['tenure'] = int(1000000 if tempTenure == "Freehold"
                                         else 10)  # ill do the math later
             transaction['resale'] = False
+
+            # To test centroids and district
+            transaction['x'] = 10000.0000
+            transaction['y'] = 10000.0000
 
             del transaction['noOfUnits']
             del transaction['contractDate']

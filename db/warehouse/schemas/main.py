@@ -1,7 +1,6 @@
 main_create = {}
 main_insert = {}
 
-# included x and y for testing
 main_create['main__PropertyTransaction'] = ('''
     CREATE TABLE `main__PropertyTransaction` (
     _id             int            AUTO_INCREMENT,
@@ -15,13 +14,12 @@ main_create['main__PropertyTransaction'] = ('''
     transactionDate varchar(10)             ,
     tenure          int                     ,
     resale          boolean                 ,
-    x               decimal(9,4)    NULL,
-    y               decimal(9,4)    NULL,
+    x               decimal(9,4)    NOT NULL,
+    y               decimal(9,4)    NOT NULL,
     PRIMARY KEY (_id)
 )
 ''')
 
-# included x and y for testing
 main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
     (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale, x, y) 

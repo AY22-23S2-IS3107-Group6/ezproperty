@@ -13,7 +13,7 @@ def assignDistricts(district_centroid):
     # df represents dataframe queried from sql
     db = DataWarehouse()
     data = db.query('''
-      SELECT district, x, y FROM main__PropertyTransaction
+      SELECT district, x, y FROM main__PropertyTransaction OFFSET 3
     ''')
 
     # iterating through df
