@@ -40,15 +40,15 @@ amn_insert['amn__TrainStation'] = ('''
 
 amn_create['amn__PrimarySchool'] = ('''
     CREATE TABLE `amn__PrimarySchool` (
-    id                      int              NOT NULL,
-    schoolName              varchar(50)      NOT NULL,
-    schoolChineseName       varchar(30)      NOT NULL,
-    sap                     varchar(3)       NULL,
-    gep                     varchar(3)       NULL,
-    gender                  varchar(5)       NOT NULL,
-    affiliatedSecondary     varchar(100)     NOT NULL,
-    area                    varchar(20)      NOT NULL,
-    address                 varchar(50)      NOT NULL,
+    id                      int                               NOT NULL,
+    schoolName              varchar(50)                       NOT NULL,
+    schoolChineseName       varchar(30)                       NOT NULL,
+    sap                     boolean                           NOT NULL,
+    gep                     boolean                           NOT NULL,
+    gender                  ENUM('Girls', 'Boys', 'Mixed')    NOT NULL,
+    affiliatedSecondary     varchar(100)                      NOT NULL,
+    area                    varchar(20)                       NOT NULL,
+    address                 varchar(50)                       NOT NULL,
     PRIMARY KEY (id,schoolName)
 )
 ''')
