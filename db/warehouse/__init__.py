@@ -85,10 +85,10 @@ class DataWarehouse:
             print(f"Failed creating table: {err}")
 
     # update without parameters
-    def update(self, update):
-        try:
-            self.cursor.execute(update)
-            print(f"Update executed successfully.")
-            return self.db.commit()
-        except mysql.connector.Error as err:
-            print(f"Failed creating table: {err}")
+    # def update(self, update):
+    #     try:
+    #         self.cursor.execute(update)
+    #         print(f"Update executed successfully.")
+    #         return self.db.commit()
+    #     except mysql.connector.Error as err:
+    #         print(f"Failed creating table: {err}")
