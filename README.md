@@ -50,7 +50,8 @@ Run this on WSL or bash
 > virtualenv env
 
 # Enter environment
-> source env/bin/activate
+> source env/bin/activate # macOS/linux
+> .\env\Scripts\activate # windows
 > pip install -r requirements.txt
 
 # Start Airflow

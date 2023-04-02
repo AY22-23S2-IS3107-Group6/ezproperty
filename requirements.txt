@@ -12,3 +12,4 @@ six==1.16.0
 flask==2.2.3
 flask-cors==3.0.10
 simplejson==3.18.4
+beautifulsoup4==4.12.0
