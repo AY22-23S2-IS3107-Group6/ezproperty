@@ -25,7 +25,7 @@ amn_create['amn__TrainStation'] = ('''
     x               decimal(9,4)    NOT NULL,
     y               decimal(9,4)    NOT NULL,
     latitude        decimal(10,9)   NOT NULL,
-    longitude       decimal(10,7)   NOT NULL,
+    longitude       decimal(12,9)   NOT NULL,
     colour          varchar(10)     NOT NULL,
     PRIMARY KEY (_id)
 )
