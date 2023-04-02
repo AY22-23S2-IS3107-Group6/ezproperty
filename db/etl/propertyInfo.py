@@ -11,13 +11,13 @@ def extract():
     print("Test: Feeding data into lake")
 
     # Test data
-    url_property = "https://data.gov.sg/dataset/9dd41b9c-b7d7-405b-88f8-61b9ca9ba224/resource/482bfa14-2977-4035-9c61-c85f871daf4e/data"
-    response_property = requests.request("GET", url_property)
-    myjson_property = response_property.json()
-    data = myjson_property['records']
+    url = "https://data.gov.sg/dataset/9dd41b9c-b7d7-405b-88f8-61b9ca9ba224/resource/482bfa14-2977-4035-9c61-c85f871daf4e/data"
+    response = requests.request("GET", url)
+    json = response.json()
+    data = json['records']
 
     db = DataLake()
-    db.insert_to_schema("HDB Property Information", data)
+    db.insert_to_schema("ref__PropertyInformation", data)
     
     transform(data)
 
@@ -30,10 +30,11 @@ def transform(result):
     tempResult = list(result)
     filteredResult = []
 
+    # in case we need to filter in the future
     for property in tempResult:
         filteredResult.append(property)
 
-    # need map town to district
+    # need to map town to district
     # replacing enum for now
 
     tag_dict = {"Y": True, "N": False}
@@ -73,7 +74,7 @@ def transform(result):
         x["block"] = x["blk_no"]
         #x["street"] = x["street"]
 
-        # replacing date with int for now
+        # only year given, so int is sufficient
         x["yearCompleted"] = int(x["year_completed"])
 
         # integers
@@ -128,7 +129,7 @@ def transform(result):
         del x['market_hawker']
         del x['_id']
 
-    print(result[0])
+    #print(result[0])
 
     load(result)
 
@@ -140,7 +141,7 @@ def load(result):
 
     result = list(map(lambda x: tuple(x.values()), result))
 
-    print(result[0])
+    #print(result[0])
 
     # Insert data
     db = DataWarehouse(True, False)

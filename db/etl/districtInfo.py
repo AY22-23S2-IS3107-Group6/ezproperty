@@ -68,11 +68,11 @@ def load(result):
     # Load data into MySQL accordingly
     print("Test: Loading data")
 
-    print(result)
+    #print(result)
 
     result = list(map(lambda x: tuple(x.values()), result))
 
-    print(result[0])
+    #print(result[0])
 
     # Insert data
     db = DataWarehouse(True, False)
