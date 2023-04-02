@@ -51,7 +51,10 @@ Run this on WSL or bash
 > ./build.sh
 
 # Enter environment
+# macOS
 > source env/bin/activate
+# windows
+> .\env\Scripts\activate
 
 # Start Airflow
 > airflow webserver --port 8080 -D
