@@ -10,14 +10,19 @@ const Search = (props) => {
   const [trainStations, setTrainStations] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/propertyinfo")
-      .then(response => response.data)
-      .then(data => setPropInfo(data))
-      .catch(err => console.log(err));
+    // axios.get("http://localhost:5000/propertyinfo")
+    //   .then(response => response.data)
+    //   .then(data => setPropInfo(JSON.parse(data)))
+    //   .catch(err => console.log(err));
     
     axios.get("http://localhost:5000/trainstation")
       .then(response => response.data)
-      .then(data => setPropInfo(data))
+      .then(data => {
+        if(typeof(data) === "string"){
+          data = JSON.parse(data)
+        }
+        setTrainStations(data)
+      })
       .catch(err => console.log(err));
   }, []);
 

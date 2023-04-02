@@ -69,6 +69,7 @@ export default function ColumnsTable(props) {
         </Text>
         <Menu />
       </Flex>
+      {console.log(tableData)}
       <Table {...getTableProps()} variant='simple' color='gray.500' mb='24px'>
         <Thead>
           {headerGroups.map((headerGroup, index) => (
