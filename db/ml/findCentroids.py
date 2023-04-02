@@ -24,9 +24,9 @@ def findCentroids():
     for row in data:
         # need to accomodate to rental or transaction or rentalMedian
         #  also cases when district is separate
-        district = row[0]
-        x = row[1]
-        y = row[2]
+        district = row['district']
+        x = row['x']
+        y = row['y']
 
         if district not in district_data:
             district_data[district] = {"x_total": x, "y_total": y, "count": 1}
@@ -56,15 +56,15 @@ def assignDistricts(district_centroid):
     # df represents dataframe queried from sql
     db = DataWarehouse()
     data = db.query('''
-      SELECT _id, district, x, y FROM main__PropertyTransaction WHERE _id  <= 3
+        SELECT _id, district, x, y FROM main__PropertyTransaction WHERE _id  <= 3
     ''')
 
     # iterating through df
     for row in data:
         shortest_dist = -1
         closest_district = -1
-        x = row[2]
-        y = row[3]
+        x = row['x']
+        y = row['y']
 
         for district, data in district_centroid.items():
 
@@ -79,10 +79,8 @@ def assignDistricts(district_centroid):
                 closest_district = district
 
         row_id = row[0]
-        print("new district for row " + str(row_id) + " is " +
-              str(closest_district))
-        db.update(
-            '''
+        print(f"new district for row {row_id} is {closest_district}")
+        db.update('''
             UPDATE main__PropertyTransaction SET district = %s WHERE _id = %s
         ''', (closest_district, row_id))
 
