@@ -49,7 +49,7 @@ def extract():
     print(df.head())
 
     db = DataLake()
-    db.insert_to_schema("amn__TrainStation", df.to_dict('records'))
+    # db.insert_to_schema("amn__TrainStation", df.to_dict('records'))
 
     testResult = db.query_find("amn__TrainStation", 
         { "stationNo": "EW5" }
@@ -67,14 +67,17 @@ def extract():
 
 
 def transform(result):
+    result = list(result)
 
     # Transform data accordingly
     print("Test: Transforming data")
     for trainStation in result:
         trainStation['x'] = Decimal(trainStation['x'])
         trainStation['y'] = Decimal(trainStation['y'])
-        trainStation['latitude'] = float(trainStation['latitude'])
-        trainStation['longitude'] = float(trainStation['longitude'])
+        trainStation['latitude'] = Decimal(trainStation['latitude'])
+        trainStation['longitude'] = Decimal(trainStation['longitude'])
+        trainStation['_id'] = id(trainStation['_id']) # using python generated _id for now since cant find a suitable pkey
+        del trainStation['id']
 
     load(result)
 
@@ -83,25 +86,22 @@ def load(result):
 
     # Load data into MySQL accordingly
     print("Test: Loading data")
-    # print(result)
+    print(result[0])
 
     result = list(map(lambda x: tuple(x.values()), result))
     # result = result.map(lambda x: tuple(x.values()))
     
-
-    # print(result)
-
     # Insert data
-    db = DataWarehouse()
+    db = DataWarehouse(True,True)
     db.insert_to_schema("amn__TrainStation", result)
 
     # Query data using SQL
-    result = db.query('''
-        SELECT * FROM amn__TrainStation
-    ''')
+    # result = db.query('''
+    #     SELECT * FROM amn__TrainStation
+    # ''')
 
-    for x in result:
-        print(x)
+    # for x in result:
+    #     print(x)
 
 
 extract()
