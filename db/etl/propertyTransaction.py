@@ -111,7 +111,6 @@ def transform(resultPrivate, resultResale):
 
 # TO DO
 # Insert all data properly (insert into one schema + fetch more records)
-# tenure doing math
 
 # need map town to district
 
@@ -208,8 +207,17 @@ def transform(resultPrivate, resultResale):
             date = datetime.datetime(year, month, 1)
             dateSql = date.strftime('%Y-%m-%d')
 
+            # Calculate tenure
+            if tempTenure == "Freehold":
+                tenure = 1000000
+            else:
+                leaseDur = int(tempTenure.split(" ")[0])
+                startYear = int(tempTenure.split(" ")[-1])
+                yearDiff = 2023 - startYear
+                tenure = leaseDur - yearDiff
+
             transaction['transactionDate'] = dateSql
-            transaction['tenure'] = int(1000000 if tempTenure == "Freehold" else 10) # ill do the math later
+            transaction['tenure'] = tenure
             transaction['resale'] = False
 
             if ('nettPrice' in transaction):
@@ -258,6 +266,7 @@ def load(result):
     print(result[0])
     print(result[101])
 
+    # For future use: https://stackoverflow.com/questions/93128/mysql-error-1153-got-a-packet-bigger-than-max-allowed-packet-bytes
 
     # Insert data
     db = DataWarehouse(True, False)
