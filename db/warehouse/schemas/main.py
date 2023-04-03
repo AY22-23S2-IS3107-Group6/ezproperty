@@ -14,17 +14,15 @@ main_create['main__PropertyTransaction'] = ('''
     transactionDate varchar(10)             ,
     tenure          int                     ,
     resale          boolean                 ,
-    x               decimal(9,4)    NOT NULL,
-    y               decimal(9,4)    NOT NULL,
     PRIMARY KEY (_id)
 )
 ''')
 
 main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
-    (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale, x, y) 
+    (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale) 
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 main_create['main__RentalProject'] = ('''
