@@ -1,5 +1,6 @@
 import pymongo
 import pandas as pd
+import datetime
 import requests
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
@@ -29,7 +30,7 @@ def extract():
     respPrivate2 = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=2', headers = apiHeader)
     respPrivate3 = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=3', headers = apiHeader)
     respPrivate4 = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=4', headers = apiHeader)
-    respResale2017 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=f1765b54-a209-4718-8d38-a39237f502b3')
+    respResale2017 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=f1765b54-a209-4718-8d38-a39237f502b3&limit=150000')
     respResale2016 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=1b702208-44bf-4829-b620-4615ee19b57c')
     respResale2014 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=83b2fc37-ce8c-4df4-968b-370fd818138b')
     respResale2012 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=8c00bf08-9124-479e-aeca-7cc411d884c4')
@@ -40,9 +41,9 @@ def extract():
     private3 = respPrivate3.json()['Result']
     private4 = respPrivate4.json()['Result']
     resale2017 = respResale2017.json()["result"]["records"]
-    resale2016 = respResale2016.json()["result"]["records"]
-    resale2014 = respResale2014.json()["result"]["records"]
-    resale2012 = respResale2012.json()["result"]["records"]
+    # resale2016 = respResale2016.json()["result"]["records"]
+    # resale2014 = respResale2014.json()["result"]["records"]
+    # resale2012 = respResale2012.json()["result"]["records"]
 
     # Insert data
     db = DataLake()
@@ -62,16 +63,6 @@ def extract():
     # db.insert_to_schema("main__PropertyTransactionsResale", resale2014)
     # print("EIGHT ONE")
     # db.insert_to_schema("main__PropertyTransactionsResale", resale2012)
-
-
-    # # Test query
-    # testResult = db.query_find("main__PropertyTransactionsPrivate", 
-    #     { "y": "30589.1070785135" }
-    # )
-
-    # # Proof that query works
-    # for x in testResult:
-    #     print(x)
 
     # Query to get data - not super needed since currently fetching all, but just in case want to modify query
     resultPrivate = db.query_find("main__PropertyTransactionsPrivate", 
@@ -94,36 +85,33 @@ def transform(resultPrivate, resultResale):
     tempPrivate = list(resultPrivate)
 
     filteredResale = []
-    tempPrivate2 = []
+    filteredPrivateProjects = []
+    filteredPrivateTransactions = []
 
 
     for transaction in tempResale:
         if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
             filteredResale.append(transaction)
 
-# removed block
-# removed x y
-# removed number of rooms
-# executive flat types assume 3 BRs
-# replacing enum for now
-
-# TO DO
-# Insert all data properly (insert into one schema + fetch more records)
-# changed date to varchar for now
-# need map town to district
-# tenure doing math
 
     # Resale: Getting key/values we want
     for transaction in filteredResale:
 
-        transaction['district'] = 1 # need to map town to district
+        transaction['district'] = 1 # need map town to district
         transaction['street'] = transaction['street_name']
         transaction['floorRangeStart'] = int(transaction['storey_range'].split(" ")[0])
         transaction['floorRangeEnd'] = int(transaction['storey_range'].split(" ")[2])
         transaction['propertyType'] = transaction['flat_type'] + "HDB"
-        transaction['area'] = float(transaction['floor_area_sqm'])  # check if can change to int
+        transaction['area'] = float(transaction['floor_area_sqm'])
         transaction['price'] = float(transaction['resale_price']) 
-        transaction['transactionDate'] = transaction['month'] # need to convert to date
+
+        # Convert date to SQL formatting
+        year = int(transaction['month'].split("-")[0])
+        month = int(transaction['month'].split("-")[1])
+        date = datetime.datetime(year, month, 1)
+        dateSql = date.strftime('%Y-%m-%d')
+
+        transaction['transactionDate'] = dateSql
         transaction['tenure'] = int(transaction['remaining_lease'].split(" ")[0]) # only taking year for now
         transaction['resale'] = True
 
@@ -143,10 +131,21 @@ def transform(resultPrivate, resultResale):
         del transaction['lease_commence_date']
         del transaction['storey_range']
 
-    print(tempResale[0])
 
-    for result in tempPrivate:
-        for transaction in result['transaction']:
+    for project in tempPrivate:
+        checker = True
+        for transaction in project['transaction']:
+            if ('propertyType' not in transaction) or ('area' not in transaction) or ('price' not in transaction) or ('tenure' not in transaction) or ('floorRange' not in transaction) or ('district' not in transaction) or ('contractDate' not in transaction):
+                checker = False
+        
+        if ('street' not in project):
+            checker = False
+
+        if checker:
+            filteredPrivateProjects.append(project)
+
+    for project in filteredPrivateProjects:
+        for transaction in project['transaction']:
 
             # for reordering
             tempType = transaction['propertyType']
@@ -175,33 +174,57 @@ def transform(resultPrivate, resultResale):
                     
 
             transaction['district'] = int(transaction['district'])
-            transaction['street'] = result['street']
+            transaction['street'] = project['street']
             transaction['floorRangeStart'] = floorRangeStart
             transaction['floorRangeEnd'] = floorRangeEnd
             transaction['propertyType'] = tempType
             transaction['area'] = float(tempArea)
             transaction['price'] = float(tempPrice)
-            transaction['transactionDate'] = transaction['contractDate']
-            transaction['tenure'] = int(1000000 if tempTenure == "Freehold" else 10) # ill do the math later
+
+            # Convert date to SQL formatting
+            year = int("20" + transaction['contractDate'][-2:])
+            month = int(transaction['contractDate'][:2])
+            date = datetime.datetime(year, month, 1)
+            dateSql = date.strftime('%Y-%m-%d')
+
+            # Calculate tenure
+            if tempTenure == "Freehold":
+                tenure = 1000000
+            else:
+                leaseDur = int(tempTenure.split(" ")[0])
+                startYear = int(tempTenure.split(" ")[-1])
+                yearDiff = 2023 - startYear
+                tenure = leaseDur - yearDiff
+
+            transaction['transactionDate'] = dateSql
+            transaction['tenure'] = tenure
             transaction['resale'] = False
 
+            if ('nettPrice' in transaction):
+                del transaction['nettPrice']
             del transaction['noOfUnits']
             del transaction['contractDate']
             del transaction['typeOfSale']
             del transaction['typeOfArea']
             del transaction['floorRange']
 
-            tempPrivate2.append(transaction)
+            filteredPrivateTransactions.append(transaction)
 
-    print(tempPrivate2[0])
+    print(filteredPrivateTransactions[0])
 
-    filteredPrivate = []
+    combinedTransactions = filteredPrivateTransactions + filteredResale
 
-    for transaction in tempPrivate2:
-        if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
-            filteredPrivate.append(transaction)
+    print(filteredPrivateTransactions[0])
+    print(filteredResale[0])
+    print("Length of private", len(filteredPrivateTransactions))
+    print("Length of resale", len(filteredResale))
 
-    combinedTransactions = filteredResale + filteredPrivate
+    # for transaction in combinedTransactions:
+    #     if ('district' in transaction) and ('street' in transaction) and ('floorRangeStart' in transaction) and ('floorRangeEnd' in transaction) and ('propertyType' in transaction) and ('area' in transaction) and ('price' in transaction) and ('transactionDate' in transaction) and ('tenure' in transaction) and ('resale' in transaction):
+    #         filteredCombinedTransactions.append(transaction)
+
+    # print("Pre filter length", len(combinedTransactions))
+    # print("Post filter length", len(filteredCombinedTransactions))
     
     print(combinedTransactions[0])
 
@@ -216,7 +239,14 @@ def load(result):
     # Transform data to list of values
     result = list(map(lambda x: tuple(x.values()), result))
 
+    for temp in result:
+        if len(temp) != 10:
+            print("FAILING", temp)
+
     print(result[0])
+    print(result[101])
+
+    # For future use: https://stackoverflow.com/questions/93128/mysql-error-1153-got-a-packet-bigger-than-max-allowed-packet-bytes
 
     # Insert data
     db = DataWarehouse(True, False)

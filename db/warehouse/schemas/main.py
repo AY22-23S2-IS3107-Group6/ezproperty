@@ -11,7 +11,7 @@ main_create['main__PropertyTransaction'] = ('''
     propertyType    varchar(50)     NOT NULL,
     area            decimal(12,2)   NOT NULL,
     price           decimal(12,2)   NOT NULL,
-    transactionDate varchar(10)             ,
+    transactionDate DATE                    ,
     tenure          int                     ,
     resale          boolean                 ,
     PRIMARY KEY (_id)
