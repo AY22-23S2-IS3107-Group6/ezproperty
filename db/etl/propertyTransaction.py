@@ -30,7 +30,7 @@ def extract():
     respPrivate2 = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=2', headers = apiHeader)
     respPrivate3 = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=3', headers = apiHeader)
     respPrivate4 = requests.get('https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=4', headers = apiHeader)
-    respResale2017 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=f1765b54-a209-4718-8d38-a39237f502b3')
+    respResale2017 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=f1765b54-a209-4718-8d38-a39237f502b3&limit=150000')
     respResale2016 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=1b702208-44bf-4829-b620-4615ee19b57c')
     respResale2014 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=83b2fc37-ce8c-4df4-968b-370fd818138b')
     respResale2012 = requests.get('https://data.gov.sg/api/action/datastore_search?resource_id=8c00bf08-9124-479e-aeca-7cc411d884c4')
@@ -41,9 +41,9 @@ def extract():
     private3 = respPrivate3.json()['Result']
     private4 = respPrivate4.json()['Result']
     resale2017 = respResale2017.json()["result"]["records"]
-    resale2016 = respResale2016.json()["result"]["records"]
-    resale2014 = respResale2014.json()["result"]["records"]
-    resale2012 = respResale2012.json()["result"]["records"]
+    # resale2016 = respResale2016.json()["result"]["records"]
+    # resale2014 = respResale2014.json()["result"]["records"]
+    # resale2012 = respResale2012.json()["result"]["records"]
 
     # Insert data
     db = DataLake()
@@ -216,8 +216,8 @@ def transform(resultPrivate, resultResale):
 
     print(filteredPrivateTransactions[0])
     print(filteredResale[0])
-
-    # filteredCombinedTransactions = []
+    print("Length of private", len(filteredPrivateTransactions))
+    print("Length of resale", len(filteredResale))
 
     # for transaction in combinedTransactions:
     #     if ('district' in transaction) and ('street' in transaction) and ('floorRangeStart' in transaction) and ('floorRangeEnd' in transaction) and ('propertyType' in transaction) and ('area' in transaction) and ('price' in transaction) and ('transactionDate' in transaction) and ('tenure' in transaction) and ('resale' in transaction):
