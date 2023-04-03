@@ -1,5 +1,6 @@
 import pymongo
 import pandas as pd
+import datetime
 import requests
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
@@ -94,7 +95,8 @@ def transform(resultPrivate, resultResale):
     tempPrivate = list(resultPrivate)
 
     filteredResale = []
-    tempPrivate2 = []
+    filteredPrivateProjects = []
+    filteredPrivateTransactions = []
 
 
     for transaction in tempResale:
@@ -109,21 +111,28 @@ def transform(resultPrivate, resultResale):
 
 # TO DO
 # Insert all data properly (insert into one schema + fetch more records)
-# changed date to varchar for now
-# need map town to district
 # tenure doing math
+
+# need map town to district
 
     # Resale: Getting key/values we want
     for transaction in filteredResale:
 
-        transaction['district'] = 1 # need to map town to district
+        transaction['district'] = 1
         transaction['street'] = transaction['street_name']
         transaction['floorRangeStart'] = int(transaction['storey_range'].split(" ")[0])
         transaction['floorRangeEnd'] = int(transaction['storey_range'].split(" ")[2])
         transaction['propertyType'] = transaction['flat_type'] + "HDB"
-        transaction['area'] = float(transaction['floor_area_sqm'])  # check if can change to int
+        transaction['area'] = float(transaction['floor_area_sqm'])
         transaction['price'] = float(transaction['resale_price']) 
-        transaction['transactionDate'] = transaction['month'] # need to convert to date
+
+        # Convert date to SQL formatting
+        year = int(transaction['month'].split("-")[0])
+        month = int(transaction['month'].split("-")[1])
+        date = datetime.datetime(year, month, 1)
+        dateSql = date.strftime('%Y-%m-%d')
+
+        transaction['transactionDate'] = dateSql
         transaction['tenure'] = int(transaction['remaining_lease'].split(" ")[0]) # only taking year for now
         transaction['resale'] = True
 
@@ -143,10 +152,21 @@ def transform(resultPrivate, resultResale):
         del transaction['lease_commence_date']
         del transaction['storey_range']
 
-    print(tempResale[0])
 
-    for result in tempPrivate:
-        for transaction in result['transaction']:
+    for project in tempPrivate:
+        checker = True
+        for transaction in project['transaction']:
+            if ('propertyType' not in transaction) or ('area' not in transaction) or ('price' not in transaction) or ('tenure' not in transaction) or ('floorRange' not in transaction) or ('district' not in transaction) or ('contractDate' not in transaction):
+                checker = False
+        
+        if ('street' not in project):
+            checker = False
+
+        if checker:
+            filteredPrivateProjects.append(project)
+
+    for project in filteredPrivateProjects:
+        for transaction in project['transaction']:
 
             # for reordering
             tempType = transaction['propertyType']
@@ -175,33 +195,48 @@ def transform(resultPrivate, resultResale):
                     
 
             transaction['district'] = int(transaction['district'])
-            transaction['street'] = result['street']
+            transaction['street'] = project['street']
             transaction['floorRangeStart'] = floorRangeStart
             transaction['floorRangeEnd'] = floorRangeEnd
             transaction['propertyType'] = tempType
             transaction['area'] = float(tempArea)
             transaction['price'] = float(tempPrice)
-            transaction['transactionDate'] = transaction['contractDate']
+
+            # Convert date to SQL formatting
+            year = int("20" + transaction['contractDate'][-2:])
+            month = int(transaction['contractDate'][:2])
+            date = datetime.datetime(year, month, 1)
+            dateSql = date.strftime('%Y-%m-%d')
+
+            transaction['transactionDate'] = dateSql
             transaction['tenure'] = int(1000000 if tempTenure == "Freehold" else 10) # ill do the math later
             transaction['resale'] = False
 
+            if ('nettPrice' in transaction):
+                del transaction['nettPrice']
             del transaction['noOfUnits']
             del transaction['contractDate']
             del transaction['typeOfSale']
             del transaction['typeOfArea']
             del transaction['floorRange']
 
-            tempPrivate2.append(transaction)
+            filteredPrivateTransactions.append(transaction)
 
-    print(tempPrivate2[0])
+    print(filteredPrivateTransactions[0])
 
-    filteredPrivate = []
+    combinedTransactions = filteredPrivateTransactions + filteredResale
 
-    for transaction in tempPrivate2:
-        if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
-            filteredPrivate.append(transaction)
+    print(filteredPrivateTransactions[0])
+    print(filteredResale[0])
 
-    combinedTransactions = filteredResale + filteredPrivate
+    # filteredCombinedTransactions = []
+
+    # for transaction in combinedTransactions:
+    #     if ('district' in transaction) and ('street' in transaction) and ('floorRangeStart' in transaction) and ('floorRangeEnd' in transaction) and ('propertyType' in transaction) and ('area' in transaction) and ('price' in transaction) and ('transactionDate' in transaction) and ('tenure' in transaction) and ('resale' in transaction):
+    #         filteredCombinedTransactions.append(transaction)
+
+    # print("Pre filter length", len(combinedTransactions))
+    # print("Post filter length", len(filteredCombinedTransactions))
     
     print(combinedTransactions[0])
 
@@ -216,7 +251,13 @@ def load(result):
     # Transform data to list of values
     result = list(map(lambda x: tuple(x.values()), result))
 
+    for temp in result:
+        if len(temp) != 10:
+            print("FAILING", temp)
+
     print(result[0])
+    print(result[101])
+
 
     # Insert data
     db = DataWarehouse(True, False)
