@@ -64,16 +64,6 @@ def extract():
     # print("EIGHT ONE")
     # db.insert_to_schema("main__PropertyTransactionsResale", resale2012)
 
-
-    # # Test query
-    # testResult = db.query_find("main__PropertyTransactionsPrivate", 
-    #     { "y": "30589.1070785135" }
-    # )
-
-    # # Proof that query works
-    # for x in testResult:
-    #     print(x)
-
     # Query to get data - not super needed since currently fetching all, but just in case want to modify query
     resultPrivate = db.query_find("main__PropertyTransactionsPrivate", 
         {}
@@ -103,21 +93,11 @@ def transform(resultPrivate, resultResale):
         if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
             filteredResale.append(transaction)
 
-# removed block
-# removed x y
-# removed number of rooms
-# executive flat types assume 3 BRs
-# replacing enum for now
-
-# TO DO
-# Insert all data properly (insert into one schema + fetch more records)
-
-# need map town to district
 
     # Resale: Getting key/values we want
     for transaction in filteredResale:
 
-        transaction['district'] = 1
+        transaction['district'] = 1 # need map town to district
         transaction['street'] = transaction['street_name']
         transaction['floorRangeStart'] = int(transaction['storey_range'].split(" ")[0])
         transaction['floorRangeEnd'] = int(transaction['storey_range'].split(" ")[2])
