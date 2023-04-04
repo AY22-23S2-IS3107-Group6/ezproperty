@@ -15,22 +15,16 @@ def extract():
     db = DataLake()
     db.insert_to_schema("Test collection", data)
 
-    result = db.query("Test collection", [{
-        "$match": {
-            "col1": "row1"
-        }
-    }, {
-        "$project": {
-            "_id": 0,
-            "col2": 1
-        }
-    }])
+    result = db.query("amn__Carpark", [
+        {"$match": {"col1": "row1"}},
+        {"$project": {"_id": 0, "col2": 1}}
+    ])
 
     # Proof that query works
     for x in result:
         print(x)
-
-    transform(data)
+    
+    transform(result)
 
 
 def transform(result):
@@ -45,8 +39,11 @@ def load(result):
 
     # Load data into MySQL accordingly
     print("Test: Loading data")
+    print(result)
 
-    result = list(map(lambda x: tuple(x.values()), result))
+    # result = list(map(lambda x: tuple(x.values()), result))
+    result = result.map(lambda x: tuple(x.values()))
+    
 
     print(result)
 
