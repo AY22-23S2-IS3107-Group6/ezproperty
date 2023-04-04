@@ -162,6 +162,8 @@ node_modules/
 # desktop services store (Mac)
 .DS_Store
 
+# vscode
+.vscode/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
