@@ -97,8 +97,6 @@ def transform(result):
 
     # no x and y values yet
 
-    print(result[0][0])
-
     for x in result[0]:
         del x['_id']
 
@@ -110,11 +108,12 @@ def load(result):
     # Load data into MySQL accordingly
     print("Test: Loading data")
 
-    for table in result:
-        table = list(map(lambda x: tuple(x.values()), table))
+    result[0] = list(map(lambda x: tuple(x.values()), result[0]))
+    result[1] = list(map(lambda x: tuple(x.values()), result[1]))
+    result[2] = list(map(lambda x: tuple(x.values()), result[2]))
 
     # Insert data
-    db = DataWarehouse(True, False)
+    db = DataWarehouse(False, False)
     db.insert_to_schema("ref__District", result[0])
     db.insert_to_schema("ref__Town", result[1])
     db.insert_to_schema("ref__PostalCode", result[2])
