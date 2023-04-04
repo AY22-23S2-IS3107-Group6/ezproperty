@@ -1,31 +1,6 @@
 amn_create = {}
 amn_insert = {}
 
-amn_create['test__Test'] = ('''
-    CREATE TABLE `test__Test` (
-    _id             varchar(50)     NOT NULL,
-    col1            varchar(50)     NOT NULL,
-    col2            varchar(50)     NOT NULL,
-    PRIMARY KEY (_id)
-)
-''')
-
-amn_insert['test__Test'] = ('''
-    INSERT INTO `test__Test`
-    (_id, col1, col2)
-    VALUES
-    (%s, %s, %s)
-''')
-
-amn_create['test__Test2'] = ('''
-    CREATE TABLE `test__Test2` (
-    id           int     NOT NULL,
-    district             int      NULL,
-    x            int     NULL,
-    y            int      NULL,
-    PRIMARY KEY (id)
-)
-''')
 
 amn_insert['test__Test2'] = ('''
     INSERT INTO `test__Test2`
@@ -77,8 +52,8 @@ amn_insert['amn__PrimarySchool'] = ('''
     (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
-amn_create['amn__SuperMarket'] = ('''
-    CREATE TABLE `amn__SuperMarket` (
+amn_create['amn__Supermarket'] = ('''
+    CREATE TABLE `amn__Supermarket` (
     licenceNo       varchar(50)          NOT NULL,
     licenseeName    varchar(50)          NOT NULL,
     buildingName    varchar(50)          NOT NULL,
@@ -92,8 +67,8 @@ amn_create['amn__SuperMarket'] = ('''
 )
 ''')
 
-amn_insert['amn__SuperMarket'] = ('''
-    INSERT INTO `amn__SuperMarket`
+amn_insert['amn__Supermarket'] = ('''
+    INSERT INTO `amn__Supermarket`
     (licenceNo, licenseeName, buildingName, blockHouseNo, level, unitNo, streetName, postalCode, district)
     VALUES
     (%s, %s, %s, %s, %s, %s, %s, %s, %s)

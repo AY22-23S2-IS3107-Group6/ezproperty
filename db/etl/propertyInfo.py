@@ -143,7 +143,7 @@ def load(result):
     #print(result[0])
 
     # Insert data
-    db = DataWarehouse(True, False)
+    db = DataWarehouse()
     db.insert_to_schema("ref__PropertyInformation", result)
 
 extract()

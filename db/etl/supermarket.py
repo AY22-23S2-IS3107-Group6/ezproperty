@@ -20,8 +20,8 @@ def extract():
     result = resp.json()['result']['records']
 
     db = DataLake()
-    db.insert_to_schema("amn__SuperMarket", result)
-    result = db.query_find("amn__SuperMarket", {})
+    db.insert_to_schema("amn__Supermarket", result)
+    result = db.query_find("amn__Supermarket", {})
 
     # Feed data into transformation
     transform(result)
@@ -62,11 +62,11 @@ def load(result):
 
     # Insert data
     db = DataWarehouse()
-    db.insert_to_schema("amn__SuperMarket", result)
+    db.insert_to_schema("amn__Supermarket", result)
 
     # Query data using SQL
     result = db.query('''
-        SELECT * FROM amn__SuperMarket
+        SELECT * FROM amn__Supermarket
     ''')
     print(result[0])
 

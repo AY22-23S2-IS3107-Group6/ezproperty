@@ -38,7 +38,7 @@ def getPrimarySchools():
 @app.route('/supermarket')
 def getSupermarkets():
     warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__SuperMarket"))
+    return jsonify(warehouse.query("SELECT * FROM amn__Supermarket"))
 
 @app.route('/hawkercentre')
 def getHawkerCentres():
