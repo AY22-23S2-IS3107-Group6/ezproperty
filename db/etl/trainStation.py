@@ -89,10 +89,9 @@ def load(result):
     print(result[0])
 
     result = list(map(lambda x: tuple(x.values()), result))
-    # result = result.map(lambda x: tuple(x.values()))
     
     # Insert data
-    db = DataWarehouse(True,True)
+    db = DataWarehouse()
     db.insert_to_schema("amn__TrainStation", result)
 
     # Query data using SQL
