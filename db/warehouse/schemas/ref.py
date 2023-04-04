@@ -132,18 +132,50 @@ ref_create['ref__District'] = ('''
     CREATE TABLE `ref__District` (
     id               int             AUTO_INCREMENT,
     district         int             NOT NULL,
-    towns            varchar(60)     NOT NULL,
-    postalCodeStart  int             NOT NULL,
-    postalCodeEnd    int             NOT NULL,
     PRIMARY KEY (id)
 )
 ''')
 
 ref_insert['ref__District'] = ('''
     INSERT INTO `ref__District`
-    (district, towns, postalCodeStart, postalCodeEnd)
+    (district)
     VALUES
-    (%s, %s, %s, %s)
+    (%s)
+''')
+
+ref_create['ref__Town'] = ('''
+    CREATE TABLE `ref__Town` (
+    id               int             AUTO_INCREMENT,
+    town             varchar(20)     NOT NULL,
+    district         int             NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
+)
+''')
+
+ref_insert['ref__Town'] = ('''
+    INSERT INTO `ref__Town`
+    (town, district)
+    VALUES
+    (%s, (SELECT id from ref__District WHERE district=%s))
+''')
+
+ref_create['ref__PostalCode'] = ('''
+    CREATE TABLE `ref__PostalCode` (
+    id               int             AUTO_INCREMENT,
+    district         int             NOT NULL,
+    postalCodeStart  int             NOT NULL,
+    postalCodeEnd    int             NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
+)
+''')
+
+ref_insert['ref__PostalCode'] = ('''
+    INSERT INTO `ref__PostalCode`
+    (district, postalCodeStart, postalCodeEnd)
+    VALUES
+    ((SELECT id from ref__District WHERE district=%s), %s, %s)
 ''')
 
 # ref_create['ref__District'] = ('''

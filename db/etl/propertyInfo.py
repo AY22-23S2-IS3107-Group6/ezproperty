@@ -35,7 +35,6 @@ def transform(result):
         filteredResult.append(property)
 
     # need to map town to district
-    # replacing enum for now
 
     tag_dict = {"Y": True, "N": False}
     town_dict = {
