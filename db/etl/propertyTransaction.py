@@ -4,6 +4,7 @@ import datetime
 import requests
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
+from ..utils import chunks
 
 
 # Feed data into lake / mongoDB
@@ -249,10 +250,11 @@ def load(result):
     # For future use: https://stackoverflow.com/questions/93128/mysql-error-1153-got-a-packet-bigger-than-max-allowed-packet-bytes
 
     # Insert data
-    db = DataWarehouse(True, False)
-    db.insert_to_schema("main__PropertyTransaction", result)
+    db = DataWarehouse()
+    chunk_nos = 10
+    chunk_generator = chunks(result, chunk_nos)
+    for i in range(chunk_nos):
+        db.insert_to_schema("main__PropertyTransaction", next(chunk_generator))
 
 
 extract()
-
-

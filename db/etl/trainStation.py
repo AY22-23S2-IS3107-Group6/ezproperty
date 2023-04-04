@@ -49,7 +49,7 @@ def extract():
     print(df.head())
 
     db = DataLake()
-    # db.insert_to_schema("amn__TrainStation", df.to_dict('records'))
+    db.insert_to_schema("amn__TrainStation", df.to_dict('records'))
 
     testResult = db.query_find("amn__TrainStation", 
         { "stationNo": "EW5" }

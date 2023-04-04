@@ -103,7 +103,7 @@ def load(rentalProject, rentalMedian):
     rentalMedian = list(map(lambda x: tuple(x.values()), rentalMedian))
 
     # Insert data
-    db = DataWarehouse(True, False)
+    db = DataWarehouse()
     db.insert_to_schema("main__RentalProject", rentalProject)
     db.insert_to_schema("main__RentalMedian", rentalMedian)
 

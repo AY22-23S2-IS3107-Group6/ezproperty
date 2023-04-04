@@ -54,6 +54,13 @@ Run this on WSL or bash
 > .\env\Scripts\activate # windows
 > pip install -r requirements.txt
 
+# You may have to run this if mysqlclient refuses to download during pip install
+> sudo apt-get install python-dev default-libmysqlclient-dev
+> sudo apt-get install python3-dev
+
+# Run ETL file
+> python3 -m db.etl.[etl file name]
+
 # Start Airflow
 > airflow webserver --port 8080 -D
 > airflow scheduler -D
@@ -70,17 +77,6 @@ Run this on WSL or bash
 > cd app
 > npm install
 > npm start
-```
-
-### Running ETL
-
-```bash
-# Download required packages
-> pip install -r requirements.txt
-
-# Run ETL file
-> python3 -m db.etl.[etl file name]
-
 ```
 
 ## Using the Data Lake and Data Warehouse
