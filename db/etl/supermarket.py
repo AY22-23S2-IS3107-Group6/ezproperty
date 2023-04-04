@@ -1,7 +1,7 @@
 import pandas as pd
-import mysql.connector
 import requests
 from ..lake import DataLake
+from ..warehouse import DataWarehouse
 
 
 def extract():
@@ -17,32 +17,58 @@ def extract():
         'https://data.gov.sg/api/action/datastore_search?resource_id=3561a136-4ee4-4029-a5cd-ddf591cce643&limit=258'
     )
 
-    # print(resp)
-    # print(resp.json())
-    respSuperMarket = resp.json()['result']['records']
-    print(respSuperMarket)
+    result = resp.json()['result']['records']
+
+    db = DataLake()
+    db.insert_to_schema("amn__SuperMarket", result)
+    result = db.query_find("amn__SuperMarket", {})
 
     # Feed data into transformation
-    transform(respSuperMarket)
+    transform(result)
 
 
-def transform(respSuperMarket):
+def transform(result):
+    result = list(result)
 
-    # no transformation required
-    load(respSuperMarket)
+    # need to transform string values of noOfStalls, noOfCookedFoodStalls, noOfMktProduceStalls into int
+    for record in result:
+        del record['_id']
+        record['licenceNo'] = record['licence_num']
+        del record['licence_num']
+        record['licenseeName'] = record['licensee_name']
+        del record['licensee_name']
+        record['buildingName'] = record['building_name']
+        del record['building_name']
+        record['blockHouseNo'] = record['block_house_num']
+        del record['block_house_num']
+        record['level'] = record['level_num']
+        del record['level_num']
+        record['unitNo'] = record['unit_num']
+        del record['unit_num']
+        record['streetName'] = record['street_name']
+        del record['street_name']
+        record['postalCode'] = int(record['postal_code'])
+        del record['postal_code']
+        record['district'] = None
+
+    load(result)
 
 
-def load(respSuperMarket):
+def load(result):
 
-    # load into mongodb
-    db = DataLake()
-    db.insert_to_schema("amn__SuperMarket", respSuperMarket)
+    print("Hawker Centre: Loading data")
+    
+    result = list(map(lambda x: tuple(x.values()), result))
 
-    testResult = db.query_find("amn__SuperMarket", {'_id': 3})
+    # Insert data
+    db = DataWarehouse()
+    db.insert_to_schema("amn__SuperMarket", result)
 
-    # Proof that query works
-    for x in testResult:
-        print(x)
+    # Query data using SQL
+    result = db.query('''
+        SELECT * FROM amn__SuperMarket
+    ''')
+    print(result[0])
 
 
 extract()

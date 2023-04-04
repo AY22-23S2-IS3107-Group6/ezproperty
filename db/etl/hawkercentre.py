@@ -1,5 +1,4 @@
 import pandas as pd
-import mysql.connector
 import requests
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
@@ -12,45 +11,62 @@ def extract():
     # resp = requests.get(
     #     'https://data.gov.sg/api/action/datastore_search?resource_id=8f6bba57-19fc-4f36-8dcf-c0bda382364d'
     # )
-
     resp = requests.get(
         'https://data.gov.sg/api/action/datastore_search?resource_id=8f6bba57-19fc-4f36-8dcf-c0bda382364d&limit=107'
     )
 
-    # print(resp)
-    # print(resp.json())
-    respHawkerCentre = resp.json()['result']['records']
-    # print(respHawkerCentre)
+    result = resp.json()['result']['records']
+
+    db = DataLake()
+    db.insert_to_schema("amn__HawkerCentre", result)
+    result = db.query_find("amn__HawkerCentre", {})
 
     # Feed data into transformation
-    transform(respHawkerCentre)
+    transform(result)
 
 
-def transform(respHawkerCentre):
+def transform(result):
 
-    # need to transform string values of no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls into int
-    for record in respHawkerCentre:
-        record['no_of_stalls'] = int(record['no_of_stalls'])
-        record['no_of_cooked_food_stalls'] = int(
-            record['no_of_cooked_food_stalls'])
-        record['no_of_mkt_produce_stalls'] = int(
-            record['no_of_mkt_produce_stalls'])
+    result = list(result)
 
-    load(respHawkerCentre)
+    # need to transform string values of noOfStalls, noOfCookedFoodStalls, noOfMktProduceStalls into int
+    for record in result:
+        del record['_id']
+        record['name'] = record['name_of_centre']
+        del record['name_of_centre']
+        record['location'] = record['location_of_centre']
+        del record['location_of_centre']
+        record['type'] = record['type_of_centre']
+        del record['type_of_centre']
+        owner = record['owner']
+        del record['owner']
+        record['owner'] = owner
+        record['noOfStalls'] = int(record['no_of_stalls'])
+        del record['no_of_stalls']
+        record['noOfCookedFoodStalls'] = int(record['no_of_cooked_food_stalls'])
+        del record['no_of_cooked_food_stalls']
+        record['noOfMktProduceStalls'] = int(record['no_of_mkt_produce_stalls'])
+        del record['no_of_mkt_produce_stalls']
+        record['district'] = None
+
+    load(result)
 
 
-def load(respHawkerCentre):
+def load(result):
 
-    # load into mongodb
-    db = DataLake()
-    db.insert_to_schema("amn__HawkerCentre", respHawkerCentre)
+    print("Hawker Centre: Loading data")
+    
+    result = list(map(lambda x: tuple(x.values()), result))
 
-    testResult = db.query_find("amn__HawkerCentre",
-                               {"no_of_mkt_produce_stalls": 0})
+    # Insert data
+    db = DataWarehouse()
+    db.insert_to_schema("amn__HawkerCentre", result)
 
-    # Proof that query works
-    for x in testResult:
-        print(x)
+    # Query data using SQL
+    result = db.query('''
+        SELECT * FROM amn__HawkerCentre
+    ''')
+    print(result[0])
 
 
 extract()

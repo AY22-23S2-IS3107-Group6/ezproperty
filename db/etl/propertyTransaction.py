@@ -91,7 +91,7 @@ def transform(resultPrivate, resultResale):
 
 
     for transaction in tempResale:
-        if ('street_name' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
+        if ('streetName' in transaction) and ('storey_range' in transaction) and ('flat_type' in transaction) and ('floor_area_sqm' in transaction) and ('resale_price' in transaction) and ('month' in transaction) and ('remaining_lease' in transaction):
             filteredResale.append(transaction)
 
 
@@ -99,7 +99,7 @@ def transform(resultPrivate, resultResale):
     for transaction in filteredResale:
 
         transaction['district'] = 1 # need map town to district
-        transaction['street'] = transaction['street_name']
+        transaction['street'] = transaction['streetName']
         transaction['floorRangeStart'] = int(transaction['storey_range'].split(" ")[0])
         transaction['floorRangeEnd'] = int(transaction['storey_range'].split(" ")[2])
         transaction['propertyType'] = transaction['flat_type'] + "HDB"
@@ -122,7 +122,7 @@ def transform(resultPrivate, resultResale):
         del transaction['block']
         del transaction['_id']
         del transaction['town']
-        del transaction['street_name']
+        del transaction['streetName']
         del transaction['flat_type']
         del transaction['flat_model']
         del transaction['floor_area_sqm']
