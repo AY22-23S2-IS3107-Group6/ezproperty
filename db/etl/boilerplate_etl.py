@@ -3,13 +3,14 @@ import pandas as pd
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
 
+
 def extract():
 
     # Feed data into lake / mongoDB
     print("Test: Feeding data into lake")
 
     # Test data
-    data = [{ "_id": "1", "col1": "row1", "col2": "row2"}]
+    data = [{"_id": "2", "col1": "row1", "col2": "row2"}]
 
     db = DataLake()
     db.insert_to_schema("Test collection", data)

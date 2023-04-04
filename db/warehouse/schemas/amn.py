@@ -17,6 +17,23 @@ amn_insert['test__Test'] = ('''
     (%s, %s, %s)
 ''')
 
+amn_create['test__Test2'] = ('''
+    CREATE TABLE `test__Test2` (
+    id           int     NOT NULL,
+    district             int      NULL,
+    x            int     NULL,
+    y            int      NULL,
+    PRIMARY KEY (id)
+)
+''')
+
+amn_insert['test__Test2'] = ('''
+    INSERT INTO `test__Test2`
+    (id, district, x, y)
+    VALUES
+    (%s, %s, %s, %s)
+''')
+
 amn_create['amn__TrainStation'] = ('''
     CREATE TABLE `amn__TrainStation` (
     _id             varchar(24)     NOT NULL,
@@ -62,46 +79,45 @@ amn_insert['amn__PrimarySchool'] = ('''
 
 amn_create['amn__SuperMarket'] = ('''
     CREATE TABLE `amn__SuperMarket` (
-    licence_num     varchar(50)          NOT NULL,
-    licensee_name   varchar(50)          NOT NULL,
-    building_name   varchar(50)          NOT NULL,
-    block_house_num varchar(50)          NOT NULL,
-    level_num       varchar(50)          NOT NULL,
-    unit_num        varchar(50)          NOT NULL,
-    street_name     varchar(50)          NOT NULL,           
-    postal_code     int                  NOT NULL,
+    licenceNo       varchar(50)          NOT NULL,
+    licenseeName    varchar(50)          NOT NULL,
+    buildingName    varchar(50)          NOT NULL,
+    blockHouseNo    varchar(50)          NOT NULL,
+    level           varchar(50)          NOT NULL,
+    unitNo          varchar(50)          NOT NULL,
+    streetName      varchar(50)          NOT NULL,           
+    postalCode      int                  NOT NULL,
     district        int                  NULL,
-    PRIMARY KEY (licence_num)
+    PRIMARY KEY (licenceNo)
 )
 ''')
 
 amn_insert['amn__SuperMarket'] = ('''
     INSERT INTO `amn__SuperMarket`
-    (licence_num, licensee_name, building_name, block_house_num, level_num, unit_num, street_name, postal_code, district)
+    (licenceNo, licenseeName, buildingName, blockHouseNo, level, unitNo, streetName, postalCode, district)
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %d, %d)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
     
 amn_create['amn__HawkerCentre'] = ('''
     CREATE TABLE `amn__HawkerCentre` (
-    name_of_centre  varchar(50)          NOT NULL,
-    location_of_centre varchar(50)       NOT NULL,
-    type_of_centre  varchar(50)          NOT NULL,
-    block           varchar(50)          NOT NULL,
-    owner           varchar(50)          NOT NULL,
-    no_of_stalls    int                  NOT NULL,
-    no_of_cooked_food_stalls int         NOT NULL,
-    no_of_mkt_produce_stalls int         NOT NULL,
-    district        int                  NULL,
-    PRIMARY KEY (name_of_centre)
+    name                    varchar(50)  NOT NULL,
+    location                varchar(100) NOT NULL,
+    type                    varchar(50)  NOT NULL,
+    owner                   varchar(50)  NOT NULL,
+    noOfStalls              int          NOT NULL,
+    noOfCookedFoodStalls    int          NOT NULL,
+    noOfMktProduceStalls    int          NOT NULL,
+    district                int          NULL,
+    PRIMARY KEY (name)
 )
 ''')
 
 amn_insert['amn__HawkerCentre'] = ('''
     INSERT INTO `amn__HawkerCentre`
-    (name_of_centre, location_of_centre, type_of_centre, block, owner, no_of_stalls, no_of_cooked_food_stalls, no_of_mkt_produce_stalls, district)
+    (name, location, type, owner, noOfStalls, noOfCookedFoodStalls, noOfMktProduceStalls, district)
     VALUES
-    (%s, %s, %s, %s, %s, %d, %d, %d, %d)
+    (%s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 
