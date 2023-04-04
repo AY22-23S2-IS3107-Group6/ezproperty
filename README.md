@@ -19,15 +19,21 @@ The project is structured by business functions.
 │   │       ├── __init__.py
 │   │       ├── main.py         # Schemas for main database
 │   │       ├── ref.py          # Schemas for reference database
-│   │       └── amn.py          # Schemas for amenities database
-│   └── lake
-│       ├── __init__.py
-│       └── mongo_connector.py   # Connects to localhost:27017
+│   │       ├── amn.py          # Schemas for amenities database
+│   │       └── test.py         # Schemas for test database
+│   ├── lake
+│   │   ├── __init__.py
+│   │   └── mongo_connector.py  # Connects to localhost:27017
+│   ├── etl
+│   │   ├── carparkPublic.py
+│   │   ├── ...
+│   │   └── trainStation.py     # Connects to localhost:27017
+│   ├── ml
+│   │   └── ...
+│   ├── app.py                  # Flask app
+│   └── utils.py                # Utility functions
 ├── airflow
-│   ├── index.py
-│   ├── data_gov_api.py
-│   ├── ura_api.py
-│   └── external_api.py
+│   └── tbd.py
 ├── app
 ├── notebooks
 ├── dataviz
@@ -59,7 +65,8 @@ Run this on WSL or bash
 > sudo apt-get install python3-dev
 
 # Run ETL file
-> python3 -m db.etl.[etl file name]
+> python -m db.etl.[etl file name]
+> python -m db.etl.primarySchool.py # has to be run on your native os terminal
 
 # Start Airflow
 > airflow webserver --port 8080 -D
