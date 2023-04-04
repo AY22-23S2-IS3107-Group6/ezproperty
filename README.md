@@ -47,35 +47,36 @@ Run this on WSL or bash
 
 ```bash
 # Create environment and download packages
-> sed -i 's/\r$//' ./build.sh
-> ./build.sh
+> virtualenv env
 
 # Enter environment
-> source env/bin/activate
+> source env/bin/activate # macOS/linux
+> .\env\Scripts\activate # windows
+> pip install -r requirements.txt
+
+# You may have to run this if mysqlclient refuses to download during pip install
+> sudo apt-get install python-dev default-libmysqlclient-dev
+> sudo apt-get install python3-dev
+
+# Run ETL file
+> python3 -m db.etl.[etl file name]
 
 # Start Airflow
 > airflow webserver --port 8080 -D
 > airflow scheduler -D
 
-# Initialises database
-> python data_loader.py
-
 # Run data injection
 > airflow dags init_load 2023-XX-YY
 
+# Run the backend
+> export FLASK_APP=db/app
+> export FLASK_ENV=development
+> flask run
+
 # Run the frontend
-> cd app && npm start
-```
-
-### Running ETL
-
-```bash
-# Download required packages
-> pip install -r requirements.txt
-
-# Run ETL file
-> python3 -m db.etl.[etl file name]
-
+> cd app
+> npm install
+> npm start
 ```
 
 ## Using the Data Lake and Data Warehouse
