@@ -6,7 +6,6 @@ from .schemas import create_queries, insert_queries
 
 
 class DataWarehouse:
-
     def __init__(self, create_tables: bool = False, drop_tables: bool = False):
         self.db = connect_to_mysql()
         self.cursor = self.db.cursor(buffered=True)
@@ -22,20 +21,20 @@ class DataWarehouse:
 
         if (database, ) not in databases:
             self.cursor.execute(f"CREATE DATABASE {database}")
-            print(f"Database {database} created successfully.")
+            self.log(f"Database {database} created successfully.")
 
         self.cursor.execute(f"USE {database}")
-        print(f"Using database {database}.")
+        self.log(f"Using database {database}.")
 
     def load_schemas(self):
         self.cursor.execute("SHOW TABLES")
         tables = self.cursor.fetchall()
         for schema_name in self.schemas:
             if (schema_name.lower(), ) not in tables:
-                print(f"Table {schema_name} does not exist.")
+                self.log(f"Table {schema_name} does not exist.")
                 self.create_schema(schema_name)
             else:
-                print(f"Table {schema_name} already exists.")
+                self.log(f"Table {schema_name} already exists.")
 
     def drop_schemas(self):
         for schema_name in self.schemas:
@@ -45,41 +44,44 @@ class DataWarehouse:
         try:
             self.cursor.execute(self.schemas[schema_name])
             self.db.commit()
-            print(f"Table {schema_name} created successfully.")
+            self.log(f"Table {schema_name} created successfully.")
         except mysql.connector.Error as err:
-            print(f"Failed creating table: {err}")
+            self.log(f"Failed creating table: {err}")
 
     def drop_schema(self, schema_name):
         try:
             self.cursor.execute(f"DROP TABLE IF EXISTS {schema_name}")
             self.db.commit()
-            print(f"Table {schema_name} deleted successfully.")
+            self.log(f"Table {schema_name} deleted successfully.")
         except mysql.connector.Error as err:
-            print(f"Failed creating table: {err}")
+            self.log(f"Failed creating table: {err}")
 
     def insert_to_schema(self, schema_name, objects: List[tuple]):
         try:
             self.cursor.executemany(self.insert_queries[schema_name], objects)
             self.db.commit()
-            print(
+            self.log(
                 f"{self.cursor.rowcount} values were inserted to {schema_name} successfully."
             )
         except mysql.connector.Error as err:
-            print(f"Failed to insert: {err}")
+            self.log(f"Failed to insert: {err}")
 
     def query(self, query):
         try:
             self.cursor.execute(query)
             columns = self.cursor.description 
-            print(f"Query executed successfully.")
+            self.log(f"Query executed successfully.")
             return [{columns[index][0]:column for index, column in enumerate(value)} for value in self.cursor.fetchall()]
         except mysql.connector.Error as err:
-            print(f"Failed creating table: {err}")
+            self.log(f"Failed creating table: {err}")
 
     def update(self, update_query):
         try:
             self.cursor.execute(update_query)
-            print(f"Update executed successfully.")
+            self.log(f"Update executed successfully.")
             return self.cursor.fetchall()
         except mysql.connector.Error as err:
-            print(f"Failed updating: {err}")
+            self.log(f"Failed updating: {err}")
+
+    def log(self, message: str):
+        print(f"Database | {message}")

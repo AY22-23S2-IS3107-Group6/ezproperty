@@ -1,149 +1,116 @@
-#import pymongo
-#import pandas as pd
-from ..lake import DataLake
-from ..warehouse import DataWarehouse
 import requests
-import json
-
-def extract():
-
-    # Feed data into lake / mongoDB
-    print("Test: Feeding data into lake")
-
-    # Test data
-    url = "https://data.gov.sg/dataset/9dd41b9c-b7d7-405b-88f8-61b9ca9ba224/resource/482bfa14-2977-4035-9c61-c85f871daf4e/data"
-    response = requests.request("GET", url)
-    json = response.json()
-    data = json['records']
-
-    db = DataLake()
-    db.insert_to_schema("ref__PropertyInformation", data)
-    
-    transform(data)
+from .pipeline import Pipeline
 
 
-def transform(result):
+class PropertyInformationPipeline(Pipeline):
+    schema_name = "ref__PropertyInformation"
 
-    # Transform data accordingly
-    print("Test: Transforming data")
+    def extract(self) -> list:
+        data = requests.request(
+            "GET",
+            "https://data.gov.sg/dataset/9dd41b9c-b7d7-405b-88f8-61b9ca9ba224/resource/482bfa14-2977-4035-9c61-c85f871daf4e/data"
+        ).json()['records']
+        
+        self.dl_loader(data, self.schema_name)
+        return self.dl_getter(self.schema_name)
 
-    tempResult = list(result)
-    filteredResult = []
+    def transform(self, result: list) -> list:
+        # Map town to district
+        tag_dict = {"Y": True, "N": False}
+        town_dict = {
+            "AMK": "ANG MO KIO",
+            "BB": "BUKIT BATOK",
+            "BD": "BEDOK",
+            "BH": "BISHAN",
+            "BM": "BUKIT MERAH",
+            "BP": "BUKIT PANJANG",
+            "BT": "BUKIT TIMAH",
+            "CCK": "CHOA CHU KANG",
+            "CL": "CLEMENTI",
+            "CT": "CENTRAL AREA",
+            "GL": "GEYLANG",
+            "HG": "HOUGANG",
+            "JE": "JURONG EAST",
+            "JW": "JURONG WEST",
+            "KWN": "KALLANG/WHAMPOA",
+            "MP": "MARINE PARADE",
+            "PG": "PUNGGOL",
+            "PRC": "PASIR RIS",
+            "QT": "QUEENSTOWN",
+            "SB": "SEMBAWANG",
+            "SGN": "SERANGOON",
+            "SK": "SENGKANG",
+            "TAP": "TAMPINES",
+            "TG": "TENGAH",
+            "TP": "TOA PAYOH",
+            "WL": "WOODLANDS",
+            "YS": "YISHUN"
+        }
 
-    # in case we need to filter in the future
-    for property in tempResult:
-        filteredResult.append(property)
+        for prop in result:
 
-    # need to map town to district
+            prop["id"] = prop["_id"]
+            prop["block"] = prop["blk_no"]
+            #prop["street"] = prop["street"]
 
-    tag_dict = {"Y": True, "N": False}
-    town_dict = {
-        "AMK": "ANG MO KIO",
-        "BB": "BUKIT BATOK", 
-        "BD": "BEDOK",
-        "BH": "BISHAN", 
-        "BM": "BUKIT MERAH", 
-        "BP": "BUKIT PANJANG", 
-        "BT": "BUKIT TIMAH", 
-        "CCK": "CHOA CHU KANG",
-        "CL": "CLEMENTI",
-        "CT": "CENTRAL AREA",
-        "GL": "GEYLANG", 
-        "HG": "HOUGANG",
-        "JE": "JURONG EAST", 
-        "JW": "JURONG WEST", 
-        "KWN": "KALLANG/WHAMPOA",
-        "MP": "MARINE PARADE",
-        "PG": "PUNGGOL", 
-        "PRC": "PASIR RIS", 
-        "QT": "QUEENSTOWN", 
-        "SB": "SEMBAWANG", 
-        "SGN": "SERANGOON",
-        "SK": "SENGKANG", 
-        "TAP": "TAMPINES", 
-        "TG": "TENGAH",
-        "TP": "TOA PAYOH", 
-        "WL": "WOODLANDS", 
-        "YS": "YISHUN"
-    }
+            # only year given, so int is sufficient
+            prop["yearCompleted"] = int(prop["year_completed"])
 
-    for x in filteredResult:
+            # integers
+            prop["totalDwellingUnits"] = int(prop["total_dwelling_units"])
+            prop["maxFloorLevel"] = int(prop["max_floor_lvl"])
+            prop["oneRoomSold"] = int(prop["1room_sold"])
+            prop["twoRoomSold"] = int(prop["2room_sold"])
+            prop["threeRoomSold"] = int(prop["3room_sold"])
+            prop["fourRoomSold"] = int(prop["4room_sold"])
+            prop["fiveRoomSold"] = int(prop["5room_sold"])
+            prop["execSold"] = int(prop["exec_sold"])
+            prop["multigenSold"] = int(prop["multigen_sold"])
+            prop["studioAptSold"] = int(prop["studio_apartment_sold"])
+            prop["oneRoomRental"] = int(prop["1room_rental"])
+            prop["twoRoomRental"] = int(prop["2room_rental"])
+            prop["threeRoomRental"] = int(prop["3room_rental"])
+            prop["otherRoomRental"] = int(prop["other_room_rental"])
 
-        x["id"] = x["_id"]
-        x["block"] = x["blk_no"]
-        #x["street"] = x["street"]
+            # changing tags to booleans
+            prop["residentialTag"] = tag_dict[prop["residential"]]
+            prop["commercialTag"] = tag_dict[prop["commercial"]]
+            prop["mscpTag"] = tag_dict[prop["multistorey_carpark"]]
+            prop["marketHawkerTag"] = tag_dict[prop["market_hawker"]]
+            prop["precinctPavilionTag"] = tag_dict[prop["precinct_pavilion"]]
+            prop["miscTag"] = tag_dict[prop["miscellaneous"]]
 
-        # only year given, so int is sufficient
-        x["yearCompleted"] = int(x["year_completed"])
+            # get town name from acronym
+            prop["bldgContractTown"] = town_dict[prop["bldg_contract_town"]]
 
-        # integers
-        x["totalDwellingUnits"] = int(x["total_dwelling_units"])
-        x["maxFloorLevel"] = int(x["max_floor_lvl"])
-        x["oneRoomSold"] = int(x["1room_sold"])
-        x["twoRoomSold"] = int(x["2room_sold"])
-        x["threeRoomSold"] = int(x["3room_sold"])
-        x["fourRoomSold"] = int(x["4room_sold"])
-        x["fiveRoomSold"] = int(x["5room_sold"])
-        x["execSold"] = int(x["exec_sold"])
-        x["multigenSold"] = int(x["multigen_sold"])
-        x["studioAptSold"] = int(x["studio_apartment_sold"])
-        x["oneRoomRental"] = int(x["1room_rental"])
-        x["twoRoomRental"] = int(x["2room_rental"])
-        x["threeRoomRental"] = int(x["3room_rental"])
-        x["otherRoomRental"] = int(x["other_room_rental"])
+            # Project
+            del prop['year_completed']
+            del prop['multigen_sold']
+            del prop['bldg_contract_town']
+            del prop['multistorey_carpark']
+            del prop['total_dwelling_units']
+            del prop['blk_no']
+            del prop['exec_sold']
+            del prop['max_floor_lvl']
+            del prop['residential']
+            del prop['1room_sold']
+            del prop['precinct_pavilion']
+            del prop['other_room_rental']
+            del prop['5room_sold']
+            del prop['3room_sold']
+            del prop['commercial']
+            del prop['4room_sold']
+            del prop['miscellaneous']
+            del prop['studio_apartment_sold']
+            del prop['2room_rental']
+            del prop['2room_sold']
+            del prop['1room_rental']
+            del prop['3room_rental']
+            del prop['market_hawker']
+            del prop['_id']
 
-        # changing tags to booleans
-        x["residentialTag"] = tag_dict[x["residential"]]
-        x["commercialTag"] = tag_dict[x["commercial"]]
-        x["mscpTag"] = tag_dict[x["multistorey_carpark"]]
-        x["marketHawkerTag"] = tag_dict[x["market_hawker"]]
-        x["precinctPavilionTag"] = tag_dict[x["precinct_pavilion"]]
-        x["miscTag"] = tag_dict[x["miscellaneous"]]
-
-        # get town name from acronym
-        x["bldgContractTown"] = town_dict[x["bldg_contract_town"]]
-
-        del x['year_completed']
-        del x['multigen_sold']
-        del x['bldg_contract_town']
-        del x['multistorey_carpark']
-        del x['total_dwelling_units']
-        del x['blk_no']
-        del x['exec_sold']
-        del x['max_floor_lvl']
-        del x['residential']
-        del x['1room_sold']
-        del x['precinct_pavilion']
-        del x['other_room_rental']
-        del x['5room_sold']
-        del x['3room_sold']
-        del x['commercial']
-        del x['4room_sold']
-        del x['miscellaneous']
-        del x['studio_apartment_sold']
-        del x['2room_rental']
-        del x['2room_sold']
-        del x['1room_rental']
-        del x['3room_rental']
-        del x['market_hawker']
-        del x['_id']
-
-    #print(result[0])
-
-    load(result)
+        return result
 
 
-def load(result):
-
-    # Load data into MySQL accordingly
-    print("Test: Loading data")
-
-    result = list(map(lambda x: tuple(x.values()), result))
-
-    #print(result[0])
-
-    # Insert data
-    db = DataWarehouse()
-    db.insert_to_schema("ref__PropertyInformation", result)
-
-extract()
+if __name__ == '__main__':
+    PropertyInformationPipeline()

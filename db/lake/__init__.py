@@ -3,8 +3,9 @@ from typing import List
 from .mongodb_connector import connect_to_mongodb
 
 class DataLake:
-    def __init__(self):
+    def __init__(self, drop_tables: bool = False):
         self.db = connect_to_mongodb()
+        if drop_tables: self.db.drop_database("is3107g6")
         self.start_db("is3107g6")
 
     def start_db(self, database: str):
