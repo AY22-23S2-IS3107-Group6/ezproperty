@@ -3,6 +3,9 @@ from .pipeline import Pipeline
 
 
 class HawkerCentrePipeline(Pipeline):
+    description = "Loads Hawker Centres from Data.gov.sg"
+    schedule_interval = "@weekly"
+    tags = ['amn']
     schema_name = "amn__HawkerCentre"
 
     def extract(self) -> list:
@@ -23,7 +26,9 @@ class HawkerCentrePipeline(Pipeline):
             record['name'] = record['name_of_centre']
             record['location'] = record['location_of_centre']
             record['type'] = record['type_of_centre']
-            record['owner'] = record['owner']
+            owner = record['owner']
+            del record['owner']
+            record['owner'] = owner
             record['noOfStalls'] = int(record['no_of_stalls'])
             record['noOfCookedFoodStalls'] = int(
                 record['no_of_cooked_food_stalls'])
@@ -36,7 +41,6 @@ class HawkerCentrePipeline(Pipeline):
             del record['location_of_centre']
             del record['type_of_centre']
             del record['_id']
-            del record['owner']
             del record['no_of_stalls']
             del record['no_of_cooked_food_stalls']
             del record['no_of_mkt_produce_stalls']

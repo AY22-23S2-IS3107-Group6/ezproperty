@@ -3,6 +3,9 @@ from .pipeline import Pipeline
 
 
 class DistrictInfoPipeline(Pipeline):
+    description = "Loads District Info natively"
+    schedule_interval = None
+    tags = ['ref']
     schema_names = ["ref__District", "ref__Town", "ref__PostalCode"]
 
     def extract(self) -> list:

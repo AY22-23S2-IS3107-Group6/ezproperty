@@ -4,6 +4,9 @@ from .pipeline import Pipeline
 
 
 class RentalPropertyMedianPipeline(Pipeline):
+    description = "Loads Rental Property from URA API"
+    schedule_interval = "@daily"
+    tags = ['main']
     schema_name = "main__RentalPropertyMedian"
 
     def extract(self) -> list:

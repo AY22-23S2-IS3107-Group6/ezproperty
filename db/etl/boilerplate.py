@@ -2,6 +2,9 @@ import pymongo
 from .pipeline import Pipeline
 
 class BoilerplatePipeline(Pipeline):
+    description = "Boilerplate"
+    schedule_interval = None
+    tags = ['test']
     schema_name = "test__Test"
 
     def extract(self) -> list:

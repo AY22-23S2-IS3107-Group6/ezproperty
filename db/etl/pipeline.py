@@ -1,12 +1,24 @@
 import pymongo
 import mysql.connector
+from datetime import datetime
+from typing import List
 from ..lake import DataLake
 from ..warehouse import DataWarehouse
 
+
 class Pipeline:
-    def __init__(self):
+    default_args = {'owner': 'airflow'}
+    description = "Default Pipeline"
+    schedule_interval = None
+    tags = []
+    start_date: datetime(2021, 1, 1)
+    catchup: False
+
+    def __init__(self, run_pipeline: bool):
+        self.id = self.__class__
         self.dl = DataLake()
         self.dw = DataWarehouse()
+        if not run_pipeline: return
         data = self.extract()
         transformed_data = self.transform(data)
         self.load(transformed_data)
@@ -26,7 +38,8 @@ class Pipeline:
     def dl_loader(self, result: list, schema_name: str) -> None:
         """ Loads data to data lake """
         try:
-            self.log(schema_name, f"Loading {len(result)} documents to data lake.")
+            self.log(schema_name,
+                     f"Loading {len(result)} documents to data lake.")
             self.dl.insert_to_schema(schema_name, result)
         except pymongo.errors.ConnectionFailure as err:
             self.log(schema_name, f"Connection to MongoDB failed: {err}.")
@@ -40,7 +53,8 @@ class Pipeline:
             result = self.dl.query_find(schema_name, {})
             result = list(result)
             if (len(result) > 0):
-                self.log(schema_name, f"Load success. Retrieved {len(result)} documents.")
+                self.log(schema_name,
+                         f"Load success. Retrieved {len(result)} documents.")
             return result
         except pymongo.errors.ConnectionFailure as err:
             self.log(schema_name, f"Connection to MongoDB failed: {err}.")
@@ -50,16 +64,22 @@ class Pipeline:
     def dw_loader(self, result: list, schema_name: str) -> None:
         """ Loads data to data warehouse """
         try:
-            self.log(schema_name, f"Loading {len(result)} documents to data lake.")
-            self.dw.insert_to_schema(schema_name, list(map(lambda x: tuple(x.values()), result)))
+            self.log(schema_name,
+                     f"Loading {len(result)} documents to data lake.")
+            self.dw.insert_to_schema(
+                schema_name, list(map(lambda x: tuple(x.values()), result)))
 
             self.log(schema_name, "Inserting to data warehouse.")
             output = self.dw.query(f"SELECT * FROM {schema_name}")
             if (len(output) > 0):
-                self.log(schema_name, "Load process to data warehouse success. Printing first result.")
+                self.log(
+                    schema_name,
+                    "Load process to data warehouse success. Printing first result."
+                )
                 print(output[0])
         except mysql.connector.Error as err:
-            self.log(schema_name, f"Connection to data warehouse failed: {err}")
+            self.log(schema_name,
+                     f"Connection to data warehouse failed: {err}")
         except:
             self.log(schema_name, "Load process to data warehouse failed.")
 

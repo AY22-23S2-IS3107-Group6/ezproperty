@@ -4,6 +4,9 @@ from .pipeline import Pipeline
 
 
 class CarparkPublicPipeline(Pipeline):
+    description = "Loads Public Carparks from URA API"
+    schedule_interval = "@weekly"
+    tags = ['amn']
     schema_name = "amn__CarparkPublic"
 
     def extract(self) -> list:

@@ -62,7 +62,7 @@ Run this on WSL or bash
 
 # You may have to run this if mysqlclient refuses to download during pip install
 > sudo apt-get install python-dev default-libmysqlclient-dev
-> sudo apt-get install python3-dev
+> sudo apt-get install python3-dev gcc
 
 # Run ETL file
 > python -m db.etl.[etl file name]

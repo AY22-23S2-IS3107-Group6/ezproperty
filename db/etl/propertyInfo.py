@@ -3,6 +3,9 @@ from .pipeline import Pipeline
 
 
 class PropertyInformationPipeline(Pipeline):
+    description = "Loads Property Information from Data.gov"
+    schedule_interval = "@monthly"
+    tags = ['ref']
     schema_name = "ref__PropertyInformation"
 
     def extract(self) -> list:
