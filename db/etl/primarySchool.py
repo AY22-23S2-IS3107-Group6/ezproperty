@@ -84,4 +84,7 @@ class PrimarySchoolPipeline(Pipeline):
 
 
 if __name__ == '__main__':
-    PrimarySchoolPipeline()
+    # PrimarySchoolPipeline() initial
+    PrimarySchoolPipeline(Pipeline(False))
+
+

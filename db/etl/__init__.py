@@ -6,7 +6,7 @@ from .boilerplate import BoilerplatePipeline
 from .carparkPublic import CarparkPublicPipeline
 from .carparkSeason import CarparkSeasonPipeline
 from .districtInfo import DistrictInfoPipeline
-from .hawkerCentre import HawkerCentrePipeline
+from .hawkercentre import HawkerCentrePipeline
 from .primarySchool import PrimarySchoolPipeline
 from .propertyInfo import PropertyInformationPipeline
 from .propertyTransaction import PropertyTransactionPipeline
