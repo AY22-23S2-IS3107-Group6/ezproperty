@@ -90,15 +90,16 @@ class DistrictInfoPipeline(Pipeline):
     def transform(self, result: list) -> list:
         # no x and y values yet
 
-        for x in result[0]:
-            # Project
-            del x['_id']
+        for schema in result:
+            for x in schema:
+                # Project
+                del x['_id']
 
         return result
 
     def load(self, result: list) -> None:
-        for schema in self.schema_names:
-            self.dw_loader(result, schema)
+        for idx, schema in enumerate(self.schema_names):
+            self.dw_loader(result[idx], schema)
 
 
 if __name__ == '__main__':
