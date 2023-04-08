@@ -14,7 +14,7 @@ class Pipeline:
     start_date: datetime(2021, 1, 1)
     catchup: False
 
-    def __init__(self, run_pipeline: bool):
+    def __init__(self, run_pipeline: bool = True):
         self.id = self.__class__
         self.dl = DataLake()
         self.dw = DataWarehouse()
