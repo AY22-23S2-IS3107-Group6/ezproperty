@@ -1,56 +1,28 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from db import DataWarehouse
+from db.warehouse.schemas import create_queries
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/propertytransaction')
-def getPropertyTransactions():
+@app.route('/<category>/<schema>', methods=['GET'])
+def getData(category: str, schema: str):
+    if f"{category}__{schema}" not in [schema_name.lower() for schema_name in create_queries]:
+        return "Bad request", 400
     warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM main__PropertyTransaction"))
+    return jsonify(warehouse.query(f"SELECT * FROM {category}__{schema}"))
 
-@app.route('/rentaltransaction')
-def getRentalTransactions():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM main__RentalTransaction"))
 
-@app.route('/propertyinformation')
-def getPropertyInformation():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM ref__PropertyInformation"))
-
-@app.route('/district')
-def getDistricts():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM ref__District"))
-
-@app.route('/trainstation')
-def getTrainStations():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__TrainStation"))
-
-@app.route('/primaryschool')
-def getPrimarySchools():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__PrimarySchool"))
-
-@app.route('/supermarket')
-def getSupermarkets():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__Supermarket"))
-
-@app.route('/hawkercentre')
-def getHawkerCentres():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__HawkerCentre"))
-
-@app.route('/carparkpublic')
-def getPublicCarparks():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__CarparkPublic"))
-
-@app.route('/carparkseasons')
-def getSeasonCarparks():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__CarparkSeason"))
+@app.route('/<category>/<schema>', methods=['POST'])
+def createData(category: str, schema: str):
+    if f"{category}__{schema}" not in [schema_name.lower() for schema_name in create_queries]:
+        return "Content-Type not supported!", 400
+    if request.headers.get('Content-Type') != 'application/json':
+        return "Bad request", 400
+    try:
+        warehouse = DataWarehouse()
+        warehouse.insert_to_schema(f"{category}__{schema}", request.json)
+    except:
+        return "Request failed", 500
+    
