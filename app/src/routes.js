@@ -4,11 +4,13 @@ import { Icon } from "@chakra-ui/react";
 import {
   MdAdd,
   MdHome,
+  MdBarChart,
 } from "react-icons/md";
 
 import MainDashboard from "views/admin/default";
 import View from "views/main/default";
 import PropertyForm from "views/main/form";
+import Charts from "views/main/charts";
 
 const routes = [
   {
@@ -17,6 +19,13 @@ const routes = [
     path: "/default",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
     component: View,
+  },
+  {
+    name: "Charts",
+    layout: "/admin",
+    path: "/charts",
+    icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
+    component: Charts,
   },
   {
     name: "Add Property Tranasction",
