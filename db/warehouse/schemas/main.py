@@ -14,7 +14,8 @@ main_create['main__PropertyTransaction'] = ('''
     transactionDate DATE                    ,
     tenure          int                     ,
     resale          boolean                 ,
-    PRIMARY KEY (_id)
+    PRIMARY KEY (_id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
@@ -22,7 +23,7 @@ main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
     (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale) 
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    ((SELECT id from ref__District WHERE district=%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 main_create['main__RentalProject'] = ('''
@@ -50,9 +51,10 @@ main_create['main__RentalMedian'] = ('''
     psf75            decimal(12,2)   NOT NULL,
     median           decimal(12,2)   NOT NULL,
     psf25            decimal(12,2)   NOT NULL,   
-    district         varchar(10)     NOT NULL,
+    district         int             NOT NULL,
     rentalProjectId  varchar(24)     NOT NULL,
-    PRIMARY KEY (_id)
+    PRIMARY KEY (_id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
@@ -60,7 +62,7 @@ main_insert['main__RentalMedian'] = ('''
     INSERT INTO `main__RentalMedian`
     (refPeriod, psf75, median, psf25, district, rentalProjectId) 
     VALUES
-    (%s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, (SELECT id from ref__District WHERE district=%s), %s)
 ''')
 
 # main_create['main__PropertyTransaction'] = ('''
