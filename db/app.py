@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from db import DataWarehouse
 
@@ -54,3 +54,9 @@ def getPublicCarparks():
 def getSeasonCarparks():
     warehouse = DataWarehouse()
     return jsonify(warehouse.query("SELECT * FROM amn__CarparkSeason"))
+
+@app.route('/addpropertytransaction', methods=['POST'])
+def addPropertyTransaction():
+    data = request.form.get('street')
+    print(data)
+    return data

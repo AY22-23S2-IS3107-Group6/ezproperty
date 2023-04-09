@@ -1,15 +1,22 @@
-import { Box, Button, Input, SimpleGrid } from "@chakra-ui/react";
-import { Field, Formik, useFormik } from "formik";
+import { Field, Formik, Form } from "formik";
+import * as Yup from "yup"
 import {
+  Box,
+  Button,
   FormControl,
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+  Input,
+  SimpleGrid
 } from "@chakra-ui/react"
 
-const Form = (props) => {
+import axios from "axios";
+
+const TransactionForm = (props) => {
   const initialValues = {
     street: "",
+    floor: 0,
     district: 1,
     propertyType: "",
     area: 0,
@@ -19,92 +26,59 @@ const Form = (props) => {
     resale: ""
   }
 
-  // const onSubmit = values => {
-  //   console.log("Form data", values)
-  // }
+  const onSubmit = values => {
 
-  function validateStreet(value) {
-    let error
-    if (!value) {
-      error = "Street is required"
-    }
-    return error
+    axios.post('http://localhost:5000/addpropertytransaction', {
+      street: values.street
+    })
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+      console.log(error);
+    });
+
+    // let options = {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     },
+    //     method: 'POST'
+    //   };
+
+    //   options.body = new FormData();
+    //   for (let key in values) {
+    //     // console.log(key, values[key])
+    //     options.body.append(key, values[key]);
+    //   }
+
+    //   fetch('http://localhost:5000/addpropertytransaction', options)
+    //     .then(response => console.log(response))
+    //     .catch(error => console.error(error))
   }
 
-  // difference btw 0 and empty field
-  function validateDistrict(value) {
-    let error
-    if (value < 1) {
-      error = "District must be larger than 0"
-    } else if (value > 28) {
-      error = "Singapore only has 28 districts"
-    } else if (value == null) {
-      error = "District is required"
-    }
-    return error
-  }
-
-  function validatePropertyType(value) {
-    let error
-    if (!value) {
-      error = "Property type is required"
-    }
-    return error
-  }
-
-  function validateArea(value) {
-    let error
-    if (value < 1) {
-      error = "Area must be larger than 0"
-    } else if (!value) {
-      error = "Area is required"
-    }
-    return error
-  }
-
-  function validatePrice(value) {
-    let error
-    if (value < 1) {
-      error = "Price must be higher than $0"
-    } else if (!value) {
-      error = "Price is required"
-    }
-    return error
-  }
-
-  function validateTransactionDate(value) {
-    let error
-    if (!value) {
-      error = "Transaction date is required"
-    }
-    return error
-  }
-
-  function validateTenure(value) {
-    let error
-    if (value < 1) {
-      error = "Property must have tenure left"
-    } else if (!value) {
-      error = "Tenure is required"
-    }
-    return error
-  }
-
-  function validateResale(value) {
-    let error
-    if (!value) {
-      error = "Required"
-    } else if (value.toLowerCase() !== "resale" && value.toLowerCase() !== "private") {
-      error = "Has to be either resale or private"
-    }
-    return error
-  }
-
-  // const formik = useFormik({
-  //   initialValues,
-  //   onSubmit,
-  //   validate
-  // })
+  const validationSchema = Yup.object({
+    street: Yup.string().required("Street is required!"),
+    floor: Yup.number()
+      .positive("Floor level must be higher than 0")
+      .required("Floor level is required!"),
+    district: Yup.number()
+      .min(1, "District must be larger than 0")
+      .max(28, "Singapore only has 28 districts")
+      .required("District is required!"),
+    propertyType: Yup.string().required("Property type is required!"),
+    area: Yup.number()
+      .positive("Area must be positive")
+      .required("Area is required!"),
+    price: Yup.number()
+      .positive("Price must be higher than $0.00")
+      .required("Price is required!"),
+    transactionDate: Yup.date()
+      .max(new Date(), "Property has to be sold"),
+    tenure: Yup.number()
+      .positive("Property must have tenure left")
+      .required("Tenure is required!"),
+    resale: Yup.string()
+      .lowercase().matches("resale" || "private", "Has to be either resale or private"),
+  })
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -114,16 +88,34 @@ const Form = (props) => {
         mb="20px">
         <Formik
           initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              actions.setSubmitting(false)
-            }, 1000)
-          }}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        // onSubmit={(values, actions) => {
+        // setTimeout(() => {
+        //   alert(JSON.stringify(values, null, 2))
+        //   actions.setSubmitting(false)
+        // }, 1000)
+
+        // let options = {
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data'
+        //   },
+        //   method: 'POST'
+        // };
+
+        // options.body = new FormData();
+        // for (let key in values) {
+        //   options.body.append(key, values[key]);
+        // }
+
+        // fetch('http://localhost:5000/addpropertytransaction', options)
+        //   .then(response => console.log(response))
+        //   .catch(error => console.error(error))
+        // }}
         >
           {(props) => (
-            <form>
-              <Field name="street" validate={validateStreet}>
+            <Form action='http://localhost:5000/addpropertytransaction' method="post">
+              <Field name="street">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.street && form.touched.street}>
                     <FormLabel htmlFor="street">Street</FormLabel>
@@ -138,7 +130,22 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="district" validate={validateDistrict}>
+              <Field name="floor">
+                {({ field, form }) => (
+                  <FormControl isInvalid={form.errors.floor && form.touched.floor}>
+                    <FormLabel htmlFor="floor">Floor Level</FormLabel>
+                    <Input
+                      {...field}
+                      id="floor"
+                      type="number"
+                      borderRadius="16px"
+                    />
+                    <FormErrorMessage>{form.errors.floor}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
+
+              <Field name="district">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.district && form.touched.district}>
                     <FormLabel htmlFor="district">District Number</FormLabel>
@@ -153,7 +160,7 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="propertyType" validate={validatePropertyType}>
+              <Field name="propertyType">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.propertyType && form.touched.propertyType}>
                     <FormLabel htmlFor="propertyType">Property Type</FormLabel>
@@ -168,7 +175,7 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="area" validate={validateArea}>
+              <Field name="area">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.area && form.touched.area}>
                     <FormLabel htmlFor="area">Area (in square metre)</FormLabel>
@@ -183,7 +190,7 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="price" validate={validatePrice}>
+              <Field name="price">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.price && form.touched.price}>
                     <FormLabel htmlFor="price">Price</FormLabel>
@@ -198,7 +205,7 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="transactionDate" validate={validateTransactionDate}>
+              <Field name="transactionDate">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.transactionDate && form.touched.transactionDate}>
                     <FormLabel htmlFor="transactionDate">Transaction Date</FormLabel>
@@ -213,7 +220,7 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="tenure" validate={validateTenure}>
+              <Field name="tenure">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.tenure && form.touched.tenure}>
                     <FormLabel htmlFor="tenure">Tenure</FormLabel>
@@ -228,7 +235,7 @@ const Form = (props) => {
                 )}
               </Field>
 
-              <Field name="resale" validate={validateResale}>
+              <Field name="resale">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.resale && form.touched.resale}>
                     <FormLabel htmlFor="resale">Resale</FormLabel>
@@ -243,10 +250,14 @@ const Form = (props) => {
                 )}
               </Field>
 
-      
-
-              <Button type="submit">Submit</Button>
-            </form>
+              <Button
+                mt={4}
+                colorScheme="brand"
+                // isLoading={props.isSubmitting}
+                type="submit">
+                Submit
+              </Button>
+            </Form>
           )}
 
         </Formik>
@@ -322,4 +333,4 @@ const Form = (props) => {
   );
 };
 
-export default Form;
+export default TransactionForm;
