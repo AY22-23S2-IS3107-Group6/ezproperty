@@ -17,7 +17,7 @@ from .trainStation import TrainStationPipeline
 
 def get_all_pipelines(run_pipelines: bool = False) -> List[Pipeline]:
     return [
-        BoilerplatePipeline(run_pipelines),
+        # BoilerplatePipeline(run_pipelines),
         CarparkPublicPipeline(run_pipelines),
         CarparkSeasonPipeline(run_pipelines),
         DistrictInfoPipeline(run_pipelines),

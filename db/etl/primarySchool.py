@@ -8,7 +8,7 @@ from .pipeline import Pipeline
 class PrimarySchoolPipeline(Pipeline):
     description = "Loads Primary Schools from 3rd Party"
     schedule_interval = "@monthly"
-    tags = ['amn']
+    tags = ['amenities']
     schema_name = "amn__PrimarySchool"
 
     def extract(self) -> list:
