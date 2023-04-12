@@ -45,13 +45,26 @@ def create_dag(pipeline: Pipeline) -> DAG:
     with dag:
         dag.doc_md = __doc__
         extract = PythonOperator(task_id="extract", python_callable=extract)
-        transform = PythonOperator(task_id="transform",
-                                   python_callable=transform)
+        transform = PythonOperator(task_id="transform", python_callable=transform)
         load = PythonOperator(task_id="load", python_callable=load)
         extract >> transform >> load
 
     return dag
 
 
+def write_dag_to_file(dag):
+
+    dag_file = 'airflow/dags/{}.py'.format(dag.dag_id)
+
+    with open(dag_file, 'w') as f:
+        print(dag)
+        # f.write(dag) need to get this dag source code and write it into dags folder I think
+
+    print(f"DAG {dag.dag_id} has been written to {dag_file}")
+
 for pipeline in get_all_pipelines(False):
     globals()[pipeline.id] = create_dag(pipeline=pipeline)
+    write_dag_to_file(globals()[pipeline.id])
+
+
+    
