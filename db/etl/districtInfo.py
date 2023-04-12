@@ -6,6 +6,7 @@ class DistrictInfoPipeline(Pipeline):
     description = "Loads District Info natively"
     schedule_interval = None
     tags = ['ref']
+    schema_name = "ref_DistrictInfo"
     schema_names = ["ref__District", "ref__Town", "ref__PostalCode"]
 
     def extract(self) -> list:

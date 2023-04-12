@@ -3,7 +3,7 @@ from .pipeline import Pipeline
 
 class BoilerplatePipeline(Pipeline):
     description = "Boilerplate"
-    schedule_interval = None
+    schedule_interval = "@weekly"
     tags = ['test']
     schema_name = "test__Test"
 

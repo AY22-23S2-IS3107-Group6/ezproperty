@@ -1,9 +1,8 @@
 from datetime import datetime
+from db.etl import get_all_pipelines
+from db.etl.pipeline import Pipeline
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from ..db.etl.pipeline import Pipeline
-from ..db.etl import get_all_pipelines
-
 
 def log(pipeline: Pipeline, message: str):
     print(f"Airflow  | {pipeline.schema_name.ljust(26)} | {message}")
@@ -34,12 +33,12 @@ def create_dag(pipeline: Pipeline) -> DAG:
         log(pipeline, "Load completed successfuly")
 
     dag = DAG(
-        pipeline.id,
+        pipeline.schema_name, # needs to be string which class name isn't, will add variables to indiv etls
         default_args=pipeline.default_args,
         description=pipeline.description,
         schedule_interval=pipeline.schedule_interval,
-        start_date=pipeline.start_date,
-        catchup=pipeline.catchup,
+        start_date=datetime(2021, 1, 1), # can consider adding to indiv etls
+        catchup=False, # can consider adding to indiv etls
         tags=pipeline.tags,
     )
 
