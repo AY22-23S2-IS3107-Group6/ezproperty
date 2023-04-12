@@ -26,3 +26,10 @@ test_create['test__Test2'] = ('''
     PRIMARY KEY (id)
 )
 ''')
+
+test_insert['test__Test2'] = ('''
+    INSERT INTO `test__Test2`
+    (id, district, x, y)
+    VALUES
+    (%s, %s, %s, %s)
+''')

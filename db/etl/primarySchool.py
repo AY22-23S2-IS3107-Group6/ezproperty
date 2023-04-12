@@ -72,6 +72,7 @@ class PrimarySchoolPipeline(Pipeline):
             school['sap'] = bool(school['sap'])
             school['gep'] = bool(school['gep'])
             school['_id'] = id(school['_id'])
+            school['district'] = None
 
         return result
 

@@ -72,6 +72,7 @@ class TrainStationPipeline(Pipeline):
             trainStation['latitude'] = Decimal(trainStation['latitude'])
             trainStation['longitude'] = Decimal(trainStation['longitude'])
             trainStation['_id'] = id(trainStation['_id'])
+            trainStation['district'] = None
             del trainStation['id']
 
         return result

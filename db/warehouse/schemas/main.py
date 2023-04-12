@@ -3,7 +3,7 @@ main_insert = {}
 
 main_create['main__PropertyTransaction'] = ('''
     CREATE TABLE `main__PropertyTransaction` (
-    _id             int            AUTO_INCREMENT,
+    _id             int             AUTO_INCREMENT,
     district        int             NOT NULL,
     street          varchar(100)    NOT NULL,
     floorRangeStart int             NOT NULL,
@@ -51,10 +51,9 @@ main_create['main__RentalMedian'] = ('''
     psf75            decimal(12,2)   NOT NULL,
     median           decimal(12,2)   NOT NULL,
     psf25            decimal(12,2)   NOT NULL,   
-    district         int             NOT NULL,
     rentalProjectId  varchar(24)     NOT NULL,
     PRIMARY KEY (_id),
-    FOREIGN KEY(district) REFERENCES ref__District(id)
+    FOREIGN KEY(rentalProjectId) REFERENCES main__RentalProject(_id)
 )
 ''')
 

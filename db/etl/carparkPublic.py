@@ -57,6 +57,7 @@ class CarparkPublicPipeline(Pipeline):
             carpark['satdayMin'] = int(carpark['satdayMin'][:-5])
             carpark['sunPHRate'] = float(carpark['sunPHRate'][1:])
             carpark['sunPHMin'] = int(carpark['sunPHMin'][:-5])
+            carpark['district'] = None
             
             # Project
             del carpark['geometries']

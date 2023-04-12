@@ -1,14 +1,6 @@
 amn_create = {}
 amn_insert = {}
 
-
-amn_insert['test__Test2'] = ('''
-    INSERT INTO `test__Test2`
-    (id, district, x, y)
-    VALUES
-    (%s, %s, %s, %s)
-''')
-
 amn_create['amn__TrainStation'] = ('''
     CREATE TABLE `amn__TrainStation` (
     _id             varchar(24)     NOT NULL,
@@ -19,15 +11,17 @@ amn_create['amn__TrainStation'] = ('''
     latitude        decimal(10,9)   NOT NULL,
     longitude       decimal(12,9)   NOT NULL,
     colour          varchar(10)     NOT NULL,
-    PRIMARY KEY (_id)
+    district        int             NULL,
+    PRIMARY KEY (_id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
 amn_insert['amn__TrainStation'] = ('''
     INSERT INTO `amn__TrainStation`
-    (_id, stationName, stationNo, x, y, latitude, longitude, colour)
+    (_id, stationName, stationNo, x, y, latitude, longitude, colour, district)
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 amn_create['amn__PrimarySchool'] = ('''
@@ -41,15 +35,17 @@ amn_create['amn__PrimarySchool'] = ('''
     affiliatedSecondary     varchar(100)                      NOT NULL,
     area                    varchar(20)                       NOT NULL,
     address                 varchar(100)                      NOT NULL,
-    PRIMARY KEY (_id,schoolName)
+    district                int                               NULL,
+    PRIMARY KEY (_id,schoolName),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
 amn_insert['amn__PrimarySchool'] = ('''
     INSERT INTO `amn__PrimarySchool`
-    (_id, schoolName, schoolChineseName, sap, gep, gender, affiliatedSecondary, area, address)
+    (_id, schoolName, schoolChineseName, sap, gep, gender, affiliatedSecondary, area, address, district)
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 amn_create['amn__Supermarket'] = ('''
@@ -63,7 +59,8 @@ amn_create['amn__Supermarket'] = ('''
     streetName      varchar(50)          NOT NULL,           
     postalCode      int                  NOT NULL,
     district        int                  NULL,
-    PRIMARY KEY (licenceNo)
+    PRIMARY KEY (licenceNo),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
@@ -84,7 +81,8 @@ amn_create['amn__HawkerCentre'] = ('''
     noOfCookedFoodStalls    int          NOT NULL,
     noOfMktProduceStalls    int          NOT NULL,
     district                int          NULL,
-    PRIMARY KEY (name)
+    PRIMARY KEY (name),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
@@ -114,7 +112,9 @@ amn_create['amn__CarparkPublic'] = ('''
     endTime             varchar(50)     NOT NULL,
     x                   decimal(7,2)    NOT NULL,
     y                   decimal(7,2)    NOT NULL,
-    PRIMARY KEY (_id)
+    district            int             NULL,
+    PRIMARY KEY (_id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
@@ -122,9 +122,9 @@ amn_create['amn__CarparkPublic'] = ('''
 
 amn_insert['amn__CarparkPublic'] = ('''
     INSERT INTO `amn__CarparkPublic`
-    (_id, weekdayMin, weekdayRate, ppCode, parkingSystem, ppName, vehCat, satdayMin, satdayRate, sunPHMin, sunPHRate, startTime, parkCapacity, endTime, x, y)
+    (_id, weekdayMin, weekdayRate, ppCode, parkingSystem, ppName, vehCat, satdayMin, satdayRate, sunPHMin, sunPHRate, startTime, parkCapacity, endTime, x, y, district)
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 amn_create['amn__CarparkSeason'] = ('''
@@ -138,13 +138,15 @@ amn_create['amn__CarparkSeason'] = ('''
     ticketType          varchar(20)     NOT NULL,
     x                   decimal(7,2)    NOT NULL,
     y                   decimal(7,2)    NOT NULL,
-    PRIMARY KEY (_id)
+    district            int             NULL,
+    PRIMARY KEY (_id),
+    FOREIGN KEY(district) REFERENCES ref__District(id)
 )
 ''')
 
 amn_insert['amn__CarparkSeason'] = ('''
     INSERT INTO `amn__CarparkSeason`
-    (_id, ppCode, ppName, vehCat, monthlyRate, parkingHrs, ticketType, x, y)
+    (_id, ppCode, ppName, vehCat, monthlyRate, parkingHrs, ticketType, x, y, district)
     VALUES
-    (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')

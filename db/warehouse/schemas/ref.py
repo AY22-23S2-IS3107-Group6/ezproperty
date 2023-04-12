@@ -130,8 +130,8 @@ ref_insert['ref__PropertyInformation'] = ('''
 
 ref_create['ref__District'] = ('''
     CREATE TABLE `ref__District` (
-    id               int             AUTO_INCREMENT,
-    district         int             NOT NULL,
+    id         int     AUTO_INCREMENT,
+    district   int     NOT NULL,
     PRIMARY KEY (id)
 )
 ''')
