@@ -1,40 +1,82 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
-import { propertyInformationColumns } from "data/ref";
-import { trainStationColumns } from "data/ref";
+import {
+  Box,
+  Checkbox,
+  Flex,
+  SimpleGrid,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import Card from "components/card/Card";
+import { tables } from "data/ref";
+import { useState } from "react";
+import { DataTable } from "views/admin/dataTables/components/DataTable";
 
 const Search = (props) => {
-  const [propInfo, setPropInfo] = useState([]);
-  const [trainStations, setTrainStations] = useState([]);
+  const { ...rest } = props;
+  const textColor = useColorModeValue("secondaryGray.900", "white");
+  const [shownTables, setShownTables] = useState(
+    tables.map((obj) => ({ ...obj, show: false }))
+  );
 
-  useEffect(() => {
-    // axios.get("http://localhost:5000/propertyinfo")
-    //   .then(response => response.data)
-    //   .then(data => setPropInfo(JSON.parse(data)))
-    //   .catch(err => console.log(err));
-    
-    axios.get("http://localhost:5000/trainstation")
-      .then(response => response.data)
-      .then(data => {
-        if(typeof(data) === "string"){
-          data = JSON.parse(data)
-        }
-        setTrainStations(data)
-      })
-      .catch(err => console.log(err));
-  }, []);
+  const handleToggle = (selectedSchemaName, checked) => {
+    setShownTables((prev) => {
+      const { ...rest } = prev.find(
+        (obj) => obj.schemaName === selectedSchemaName
+      );
+      return [
+        ...prev.filter((obj) => obj.schemaName !== selectedSchemaName),
+        { ...rest, show: checked },
+      ];
+    });
+  };
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid
-        columns={{ base: 1, "2xl": 2 }}
-        gap="20px"
-        mb="20px"
-      >
-        <ColumnsTable columnsData={propertyInformationColumns} tableData={propInfo} title={"Property Information"} />
-        <ColumnsTable columnsData={trainStationColumns} tableData={trainStations} title={"Amenities: Train Stations"} />
+      <SimpleGrid columns={{ base: 1 }} gap="20px" mb="20px">
+        <Card
+          p="20px"
+          align="center"
+          direction="column"
+          w="100%"
+          {...rest}
+          width={2}
+        >
+          <Flex alignItems="center" w="100%" mb="30px">
+            <Text color={textColor} fontSize="lg" fontWeight="700">
+              Table Selector
+            </Text>
+          </Flex>
+          <SimpleGrid columns={{ base: 3 }}>
+            {tables.map(({ schemaName, title }) => (
+              <Flex mb="20px" key={schemaName}>
+                <Checkbox
+                  me="16px"
+                  colorScheme="brandScheme"
+                  onChange={(e) => handleToggle(schemaName, e.target.checked)}
+                />
+                <Text
+                  fontWeight="bold"
+                  color={textColor}
+                  fontSize="md"
+                  textAlign="start"
+                >
+                  {title}
+                </Text>
+              </Flex>
+            ))}
+          </SimpleGrid>
+        </Card>
+        {console.log(shownTables)}
+        {shownTables.map(
+          ({ schemaName, title, show }) =>
+            show && (
+              <DataTable
+                key={schemaName}
+                schemaName={schemaName}
+                title={title}
+              />
+            )
+        )}
       </SimpleGrid>
     </Box>
   );
