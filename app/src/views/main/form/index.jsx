@@ -28,37 +28,40 @@ const TransactionForm = (props) => {
 
   const onSubmit = values => {
 
-    axios.post('http://localhost:5000/addpropertytransaction', {
-      street: values.street
-    })
-    .then((response) => {
-      console.log(response);
-    }, (error) => {
-      console.log(error);
-    });
+
 
     // let options = {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     },
-    //     method: 'POST'
-    //   };
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   },
+    //   method: 'POST'
+    // };
 
-    //   options.body = new FormData();
-    //   for (let key in values) {
-    //     // console.log(key, values[key])
-    //     options.body.append(key, values[key]);
-    //   }
+    // options.body = new FormData();
+    // for (let key in values) {
+    //   console.log(key, values[key])
+    //   options.body.append(key, values[key]);
+    //   console.log("body " + options.body)
+    // }
+    // console.log("options " + options)
+    axios.post('http://localhost:5000/addpropertytransaction', {
+      values
+      // street: values.street
+    })
+      .then((response) => {
+        console.log(response);
+      }, (error) => {
+        console.log(error);
+      });
 
-    //   fetch('http://localhost:5000/addpropertytransaction', options)
-    //     .then(response => console.log(response))
-    //     .catch(error => console.error(error))
+    // fetch('http://localhost:5000/addpropertytransaction', options)
+    //   .then(response => console.log(response))
+    //   .catch(error => console.error(error))
   }
 
   const validationSchema = Yup.object({
     street: Yup.string().required("Street is required!"),
     floor: Yup.number()
-      .positive("Floor level must be higher than 0")
       .required("Floor level is required!"),
     district: Yup.number()
       .min(1, "District must be larger than 0")
@@ -77,7 +80,8 @@ const TransactionForm = (props) => {
       .positive("Property must have tenure left")
       .required("Tenure is required!"),
     resale: Yup.string()
-      .lowercase().matches("resale" || "private", "Has to be either resale or private"),
+      .lowercase().matches("resale" || "private", "Has to be either resale or private")
+      .required("Resale/ Private is required!"),
   })
 
   return (
@@ -90,6 +94,7 @@ const TransactionForm = (props) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
+          // method="POST"
         // onSubmit={(values, actions) => {
         // setTimeout(() => {
         //   alert(JSON.stringify(values, null, 2))
