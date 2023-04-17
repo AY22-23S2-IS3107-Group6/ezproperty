@@ -7,15 +7,9 @@ from ..warehouse import DataWarehouse
 
 
 class Pipeline:
-    default_args = {'owner': 'airflow'}
-    description = "Default Pipeline"
-    schedule_interval = None
-    tags = []
-    start_date: datetime(2021, 1, 1)
-    catchup: False
 
     def __init__(self, run_pipeline: bool = True):
-        self.id = self.__class__
+        self.id = str(self.__class__.__name__)
         self.dl = DataLake()
         self.dw = DataWarehouse()
         if not run_pipeline: return
