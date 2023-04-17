@@ -72,6 +72,7 @@ def addPropertyTransaction():
     if request.method == "POST":
         # retrieve data from FE
         data = request.get_json()["values"]
+        print(data)
 
         # separating data
         street = data["street"]
@@ -119,9 +120,7 @@ def addPropertyTransaction():
             floor_start = find_closest_floor_number(floor, floor_start_range)
             floor_end = find_closest_floor_number(floor, floor_end_range)
 
-
-# check resale
-# prepare resale boolean
+        # prepare resale boolean
         if (resale == "resale"):
             resale = True
         else:
@@ -141,6 +140,9 @@ def addPropertyTransaction():
         }]
         propertyTransaction = list(
             map(lambda x: tuple(x.values()), propertyTransaction))
+        print(propertyTransaction)
+
+        # dummyInsert = [(14, 'WW', 46, 50, 'Apartment', 43, 900, '2023-04-10', 90, True)]
 
         warehouse = DataWarehouse()
         warehouse.insert_to_schema("main__PropertyTransaction",
