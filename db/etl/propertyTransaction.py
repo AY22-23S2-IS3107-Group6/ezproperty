@@ -233,11 +233,4 @@ class PropertyTransactionPipeline(Pipeline):
 
 
 if __name__ == '__main__':
-    # PropertyTransactionPipeline()
-    p = PropertyTransactionPipeline(run_pipeline=False)
-    h = p.transform([            p.dl_getter("main__PropertyTransactionsPrivate"),
-            p.dl_getter("main__PropertyTransactionsPublic")
-        ])
-    print(len(h[0]))
-    print(len(h[1]))
-    p.load(h)
+    PropertyTransactionPipeline()
