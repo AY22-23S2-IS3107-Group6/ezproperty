@@ -6,7 +6,6 @@ import {
     FormControl,
     FormLabel,
     FormErrorMessage,
-    FormHelperText,
     Input,
     SimpleGrid
 } from "@chakra-ui/react"
@@ -27,7 +26,7 @@ const PredictivePriceForm = (props) => {
     }
 
     const onSubmit = values => {
-        axios.post('http://localhost:5000/addpropertytransaction', {
+        axios.post('http://localhost:5000/predictpropertyprice', {
             values
         })
             .then((response) => {
@@ -40,23 +39,17 @@ const PredictivePriceForm = (props) => {
     const validationSchema = Yup.object({
         street: Yup.string().required("Street is required!"),
         floor: Yup.number()
+            .min(0, "Floor level cannot be negative")
             .required("Floor level is required!"),
         district: Yup.number()
             .min(1, "District must be larger than 0")
             .max(28, "Singapore only has 28 districts")
             .required("District is required!"),
-        propertyType: Yup.string().required("Property type is required!"),
         area: Yup.number()
             .positive("Area must be positive")
             .required("Area is required!"),
-        price: Yup.number()
-            .positive("Price must be higher than $0.00")
-            .required("Price is required!"),
         transactionDate: Yup.date()
-            .max(new Date(), "Property has to be sold"),
-        tenure: Yup.number()
-            .positive("Property must have tenure left")
-            .required("Tenure is required!"),
+            .min(new Date(), "Property should not be sold yet"),
         resale: Yup.mixed()
             .oneOf(["private", "resale"], "Has to be either resale or private")
             .required("Resale/ Private is required!"),
@@ -78,7 +71,7 @@ const PredictivePriceForm = (props) => {
                             <Field name="street">
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.street && form.touched.street}>
-                                        <FormLabel htmlFor="street">Street</FormLabel>
+                                        <FormLabel htmlFor="street">Street Name</FormLabel>
                                         <Input
                                             {...field}
                                             id="street"
@@ -120,21 +113,6 @@ const PredictivePriceForm = (props) => {
                                 )}
                             </Field>
 
-                            <Field name="propertyType">
-                                {({ field, form }) => (
-                                    <FormControl isInvalid={form.errors.propertyType && form.touched.propertyType}>
-                                        <FormLabel htmlFor="propertyType">Property Type</FormLabel>
-                                        <Input
-                                            {...field}
-                                            id="Property Type"
-                                            placeholder="Property Type"
-                                            borderRadius="16px"
-                                        />
-                                        <FormErrorMessage>{form.errors.propertyType}</FormErrorMessage>
-                                    </FormControl>
-                                )}
-                            </Field>
-
                             <Field name="area">
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.area && form.touched.area}>
@@ -150,25 +128,10 @@ const PredictivePriceForm = (props) => {
                                 )}
                             </Field>
 
-                            <Field name="price">
-                                {({ field, form }) => (
-                                    <FormControl isInvalid={form.errors.price && form.touched.price}>
-                                        <FormLabel htmlFor="price">Price</FormLabel>
-                                        <Input
-                                            {...field}
-                                            id="price"
-                                            type="number"
-                                            borderRadius="16px"
-                                        />
-                                        <FormErrorMessage>{form.errors.price}</FormErrorMessage>
-                                    </FormControl>
-                                )}
-                            </Field>
-
                             <Field name="transactionDate">
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.transactionDate && form.touched.transactionDate}>
-                                        <FormLabel htmlFor="transactionDate">Transaction Date</FormLabel>
+                                        <FormLabel htmlFor="transactionDate">Future Transaction Date</FormLabel>
                                         <Input
                                             {...field}
                                             id="transactionDate"
@@ -176,21 +139,6 @@ const PredictivePriceForm = (props) => {
                                             borderRadius="16px"
                                         />
                                         <FormErrorMessage>{form.errors.transactionDate}</FormErrorMessage>
-                                    </FormControl>
-                                )}
-                            </Field>
-
-                            <Field name="tenure">
-                                {({ field, form }) => (
-                                    <FormControl isInvalid={form.errors.tenure && form.touched.tenure}>
-                                        <FormLabel htmlFor="tenure">Tenure</FormLabel>
-                                        <Input
-                                            {...field}
-                                            id="tenure"
-                                            type="number"
-                                            borderRadius="16px"
-                                        />
-                                        <FormErrorMessage>{form.errors.tenure}</FormErrorMessage>
                                     </FormControl>
                                 )}
                             </Field>

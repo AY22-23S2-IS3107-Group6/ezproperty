@@ -6,7 +6,6 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  FormHelperText,
   Input,
   SimpleGrid
 } from "@chakra-ui/react"
@@ -27,41 +26,20 @@ const TransactionForm = (props) => {
   }
 
   const onSubmit = values => {
-
-
-
-    // let options = {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data'
-    //   },
-    //   method: 'POST'
-    // };
-
-    // options.body = new FormData();
-    // for (let key in values) {
-    //   console.log(key, values[key])
-    //   options.body.append(key, values[key]);
-    //   console.log("body " + options.body)
-    // }
-    // console.log("options " + options)
     axios.post('http://localhost:5000/addpropertytransaction', {
       values
-      // street: values.street
     })
       .then((response) => {
         console.log(response);
       }, (error) => {
         console.log(error);
       });
-
-    // fetch('http://localhost:5000/addpropertytransaction', options)
-    //   .then(response => console.log(response))
-    //   .catch(error => console.error(error))
   }
 
   const validationSchema = Yup.object({
     street: Yup.string().required("Street is required!"),
     floor: Yup.number()
+      .min(0, "Floor level cannot be negative")
       .required("Floor level is required!"),
     district: Yup.number()
       .min(1, "District must be larger than 0")
@@ -94,36 +72,13 @@ const TransactionForm = (props) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
-        // method="POST"
-        // onSubmit={(values, actions) => {
-        // setTimeout(() => {
-        //   alert(JSON.stringify(values, null, 2))
-        //   actions.setSubmitting(false)
-        // }, 1000)
-
-        // let options = {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   },
-        //   method: 'POST'
-        // };
-
-        // options.body = new FormData();
-        // for (let key in values) {
-        //   options.body.append(key, values[key]);
-        // }
-
-        // fetch('http://localhost:5000/addpropertytransaction', options)
-        //   .then(response => console.log(response))
-        //   .catch(error => console.error(error))
-        // }}
         >
           {(props) => (
             <Form action='http://localhost:5000/addpropertytransaction' method="post">
               <Field name="street">
                 {({ field, form }) => (
                   <FormControl isInvalid={form.errors.street && form.touched.street}>
-                    <FormLabel htmlFor="street">Street</FormLabel>
+                    <FormLabel htmlFor="street">Street Name</FormLabel>
                     <Input
                       {...field}
                       id="street"
@@ -269,72 +224,6 @@ const TransactionForm = (props) => {
 
       </SimpleGrid>
     </Box>
-
-
-    // <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-    //   <SimpleGrid
-    //     columns={{ base: 1, md: 2, lg: 3, "2xl": 6 }}
-    //     gap="20px"
-    //     mb="20px"
-    //   >
-    //     <Formik
-    //       initialValues={{ name: "Sasuke" }}
-    //       // onSubmit={(values, actions) => {
-    //       //   setTimeout(() => {
-    //       //     alert(JSON.stringify(values, null, 2))
-    //       //     actions.setSubmitting(false)
-    //       //   }, 1000)
-    //       // }}
-    //     >
-    //       {(props) => (
-    //         <form>
-    //           <Field name="name" validate={validateStreet}>
-    //             {({ field, form }) => (
-    //               <FormControl isInvalid={form.errors.name && form.touched.name}>
-    //                 <FormLabel htmlFor="name">First name</FormLabel>
-    //                 <Input
-    //                   {...field}
-    //                   id="name"
-    //                   placeholder="name"
-    //                   borderRadius="16px"
-    //                 />
-    //                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-    //               </FormControl>
-    //             )}
-    //           </Field>
-
-    //           <Field name="name" validate={validateStreet}>
-    //             {({ field, form }) => (
-    //               <FormControl isInvalid={form.errors.name && form.touched.name}>
-    //                 <FormLabel htmlFor="name">First name</FormLabel>
-    //                 <Input
-    //                   {...field}
-    //                   id="name"
-    //                   placeholder="name"
-    //                   borderRadius="16px"
-    //                 />
-    //                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-    //               </FormControl>
-    //             )}
-    //           </Field>
-
-    //           <Button
-    //             mt={4}
-    //             colorScheme="brand"
-    //             isLoading={props.isSubmitting}
-    //             type="submit"
-    //           >
-    //             Submit
-    //           </Button>
-    //         </form>
-    //       )}
-    //     </Formik>
-    //   </SimpleGrid>
-    // </Box>
-
-
-
-
   );
 };
 
