@@ -39,3 +39,13 @@ def get_schema(category: str, schema_name: str):
         if f"{category}__{schema_name}" == schema.lower():
             return schema
     return None
+
+@app.route('/topfivedistrictsforapartment', methods=['GET'])
+def get_top_five():
+    dw = DataWarehouse()
+    return jsonify(dw.query(f"SELECT propertyType, district, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = 'Apartment' GROUP BY district ORDER BY avg_price DESC LIMIT 5"))
+
+@app.route('/linechartdata', methods=['GET'])
+def get_line_data():
+    dw = DataWarehouse()
+    return jsonify(dw.query(f"SELECT YEAR(transactionDate) AS year, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = 'Apartment' GROUP BY year ORDER BY year"))
