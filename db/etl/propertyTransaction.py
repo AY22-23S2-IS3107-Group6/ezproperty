@@ -7,7 +7,7 @@ from .pipeline import Pipeline
 class PropertyTransactionPipeline(Pipeline):
     description = "Loads Property Transactions from URA API and Data.gov.sg"
     schedule_interval = "@daily"
-    tags = ['main']
+    tags = ['is3107g6','main']
     schema_name = "main__PropertyTransaction"
 
     def extract(self) -> list:

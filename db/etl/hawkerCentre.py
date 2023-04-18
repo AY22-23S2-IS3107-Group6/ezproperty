@@ -5,7 +5,7 @@ from .pipeline import Pipeline
 class HawkerCentrePipeline(Pipeline):
     description = "Loads Hawker Centres from Data.gov.sg"
     schedule_interval = "@weekly"
-    tags = ['amn']
+    tags = ['is3107g6','amn']
     schema_name = "amn__HawkerCentre"
 
     def extract(self) -> list:

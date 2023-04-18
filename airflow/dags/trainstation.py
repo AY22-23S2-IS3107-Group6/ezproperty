@@ -23,7 +23,7 @@ with DAG(
     schedule_interval=None,
     start_date=datetime(2021, 1, 1),
     catchup=False,
-    tags=['amn'],
+    tags=['is3107g6','amn'],
 ) as dag:
 
     dag.doc_md = __doc__

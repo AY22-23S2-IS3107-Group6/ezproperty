@@ -10,7 +10,7 @@ class Pipeline:
     default_args = {'owner': 'airflow'}
     description = "Default Pipeline"
     schedule_interval = None
-    tags = []
+    tags = ['is3107g6',]
     start_date: datetime(2021, 1, 1)
     catchup: False
 
