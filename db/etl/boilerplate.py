@@ -3,8 +3,8 @@ from .pipeline import Pipeline
 
 class BoilerplatePipeline(Pipeline):
     description = "Boilerplate"
-    schedule_interval = None
-    tags = ['test']
+    schedule_interval = "@weekly"
+    tags = ['is3107g6','test']
     schema_name = "test__Test"
 
     def extract(self) -> list:
