@@ -80,7 +80,7 @@ const TransactionForm = (props) => {
       .positive("Property must have tenure left")
       .required("Tenure is required!"),
     resale: Yup.string()
-      .lowercase().matches("resale" || "private", "Has to be either resale or private")
+      .oneOf(["private", "resale"], "Has to be either resale or private")
       .required("Resale/ Private is required!"),
   })
 
@@ -94,7 +94,7 @@ const TransactionForm = (props) => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
-          // method="POST"
+        // method="POST"
         // onSubmit={(values, actions) => {
         // setTimeout(() => {
         //   alert(JSON.stringify(values, null, 2))
