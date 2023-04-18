@@ -6,7 +6,7 @@ from .pipeline import Pipeline
 class CarparkSeasonPipeline(Pipeline):
     description = "Loads Seasonal Carparks from URA API"
     schedule_interval = "@weekly"
-    tags = ['amn']
+    tags = ['amenities']
     schema_name = "amn__CarparkSeason"
 
     def extract(self) -> list:
@@ -46,6 +46,7 @@ class CarparkSeasonPipeline(Pipeline):
                 carpark['geometries'][0]['coordinates'].split(",")[1])
             carpark['_id'] = id(carpark['_id'])
             carpark['monthlyRate'] = int(carpark['monthlyRate'])
+            carpark['district'] = None
 
             # Project
             del carpark['geometries']

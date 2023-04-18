@@ -6,6 +6,9 @@ from .pipeline import Pipeline
 
 
 class TrainStationPipeline(Pipeline):
+    description = "Loads Rental Property from 3rd Party"
+    schedule_interval = "@monthly"
+    tags = ['amenities']
     schema_name = "amn__TrainStation"
 
     def extract(self) -> list:
@@ -72,6 +75,7 @@ class TrainStationPipeline(Pipeline):
             trainStation['latitude'] = Decimal(trainStation['latitude'])
             trainStation['longitude'] = Decimal(trainStation['longitude'])
             trainStation['_id'] = id(trainStation['_id'])
+            trainStation['district'] = None
             del trainStation['id']
 
         return result
