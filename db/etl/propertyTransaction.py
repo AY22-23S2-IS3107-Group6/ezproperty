@@ -184,7 +184,7 @@ class PropertyTransactionPipeline(Pipeline):
                 dateSql = date.strftime('%Y-%m-%d')
 
                 # Calculate tenure
-                if tempTenure == "Freehold":
+                if isinstance(tempTenure, str):
                     tenure = 1000000
                 else:
                     leaseDur = int(tempTenure.split(" ")[0])

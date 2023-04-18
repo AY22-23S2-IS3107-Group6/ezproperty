@@ -26,6 +26,13 @@ const routes = [
     component: PropertyForm,
   },
   {
+    name: "Predict Property Tranasction Price",
+    layout: "/admin",
+    path: "/predict-property-price",
+    icon: <Icon as={MdAdd} width='20px' height='20px' color='inherit' />,
+    component: PropertyForm,
+  },
+  {
     name: "Template",
     layout: "/admin",
     path: "/template",
