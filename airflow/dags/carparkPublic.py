@@ -6,6 +6,8 @@
 # import sys
 # sys.path.append(str(Path('../../').resolve()))
 
+# import pickle
+
 import os
 import sys
 
@@ -35,28 +37,29 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
+    CarparkPublicPipelineTemp = CarparkPublicPipeline()
 
     def extract(**kwargs):
         log(CarparkPublicPipeline, "Extract start")
         ti = kwargs['ti']
-        data = CarparkPublicPipeline.extract()
+        data = CarparkPublicPipelineTemp.extract()
         ti.xcom_push('data', data)
-        log(CarparkPublicPipeline, "Extract completed successfuly")
+        log(CarparkPublicPipelineTemp, "Extract completed successfuly")
 
     def transform(**kwargs):
-        log(CarparkPublicPipeline, "Transform Start")
+        log(CarparkPublicPipelineTemp, "Transform Start")
         ti = kwargs['ti']
         data = ti.xcom_pull(task_ids='extract', key='data')
-        transformed_data = CarparkPublicPipeline.transform(data)
+        transformed_data = CarparkPublicPipelineTemp.transform(data)
         ti.xcom_push('transformed_data', transformed_data)
-        log(CarparkPublicPipeline, "Transform completed successfuly")
+        log(CarparkPublicPipelineTemp, "Transform completed successfuly")
 
     def load(**kwargs):
-        log(CarparkPublicPipeline, "Load Start")
+        log(CarparkPublicPipelineTemp, "Load Start")
         ti = kwargs['ti']
         data = ti.xcom_pull(task_ids='transform', key='transformed_data')
-        CarparkPublicPipeline.load(data)
-        log(CarparkPublicPipeline, "Load completed successfuly")
+        CarparkPublicPipelineTemp.load(data)
+        log(CarparkPublicPipelineTemp, "Load completed successfuly")
 
     extract = PythonOperator(task_id="extract", python_callable=extract)
     transform = PythonOperator(task_id="transform", python_callable=transform)
