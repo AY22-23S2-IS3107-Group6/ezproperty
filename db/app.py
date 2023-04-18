@@ -1,71 +1,45 @@
-from flask import Flask, jsonify, request
+from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 from db import DataWarehouse
-import mysql.connector
 from .utils import get_floor_range
+from db.warehouse.schemas import create_queries
 
 app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/propertytransaction')
-def getPropertyTransactions():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM main__PropertyTransaction"))
+@app.route('/<category>/<schema_name>', methods=['GET'])
+def get_data(category: str, schema_name: str):
+    schema = get_schema(category, schema_name)
+    if not schema:
+        return jsonify({"error": "Bad request"}), 400
+    dw = DataWarehouse()
+    return jsonify(dw.query(f"SELECT * FROM {schema}"))
 
 
-@app.route('/rentaltransaction')
-def getRentalTransactions():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM main__RentalTransaction"))
+@app.route('/<category>/<schema_name>', methods=['POST'])
+def post_data(category: str, schema_name: str):
+    schema = get_schema(category, schema_name)
+    if not schema:
+        return jsonify({"error": "Bad request"}), 400
+    if request.headers.get('Content-Type') != 'application/json':
+        return jsonify({"error": "Content-Type not supported!"}), 400
+    try:
+        dw = DataWarehouse()
+        data = request.get_json()
+        if not isinstance(data, list):
+            return jsonify({"error": "JSON data must be a list"}), 400
+        dw.insert_to_schema(f"{schema}", data)
+        return "Successfully added"
+    except:
+        return "Request failed", 500
 
 
-@app.route('/propertyinformation')
-def getPropertyInformation():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM ref__PropertyInformation"))
-
-
-@app.route('/district')
-def getDistricts():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM ref__District"))
-
-
-@app.route('/trainstation')
-def getTrainStations():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__TrainStation"))
-
-
-@app.route('/primaryschool')
-def getPrimarySchools():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__PrimarySchool"))
-
-
-@app.route('/supermarket')
-def getSupermarkets():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__Supermarket"))
-
-
-@app.route('/hawkercentre')
-def getHawkerCentres():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__HawkerCentre"))
-
-
-@app.route('/carparkpublic')
-def getPublicCarparks():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__CarparkPublic"))
-
-
-@app.route('/carparkseasons')
-def getSeasonCarparks():
-    warehouse = DataWarehouse()
-    return jsonify(warehouse.query("SELECT * FROM amn__CarparkSeason"))
+def get_schema(category: str, schema_name: str):
+    for schema in create_queries:
+        if f"{category}__{schema_name}" == schema.lower():
+            return schema
+    return None
 
 
 @app.route('/addpropertytransaction', methods=['POST'])
