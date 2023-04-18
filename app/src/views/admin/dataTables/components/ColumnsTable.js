@@ -1,5 +1,4 @@
 import {
-  Divider,
   Flex,
   Table,
   Tbody,
@@ -20,7 +19,6 @@ import {
 
 // Custom components
 import Card from "components/card/Card";
-import Menu from "components/menu/MainMenu";
 export default function ColumnsTable(props) {
   const { columnsData, tableData, title } = props;
 
@@ -54,7 +52,7 @@ export default function ColumnsTable(props) {
       direction="column"
       w="100%"
       px="0px"
-      overflowX={{ sm: "scroll", lg: "hidden" }}
+      overflowX={{ sm: "scroll" }}
     >
       <Flex px="25px" justify="space-between" mb="20px" align="center">
         <Text

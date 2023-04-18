@@ -7,15 +7,9 @@ from ..warehouse import DataWarehouse
 
 
 class Pipeline:
-    default_args = {'owner': 'airflow'}
-    description = "Default Pipeline"
-    schedule_interval = None
-    tags = ['is3107g6',]
-    start_date: datetime(2021, 1, 1)
-    catchup: False
 
     def __init__(self, run_pipeline: bool = True):
-        self.id = self.__class__
+        self.id = str(self.__class__.__name__)
         self.dl = DataLake()
         self.dw = DataWarehouse()
         if not run_pipeline: return
@@ -65,7 +59,7 @@ class Pipeline:
         """ Loads data to data warehouse """
         try:
             self.log(schema_name,
-                     f"Loading {len(result)} documents to data lake.")
+                     f"Loading {len(result)} documents to data warehouse.")
             self.dw.insert_to_schema(
                 schema_name, list(map(lambda x: tuple(x.values()), result)))
 

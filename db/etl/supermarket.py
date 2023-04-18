@@ -3,6 +3,9 @@ from .pipeline import Pipeline
 
 
 class SupermarketPipeline(Pipeline):
+    description = "Loads Supermarkets from Data.gov"
+    schedule_interval = "@monthly"
+    tags = ['amenities']
     schema_name = "amn__Supermarket"
 
     def extract(self) -> list:
