@@ -6,7 +6,6 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  FormHelperText,
   Input,
   SimpleGrid
 } from "@chakra-ui/react"

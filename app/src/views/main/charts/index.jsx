@@ -1,91 +1,81 @@
 import React from 'react'
 
 // Chakra imports
-import { Box, SimpleGrid, Flex, Text, useColorModeValue } from "@chakra-ui/react";
-import BarChart from "views/admin/dataTables/components/BarChart";
-import LineChart from "views/admin/dataTables/components/LineChart";
+import { Box, Checkbox, SimpleGrid, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { graphs } from "data/ref";
+import { useState } from "react";
+import { PropertyCharts } from "views/admin/dataTables/components/PropertyCharts";
 
 // Custom components
 import Card from "components/card/Card.js";
 
-export default function ApartmentChart(props) {
+const Charts = (props) => {
   const { ...rest } = props;
-
-  // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
+  const [shownGraphs, setShownGraphs] = useState(
+    graphs.map((obj) => ({ ...obj, show: false }))
+  );
+
+  const handleToggle = (selectedPropertyType, checked) => {
+    setShownGraphs((prev) => {
+      const { ...rest } = prev.find(
+        (obj) => obj.propertyType === selectedPropertyType
+      );
+      return [
+        ...prev.filter((obj) => obj.propertyType !== selectedPropertyType),
+        { ...rest, show: checked },
+      ];
+    });
+  };
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <Card align='center' direction='column' w='100%' {...rest}>
-        <Flex justify='space-between' align='start' px='10px' pt='5px'>
-          <Flex flexDirection='column' align='start' me='20px'>
-            <Flex align='end'>
-              <Text
-                color={textColor}
-                fontSize='34px'
-                fontWeight='700'
-                lineHeight='100%'>
-                Average Resale Prices over Time
-              </Text>
-            </Flex>
+      <SimpleGrid columns={{ base: 1 }} gap="20px" mb="20px">
+        <Card
+          p="20px"
+          align="center"
+          direction="column"
+          w="100%"
+          {...rest}
+          width={2}
+        >
+          <Flex alignItems="center" w="100%" mb="30px">
+            <Text color={textColor} fontSize="lg" fontWeight="700">
+              Graph Selector
+            </Text>
           </Flex>
-        </Flex>
-        <Flex justify='space-between' align='start' px='10px' pt='5px'>
-          <Flex flexDirection='column' align='start' me='20px'>
-            <Flex align='end'>
-              <Text
-                color={textColor}
-                fontSize='16px'
-                fontWeight= '300'
-                lineHeight='150%'>
-                For Apartments
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-        <SimpleGrid
-          mb="10px"
-        ></SimpleGrid>
-        <Box h='290px' mt='auto'>
-          <LineChart />
-        </Box>
-      </Card>
-      <SimpleGrid
-          mb="20px"
-        ></SimpleGrid>
-      <Card align='center' direction='column' w='100%' {...rest}>
-        <Flex justify='space-between' align='start' px='10px' pt='5px'>
-          <Flex flexDirection='column' align='start' me='20px'>
-            <Flex align='end'>
-              <Text
-                color={textColor}
-                fontSize='34px'
-                fontWeight='700'
-                lineHeight='100%'>
-                Highest Average Resale Price by District
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Flex justify='space-between' align='start' px='10px' pt='5px'>
-          <Flex flexDirection='column' align='start' me='20px'>
-            <Flex align='end'>
-              <Text
-                color={textColor}
-                fontSize='16px'
-                fontWeight= '300'
-                lineHeight='150%'>
-                For Apartments
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-        <SimpleGrid
-          mb="10px"
-        ></SimpleGrid>
-        <Box h='290px' mt='auto'>
-          <BarChart />
-        </Box>
-      </Card>
+          <SimpleGrid columns={{ base: 3 }}>
+            {graphs.map(({ propertyType }) => (
+              <Flex mb="20px" key={propertyType}>
+                <Checkbox
+                  me="16px"
+                  colorScheme="brandScheme"
+                  onChange={(e) => handleToggle(propertyType, e.target.checked)}
+                />
+                <Text
+                  fontWeight="bold"
+                  color={textColor}
+                  fontSize="md"
+                  textAlign="start"
+                >
+                  {propertyType}
+                </Text>
+              </Flex>
+            ))}
+          </SimpleGrid>
+        </Card>
+        {console.log(shownGraphs)}
+        {shownGraphs.map(
+          ({ propertyType, show }) =>
+            show && (
+              <PropertyCharts
+                propertyType={propertyType}
+              />
+            )
+        )}
+      </SimpleGrid>
     </Box>
   );
 }
+
+export default Charts;

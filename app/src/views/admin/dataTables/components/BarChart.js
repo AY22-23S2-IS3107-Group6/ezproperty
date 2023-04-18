@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
 
-const MyChart = () => {
+export const BarChart = (props) => {
+  const { propertyType } = props;
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/topfivedistrictsforapartment")
+    axios.get(`http://localhost:5000/topfivedistrictsfor${propertyType}`)
       .then(response => setData(response.data))
       .catch(error => console.log(error));
-  }, []);
+  }, [propertyType]);
 
   const chartOptions = {
     chart: {
@@ -32,13 +33,13 @@ const MyChart = () => {
         },
       },
       title: {
-        text: "District",
+        text: "Postal District",
         rotate: -90,
         offsetX: 0,
         offsetY: -10,
         style: {
           colors: "#CBD5E0",
-          fontSize: "18px",
+          fontSize: "16px",
         },
       },
       axisBorder: {
@@ -62,13 +63,13 @@ const MyChart = () => {
         }
       },
       title: {
-        text: "Average resale price",
+        text: "Average Resale Price",
         rotate: -90,
         offsetX: -10,
         offsetY: 0,
         style: {
           colors: "#CBD5E0",
-          fontSize: "18px",
+          fontSize: "16px",
         },
       },
     },
@@ -124,5 +125,3 @@ const MyChart = () => {
     />
   );
 };
-
-export default MyChart;

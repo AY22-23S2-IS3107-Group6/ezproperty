@@ -40,15 +40,15 @@ def get_schema(category: str, schema_name: str):
             return schema
     return None
 
-@app.route('/topfivedistrictsforapartment', methods=['GET'])
-def get_top_five():
+@app.route('/topfivedistrictsfor<property_type>', methods=['GET'])
+def get_top_five(property_type: str):
     dw = DataWarehouse()
-    return jsonify(dw.query(f"SELECT propertyType, district, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = 'Apartment' GROUP BY district ORDER BY avg_price DESC LIMIT 5"))
+    return jsonify(dw.query(f"SELECT propertyType, district, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = '{property_type}' GROUP BY district ORDER BY avg_price DESC LIMIT 5"))
 
-@app.route('/linechartdata', methods=['GET'])
-def get_line_data():
+@app.route('/linechartdatafor<property_type>', methods=['GET'])
+def get_line_data(property_type: str):
     dw = DataWarehouse()
-    return jsonify(dw.query(f"SELECT YEAR(transactionDate) AS year, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = 'Apartment' GROUP BY year ORDER BY year"))
+    return jsonify(dw.query(f"SELECT YEAR(transactionDate) AS year, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = '{property_type}' GROUP BY year ORDER BY year"))
 
 @app.route('/propertytransaction')
 def getPropertyTransactions():

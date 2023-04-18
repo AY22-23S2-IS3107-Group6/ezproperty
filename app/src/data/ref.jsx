@@ -12,3 +12,11 @@ export const tables = [
   { schemaName: "amn/trainstation", title: "Amenities: Train Stations" },
   { schemaName: "amn/supermarket", title: "Amenities: Supermarkets" },
 ];
+
+export const graphs = [
+  { propertyType: "Apartment" },
+  { propertyType: "Condominium" },
+  { propertyType: "Detached" },
+  { propertyType: "Semi-Detached" },
+  { propertyType: "Terrace" }
+]
