@@ -20,7 +20,7 @@ with DAG(
     'propertyTransaction',
     default_args=default_args,
     description='Loads Property Transaction',
-    schedule_interval=None,
+    schedule_interval='@daily',
     start_date=datetime(2021, 1, 1),
     catchup=False,
     tags=['is3107g6','main'],

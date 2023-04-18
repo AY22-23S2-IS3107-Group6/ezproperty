@@ -20,7 +20,7 @@ with DAG(
     'supermarket',
     default_args=default_args,
     description='Loads Supermarkets',
-    schedule_interval=None,
+    schedule_interval='@monthly',
     start_date=datetime(2021, 1, 1),
     catchup=False,
     tags=['is3107g6','amn'],

@@ -20,7 +20,7 @@ with DAG(
     'carparkSeason',
     default_args=default_args,
     description='Loads Seasonal Carparks',
-    schedule_interval=None,
+    schedule_interval='@weekly',
     start_date=datetime(2021, 1, 1),
     catchup=False,
     tags=['is3107g6','amn'],
