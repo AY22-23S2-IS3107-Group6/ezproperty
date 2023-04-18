@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    DistrictInfoPipelineTemp = DistrictInfoPipeline()
+    DistrictInfoPipelineTemp = DistrictInfoPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(DistrictInfoPipeline, "Extract start")

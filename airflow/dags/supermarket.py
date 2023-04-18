@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    SupermarketPipelineTemp = SupermarketPipeline()
+    SupermarketPipelineTemp = SupermarketPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(SupermarketPipeline, "Extract start")

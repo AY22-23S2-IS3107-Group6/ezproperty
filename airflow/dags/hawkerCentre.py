@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    HawkerCentrePipelineTemp = HawkerCentrePipeline()
+    HawkerCentrePipelineTemp = HawkerCentrePipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(HawkerCentrePipeline, "Extract start")

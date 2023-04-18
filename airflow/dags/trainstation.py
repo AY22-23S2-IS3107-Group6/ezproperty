@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    TrainStationPipelineTemp = TrainStationPipeline()
+    TrainStationPipelineTemp = TrainStationPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(TrainStationPipeline, "Extract start")

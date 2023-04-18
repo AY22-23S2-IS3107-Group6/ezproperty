@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    PropertyTransactionPipelineTemp = PropertyTransactionPipeline()
+    PropertyTransactionPipelineTemp = PropertyTransactionPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(PropertyTransactionPipeline, "Extract start")

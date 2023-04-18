@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    RentalPropertyMedianPipelineTemp = RentalPropertyMedianPipeline()
+    RentalPropertyMedianPipelineTemp = RentalPropertyMedianPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(RentalPropertyMedianPipeline, "Extract start")

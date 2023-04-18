@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    CarparkPublicPipelineTemp = CarparkPublicPipeline()
+    CarparkPublicPipelineTemp = CarparkPublicPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(CarparkPublicPipeline, "Extract start")

@@ -27,7 +27,7 @@ with DAG(
 ) as dag:
 
     dag.doc_md = __doc__
-    PrimarySchoolPipelineTemp = PrimarySchoolPipeline()
+    PrimarySchoolPipelineTemp = PrimarySchoolPipeline(run_pipeline=False)
 
     def extract(**kwargs):
         log(PrimarySchoolPipeline, "Extract start")
