@@ -57,9 +57,8 @@ const PredictivePriceForm = (props) => {
         tenure: Yup.number()
             .positive("Property must have tenure left")
             .required("Tenure is required!"),
-        resale: Yup.string()
-            .oneOf(["resale", "private"], "Has to be either resale or private")
-            // .lowercase().matches("resale" || "private", "Has to be either resale or private")
+        resale: Yup.mixed()
+            .oneOf(["private", "resale"], "Has to be either resale or private")
             .required("Resale/ Private is required!"),
     })
 
