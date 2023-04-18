@@ -1,11 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 from db import DataWarehouse
+import mysql.connector
 from db.warehouse.schemas import create_queries
 
 app = Flask(__name__)
 CORS(app)
-
 
 @app.route('/<category>/<schema_name>', methods=['GET'])
 def get_data(category: str, schema_name: str):
