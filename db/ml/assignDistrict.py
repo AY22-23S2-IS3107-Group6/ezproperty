@@ -40,7 +40,5 @@ def assignDistricts(district_centroid):
             UPDATE main__PropertyTransaction SET district = closest_district WHERE id = row_id
         ''')
 
-    # use Sean's update function to update sql district?
-
 
 assignDistricts(findCentroids.findCentroids())

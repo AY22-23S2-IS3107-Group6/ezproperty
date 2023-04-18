@@ -13,6 +13,7 @@ from .propertyTransaction import PropertyTransactionPipeline
 from .rentalPropertyMedian import RentalPropertyMedianPipeline
 from .supermarket import SupermarketPipeline
 from .trainStation import TrainStationPipeline
+from .multilayerPerceptron import MultilayerPerceptronPipeline
 
 
 def get_all_pipelines(run_pipelines: bool = False) -> List[Pipeline]:
@@ -28,6 +29,7 @@ def get_all_pipelines(run_pipelines: bool = False) -> List[Pipeline]:
         RentalPropertyMedianPipeline(run_pipelines),
         SupermarketPipeline(run_pipelines),
         TrainStationPipeline(run_pipelines),
+        MultilayerPerceptronPipeline(run_pipelines)
     ]
 
 
