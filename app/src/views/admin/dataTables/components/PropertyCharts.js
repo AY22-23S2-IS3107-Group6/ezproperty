@@ -10,81 +10,80 @@ export const PropertyCharts = (props) => {
 
   return (
     <Box>
-      <Card align='center' direction='column' w='100%'>
-        <Flex justify='space-between' align='start' px='10px' pt='5px'>
-          <Flex flexDirection='column' align='start' me='20px'>
-            <Flex align='end'>
-              <Text
-                color={textColor}
-                fontSize='34px'
-                fontWeight='700'
-                lineHeight='100%'>
-                Average Resale Prices over Time
-              </Text>
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px'>
+        <Card align='center' direction='column' w='100%'>
+          <Flex justify='space-between' align='start' px='10px' pt='5px'>
+            <Flex flexDirection='column' align='start' me='20px'>
+              <Flex align='end'>
+                <Text
+                  color={textColor}
+                  fontSize='25px'
+                  fontWeight='700'
+                  lineHeight='100%'>
+                  Average Resale Prices over Time
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-        <Flex justify='space-between' align='start' px='10px' pt='5px'>
-          <Flex flexDirection='column' align='start' me='20px'>
-            <Flex align='end'>
-              <Text
-                color={textColor}
-                fontSize='16px'
-                fontWeight= '300'
-                lineHeight='150%'>
-                For {propertyType}
-              </Text>
+          <Flex justify='space-between' align='start' px='10px' pt='5px'>
+            <Flex flexDirection='column' align='start' me='20px'>
+              <Flex align='end'>
+                <Text
+                  color={textColor}
+                  fontSize='16px'
+                  fontWeight= '300'
+                  lineHeight='150%'>
+                  For {propertyType}
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-        <SimpleGrid
-          mb="10px"
-        ></SimpleGrid>
-        <Box h='290px' mt='auto'>
-          <LineChart
-            propertyType={propertyType}
-          />
-        </Box>
-      </Card>
-      <SimpleGrid
-          mb="20px"
-        ></SimpleGrid>
-      <Card align='center' direction='column' w='100%'>
-      <Flex justify='space-between' align='start' px='10px' pt='5px'>
-        <Flex flexDirection='column' align='start' me='20px'>
-          <Flex align='end'>
-            <Text
-              color={textColor}
-              fontSize='34px'
-              fontWeight='700'
-              lineHeight='100%'>
-              Highest Average Resale Price by District
-            </Text>
+          <SimpleGrid
+            mb="10px"
+          ></SimpleGrid>
+          <Box h='290px' mt='auto'>
+            <LineChart
+              propertyType={propertyType}
+            />
+          </Box>
+        </Card>
+        <Card align='center' direction='column' w='100%'>
+          <Flex justify='space-between' align='start' px='10px' pt='5px'>
+            <Flex flexDirection='column' align='start' me='20px'>
+              <Flex align='end'>
+                <Text
+                  color={textColor}
+                  fontSize='25px'
+                  fontWeight='700'
+                  lineHeight='100%'>
+                  Top Average Resale Price by District
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
-        </Flex>
-      </Flex>
-      <Flex justify='space-between' align='start' px='10px' pt='5px'>
-        <Flex flexDirection='column' align='start' me='20px'>
-          <Flex align='end'>
-            <Text
-              color={textColor}
-              fontSize='16px'
-              fontWeight= '300'
-              lineHeight='150%'>
-              For {propertyType}
-            </Text>
+          <Flex justify='space-between' align='start' px='10px' pt='5px'>
+            <Flex flexDirection='column' align='start' me='20px'>
+              <Flex align='end'>
+                <Text
+                  color={textColor}
+                  fontSize='16px'
+                  fontWeight= '300'
+                  lineHeight='150%'>
+                  For {propertyType}
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
-        </Flex>
-      </Flex>
-      <SimpleGrid
-        mb="10px"
-      ></SimpleGrid>
-      <Box h='290px' mt='auto'>
-        <BarChart
-          propertyType={propertyType}
-        />
-      </Box>
-    </Card>
-  </Box>
+          <SimpleGrid
+            mb="10px"
+          ></SimpleGrid>
+          <Box h='290px' mt='auto'>
+            <BarChart
+              propertyType={propertyType}
+            />
+          </Box>
+        </Card>
+      </SimpleGrid>
+    </Box>
   );
 };
