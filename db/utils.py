@@ -38,8 +38,9 @@ def get_floor_range(floor):
         floor_start = 0
         floor_end = 0
     else:
-        floor_start = find_closest_floor_number(floor, floor_start_range)
-        floor_end = find_closest_floor_number(floor, floor_end_range)
+        floor_number_index = find_floor_number_index(floor, floor_start_range)
+        floor_start = floor_start_range[floor_number_index]
+        floor_end = floor_end_range[floor_number_index]
 
     return {
         "floor_start": floor_start,
@@ -56,15 +57,8 @@ def generate_incrementing_floor_numbers(start, end, increment):
 
     return floor_numbers_list
 
-def find_closest_floor_number(number, list_of_floor_numbers):
-    closest_floor_number = None
-    min_difference = float("inf")
+def find_floor_number_index(number, list_of_floor_numbers):
+    for i in range(len(list_of_floor_numbers) - 1):
+        if list_of_floor_numbers[i] <= number < list_of_floor_numbers[i + 1]:
+            return i
 
-    for num in list_of_floor_numbers:
-        difference = abs(number - num)
-
-        if difference < min_difference:
-            closest_floor_number = num
-            min_difference = difference
-
-    return closest_floor_number
