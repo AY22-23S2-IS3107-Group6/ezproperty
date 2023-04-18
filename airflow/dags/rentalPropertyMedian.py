@@ -7,7 +7,7 @@ from datetime import datetime
 from db.etl.pipeline import Pipeline
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from db.etl.carparkPublic import CarparkPublicPipeline
+from db.etl.rentalPropertyMedian import RentalPropertyMedianPipeline
 
 def log(pipeline: Pipeline, message: str):
     print(f"Airflow  | {pipeline.schema_name.ljust(26)} | {message}")
@@ -17,39 +17,39 @@ default_args = {
 }
 
 with DAG(
-    'carparkPublic',
+    'rentalPropertyMedian',
     default_args=default_args,
-    description='Loads Public Carparks',
+    description='Loads Rental Property Median',
     schedule_interval=None,
     start_date=datetime(2021, 1, 1),
     catchup=False,
-    tags=['amn'],
+    tags=['main'],
 ) as dag:
 
     dag.doc_md = __doc__
-    CarparkPublicPipelineTemp = CarparkPublicPipeline()
+    RentalPropertyMedianPipelineTemp = RentalPropertyMedianPipeline()
 
     def extract(**kwargs):
-        log(CarparkPublicPipeline, "Extract start")
+        log(RentalPropertyMedianPipeline, "Extract start")
         ti = kwargs['ti']
-        data = CarparkPublicPipelineTemp.extract()
+        data = RentalPropertyMedianPipelineTemp.extract()
         ti.xcom_push('data', data)
-        log(CarparkPublicPipelineTemp, "Extract completed successfuly")
+        log(RentalPropertyMedianPipelineTemp, "Extract completed successfuly")
 
     def transform(**kwargs):
-        log(CarparkPublicPipelineTemp, "Transform Start")
+        log(RentalPropertyMedianPipelineTemp, "Transform Start")
         ti = kwargs['ti']
         data = ti.xcom_pull(task_ids='extract', key='data')
-        transformed_data = CarparkPublicPipelineTemp.transform(data)
+        transformed_data = RentalPropertyMedianPipelineTemp.transform(data)
         ti.xcom_push('transformed_data', transformed_data)
-        log(CarparkPublicPipelineTemp, "Transform completed successfuly")
+        log(RentalPropertyMedianPipelineTemp, "Transform completed successfuly")
 
     def load(**kwargs):
-        log(CarparkPublicPipelineTemp, "Load Start")
+        log(RentalPropertyMedianPipelineTemp, "Load Start")
         ti = kwargs['ti']
         data = ti.xcom_pull(task_ids='transform', key='transformed_data')
-        CarparkPublicPipelineTemp.load(data)
-        log(CarparkPublicPipelineTemp, "Load completed successfuly")
+        RentalPropertyMedianPipelineTemp.load(data)
+        log(RentalPropertyMedianPipelineTemp, "Load completed successfuly")
 
     extract = PythonOperator(task_id="extract", python_callable=extract)
     transform = PythonOperator(task_id="transform", python_callable=transform)
