@@ -1,85 +1,14 @@
-export const propertyInformationColumns = [
+export const tables = [
   {
-    Header: "ID",
-    accessor: "id",
+    schemaName: "main/propertytransaction",
+    title: "Main: Property Transactions",
   },
-  {
-    Header: "TOWN",
-    accessor: "bldgContractTown",
-  },
-  {
-    Header: "BLOCK",
-    accessor: "block",
-  },
-  {
-    Header: "STREET",
-    accessor: "street",
-  },
-  {
-    Header: "MAX FLOOR",
-    accessor: "maxFloorLevel",
-  },
-  {
-    Header: "YEAR COMPLETED",
-    accessor: "yearCompleted",
-  },
-  {
-    Header: "RESIDENTIAL",
-    accessor: "residentialTag",
-  },
-  {
-    Header: "COMMERCIAL",
-    accessor: "commercialTag",
-  },
-  {
-    Header: "MKT HAWKER",
-    accessor: "marketHawkerTag",
-  },
-  {
-    Header: "MISC",
-    accessor: "miscTag",
-  },
-  {
-    Header: "CARPARK",
-    accessor: "mscpTag",
-  },
-  {
-    Header: "PAVILLION",
-    accessor: "precinctPavillionTag",
-  },
-  {
-    Header: "TOTAL DWELLING UNITS",
-    accessor: "totalDwellingUnits",
-  },
+  { schemaName: "main/rentalproject", title: "Main: Rental Projects" },
+  { schemaName: "main/rentalmedian", title: "Main: Rental Project Prices" },
+  { schemaName: "amn/carparkpublic", title: "Amenities: Public Carparks" },
+  { schemaName: "amn/carparkseason", title: "Amenities: Season Carparks" },
+  { schemaName: "amn/hawkercentre", title: "Amenities: Hawker Centres" },
+  { schemaName: "amn/primaryschool", title: "Amenities: Primary Schools" },
+  { schemaName: "amn/trainstation", title: "Amenities: Train Stations" },
+  { schemaName: "amn/supermarket", title: "Amenities: Supermarkets" },
 ];
-
-export const trainStationColumns = [
-  {
-    Header: "STATION NAME",
-    accessor: "stationName",
-  },
-  {
-    Header: "STATION NUMBER",
-    accessor: "stationNo",
-  },
-  {
-    Header: "X COORDINATE (SVY21)",
-    accessor: "x",
-  },
-  {
-    Header: "Y COORDINATE (SVY21)",
-    accessor: "y",
-  },
-  {
-    Header: "LATITUDE",
-    accessor: "latitude",
-  },
-  {
-    Header: "LONGITUDE",
-    accessor: "longitude",
-  },
-  {
-    Header: "COLOR",
-    accessor: "color",
-  },
-]
