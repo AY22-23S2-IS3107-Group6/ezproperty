@@ -6,9 +6,6 @@ class MultilayerPerceptronPipeline(Pipeline):
 
     def extract(self) -> list:
 
-        # need to load one sample data to create the db if its empty. then, stop loading
-        # data = [{}]
-         
         # self.dl_loader(data, self.schema_name)
         return self.dl_getter(self.schema_name)
 
