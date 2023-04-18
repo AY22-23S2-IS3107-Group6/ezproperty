@@ -1,5 +1,4 @@
 import {
-  Divider,
   Flex,
   Table,
   Tbody,
@@ -20,7 +19,6 @@ import {
 
 // Custom components
 import Card from "components/card/Card";
-import Menu from "components/menu/MainMenu";
 export default function ColumnsTable(props) {
   const { columnsData, tableData, title } = props;
 

@@ -7,7 +7,6 @@ from db.warehouse.schemas import create_queries
 app = Flask(__name__)
 CORS(app)
 
-
 @app.route('/<category>/<schema_name>', methods=['GET'])
 def get_data(category: str, schema_name: str):
     schema = get_schema(category, schema_name)
@@ -40,6 +39,75 @@ def get_schema(category: str, schema_name: str):
         if f"{category}__{schema_name}" == schema.lower():
             return schema
     return None
+
+@app.route('/topfivedistrictsfor<property_type>', methods=['GET'])
+def get_top_five(property_type: str):
+    dw = DataWarehouse()
+    return jsonify(dw.query(f"SELECT propertyType, district, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = '{property_type}' GROUP BY district ORDER BY avg_price DESC LIMIT 5"))
+
+@app.route('/linechartdatafor<property_type>', methods=['GET'])
+def get_line_data(property_type: str):
+    dw = DataWarehouse()
+    return jsonify(dw.query(f"SELECT YEAR(transactionDate) AS year, AVG(price) AS avg_price FROM main__propertyTransaction WHERE propertyType = '{property_type}' GROUP BY year ORDER BY year"))
+
+@app.route('/propertytransaction')
+def getPropertyTransactions():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM main__PropertyTransaction"))
+
+
+@app.route('/rentaltransaction')
+def getRentalTransactions():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM main__RentalTransaction"))
+
+
+@app.route('/propertyinformation')
+def getPropertyInformation():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM ref__PropertyInformation"))
+
+
+@app.route('/district')
+def getDistricts():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM ref__District"))
+
+
+@app.route('/trainstation')
+def getTrainStations():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM amn__TrainStation"))
+
+
+@app.route('/primaryschool')
+def getPrimarySchools():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM amn__PrimarySchool"))
+
+
+@app.route('/supermarket')
+def getSupermarkets():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM amn__Supermarket"))
+
+
+@app.route('/hawkercentre')
+def getHawkerCentres():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM amn__HawkerCentre"))
+
+
+@app.route('/carparkpublic')
+def getPublicCarparks():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM amn__CarparkPublic"))
+
+
+@app.route('/carparkseasons')
+def getSeasonCarparks():
+    warehouse = DataWarehouse()
+    return jsonify(warehouse.query("SELECT * FROM amn__CarparkSeason"))
 
 
 @app.route('/addpropertytransaction', methods=['POST'])
