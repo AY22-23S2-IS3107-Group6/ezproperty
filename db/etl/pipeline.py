@@ -59,7 +59,7 @@ class Pipeline:
         """ Loads data to data warehouse """
         try:
             self.log(schema_name,
-                     f"Loading {len(result)} documents to data lake.")
+                     f"Loading {len(result)} documents to data warehouse.")
             self.dw.insert_to_schema(
                 schema_name, list(map(lambda x: tuple(x.values()), result)))
 
