@@ -3,6 +3,10 @@ from flask_cors import CORS
 from db import DataWarehouse
 from .utils import get_floor_range
 from db.warehouse.schemas import create_queries
+import numpy as np
+import pandas as pd
+
+from db.ml import export_model 
 
 app = Flask(__name__)
 CORS(app)
@@ -110,7 +114,7 @@ def predictPropertyPrice():
         transactionDate = data["transactionDate"]
         resale = data["resale"]
 
-        # prepare floor_start & floor_end to input into datawarehouse
+        # prepare floor_start & floor_end 
         floor_range = get_floor_range(floor)
         floor_start = floor_range["floor_start"]
         floor_end = floor_range["floor_end"]
@@ -120,6 +124,18 @@ def predictPropertyPrice():
             resale = True
         else:
             resale = False
+
+        # prepare date format
+        df = pd.DataFrame(data, index=[0])
+        for column in df.columns:
+            if column == "transactionDate":
+                df[column] = pd.to_datetime(df[column])
+                df[column] = (df[column].max() - df[column]) / np.timedelta64(1,'Y')
+                print(df[column][0])
+                transactionDate = df[column][0]
+        
+        print(df)
+        print(transactionDate)
 
         futurePropertyTransaction = [{
             "district": district,
@@ -134,8 +150,6 @@ def predictPropertyPrice():
             map(lambda x: tuple(x.values()), futurePropertyTransaction))
         print(futurePropertyTransaction)
 
-        # warehouse = DataWarehouse()
-        # warehouse.insert_to_schema("main__PropertyTransaction",
-        #                            propertyTransaction)
-
+        predicted_price = model.predict()
+       
         return futurePropertyTransaction
