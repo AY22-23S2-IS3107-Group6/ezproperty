@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "apexcharts": "^3.37.3",
-    "bootstrap": "^5.2.3",
-    "chart.js": "^4.2.1",
-    "dotenv": "^16.0.3",
-    "react-apexcharts": "^1.4.0",
-    "react-bootstrap": "^2.7.2",
-    "react-chartjs-2": "^5.2.0"
+    "dotenv": "^16.0.3"
   }
 }
