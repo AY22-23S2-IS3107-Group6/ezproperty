@@ -5,8 +5,7 @@ from .utils import get_floor_range
 from db.warehouse.schemas import create_queries
 import numpy as np
 import pandas as pd
-
-from db.ml import export_model 
+from datetime import date, datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -99,57 +98,69 @@ def addPropertyTransaction():
         return propertyTransaction
 
 
-@app.route('/predictpropertyprice', methods=['POST'])
+@app.route('/predictpropertyprice', methods=['GET'])
 def predictPropertyPrice():
-    if request.method == "POST":
+    if request.method == "GET":
         # retrieve data from FE
-        data = request.get_json()["values"]
-        print(data)
+        print(request.args.get("floor"))
+        
+        # data = request.get_json()["values"]
+        # print(data)
 
         # separating data
-        # street = data["street"]
-        floor = data["floor"]
-        district = data["district"]
-        area = data["area"]
-        transactionDate = data["transactionDate"]
-        resale = data["resale"]
+        floor = int(request.args.get("floor"))
+        district = int(request.args.get("district"))
+        area = int(request.args.get("area"))
+        transactionDate = request.args.get("transactionDate")
+        resale = request.args.get("resale")
 
-        # prepare floor_start & floor_end 
+        # # prepare floor_start & floor_end 
         floor_range = get_floor_range(floor)
         floor_start = floor_range["floor_start"]
         floor_end = floor_range["floor_end"]
 
-        # prepare resale boolean
+        # # prepare resale boolean
         if (resale == "resale"):
             resale = True
         else:
             resale = False
 
-        # prepare date format
-        df = pd.DataFrame(data, index=[0])
-        for column in df.columns:
-            if column == "transactionDate":
-                df[column] = pd.to_datetime(df[column])
-                df[column] = (df[column].max() - df[column]) / np.timedelta64(1,'Y')
-                print(df[column][0])
-                transactionDate = df[column][0]
-        
-        print(df)
-        print(transactionDate)
-
-        futurePropertyTransaction = [{
+        # # prepare date format
+        data = [{
+            "floor": floor,
             "district": district,
-            # "street": street,
-            "floorRangeStart": floor_start,
-            "floorRangeEnd": floor_end,
             "area": area,
             "transactionDate": transactionDate,
             "resale": resale
         }]
-        futurePropertyTransaction = list(
-            map(lambda x: tuple(x.values()), futurePropertyTransaction))
-        print(futurePropertyTransaction)
+        df = pd.DataFrame(data, index=[0])
+        for column in df.columns:
+            if column == "transactionDate":
+                df[column] = pd.to_datetime(df[column])
+                df[column] = (df[column] - pd.to_datetime(date.today())) / np.timedelta64(1,'Y')
+                print(df[column][0])
+                transactionDate = df[column][0]
 
-        predicted_price = model.predict()
+        print(transactionDate)
+        data = list(
+            map(lambda x: tuple(x.values()), data))
+        print(data)
+
+        # futurePropertyTransaction = [{
+        #     "district": district,
+        #     # "street": street,
+        #     "floorRangeStart": floor_start,
+        #     "floorRangeEnd": floor_end,
+        #     "area": area,
+        #     "transactionDate": transactionDate,
+        #     "resale": resale
+        # }]
+        # futurePropertyTransaction = list(
+        #     map(lambda x: tuple(x.values()), futurePropertyTransaction))
+        # print(futurePropertyTransaction)
+
+        # predicted_price = model.predict()
+        # predicted_price = 509
+        # predicted_price = str(predicted_price)
        
-        return futurePropertyTransaction
+        return jsonify(6.5)

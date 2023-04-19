@@ -7,34 +7,63 @@ import {
     FormLabel,
     FormErrorMessage,
     Input,
-    SimpleGrid
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    SimpleGrid,
+    useDisclosure
 } from "@chakra-ui/react"
 
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const PredictivePriceForm = (props) => {
     const initialValues = {
         street: "",
         floor: 0,
         district: 1,
-        propertyType: "",
         area: 0,
-        price: 0,
         transactionDate: new Date(),
-        tenure: 0,
         resale: ""
     }
+    const [predictedPrice, setPredictedPrice] = useState(null);
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const onSubmit = values => {
-        axios.post('http://localhost:5000/predictpropertyprice', {
-            values
-        })
-            .then((response) => {
-                console.log(response);
-            }, (error) => {
-                console.log(error);
-            });
+    const onSubmit = async (values) => {
+        const params = {
+            "floor": values.floor,
+            "district": values.district,
+            "area": values.area,
+            "transactionDate": values.transactionDate,
+            "resale": values.resale
+        }
+
+        try {
+            axios.get('http://localhost:5000/predictpropertyprice', {
+                params: params
+            })
+                .then((response) => response.data)
+                .then((json) => {
+                    if (typeof json === "number") {
+                        json = JSON.parse(json);
+                        console.log(json)
+                    }
+                    setPredictedPrice(json);
+                    onOpen();
+                })
+                .catch((err) => console.log(err));
+        } catch (error) {
+            console.error("Error:", error);
+        }
     }
+
+    // useEffect(() => {
+    //     onOpen();
+    // }, [predictedPrice]);
 
     const validationSchema = Yup.object({
         street: Yup.string().required("Street is required!"),
@@ -67,7 +96,7 @@ const PredictivePriceForm = (props) => {
                     onSubmit={onSubmit}
                 >
                     {(props) => (
-                        <Form action='http://localhost:5000/addpropertytransaction' method="post">
+                        <Form action='http://localhost:5000/predictpropertyprice' method="get">
                             <Field name="street">
                                 {({ field, form }) => (
                                     <FormControl isInvalid={form.errors.street && form.touched.street}>
@@ -169,6 +198,26 @@ const PredictivePriceForm = (props) => {
                     )}
 
                 </Formik>
+
+                <>
+                    <Modal isOpen={isOpen} onClose={onClose}>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Predicted Property Price</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                <div>
+                                    {predictedPrice}
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button colorScheme="brand" mr={3} onClick={onClose}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
+                </>
             </SimpleGrid>
         </Box>
     );
