@@ -10,6 +10,7 @@ The project is structured by business functions.
 ./
 ├── README.md
 ├── env
+├── venv                        # If you need two environments
 ├── db
 │   ├── __init__.py             # Main DB script
 │   ├── warehouse
@@ -29,7 +30,10 @@ The project is structured by business functions.
 │   │   ├── ...
 │   │   └── trainStation.py
 │   ├── ml
-│   │   └── ...
+│   │   ├── findCentroids.py
+│   │   ├── assignDistrict.py
+│   │   ├── predictPrice.py
+│   │   └── predictPrice2.ipynb
 │   ├── app.py                  # Flask app
 │   └── utils.py                # Utility functions
 ├── airflow/dags                # DAG bag folder
@@ -37,8 +41,6 @@ The project is structured by business functions.
 │   ├── ...
 │   └── trainstation.py 
 ├── app
-├── notebooks
-├── dataviz
 └── etc.
 ```
 
@@ -55,34 +57,35 @@ Run this on WSL or bash
 
 ```bash
 # Create environment and download packages
-> virtualenv env
+(base) virtualenv env
 
 # Enter environment
-> source env/bin/activate # macOS/linux
-> .\env\Scripts\activate # windows
-> pip install -r requirements.txt
+(base) source env/bin/activate # macOS/linux
+(env) .\env\Scripts\activate # windows
+(env) pip install -r requirements.txt
+(env) pip install ... # manual installation for failing libraries
 
 # You may have to run this if mysqlclient refuses to download during pip install
-> sudo apt-get install python-dev default-libmysqlclient-dev
-> sudo apt-get install python3-dev gcc
+(env) sudo apt-get install python-dev default-libmysqlclient-dev
+(env) sudo apt-get install python3-dev gcc
 
 # Run ETL file
-> python -m db.etl.[etl file name]
-> python -m db.etl.primarySchool.py # has to be run on your native os terminal
+(env) python -m db.etl.[etl file name]
+(env) python -m db.etl.primarySchool.py # has to be run on your native os terminal
 
 # Start Airflow
 <Terminal 1>
-> airflow webserver --port 8080
+(env) airflow webserver --port 8080
 
 <Terminal 2>
-> airflow scheduler
+(env) airflow scheduler
 
 # Run the backend
 # for macOS Monterey/Ventura, turn off Airplay Receiver in System Settings
 <Terminal 3>
-> export FLASK_APP=db/app
-> export FLASK_ENV=development
-> flask run
+(env) export FLASK_APP=db/app
+(env) export FLASK_ENV=development
+(env) flask run
 
 # Run the frontend
 <Terminal 4>
@@ -163,4 +166,4 @@ Go to the webserver and filter by tag "is3107g6". Steps:
 1. Run `clearDatabases` to initialise database in MySQL and MongoDB
 2. Run `districtInfo` to initialise references
 3. Run all other pipelines
-4. If you run `primarySchool`, it may fail if you do not have `chromedriver` installed.
+4. If you run `primarySchool`, it may fail if you do not have `chromedriver`
