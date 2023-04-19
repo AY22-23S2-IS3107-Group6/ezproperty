@@ -50,7 +50,7 @@ def __init__():
             df[column] = (df[column].max() - df[column]) / np.timedelta64(1,'Y')
         if column == "price": # price is in millions
             df[column] = df[column].astype(float) / 1e6
-        if column == "area": # area is in 100 square feet
+        if column == "area": # area is in 100 square metre
             df[column] = df[column].astype(float) / 100
         else:
             df[column] = df[column].astype(float)

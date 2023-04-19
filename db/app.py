@@ -104,7 +104,7 @@ def addPropertyTransaction():
         warehouse.insert_to_schema("main__PropertyTransaction",
                                    propertyTransaction)
 
-        return propertyTransaction
+        return jsonify(propertyTransaction)
 
 
 @app.route('/predictpropertyprice', methods=['GET'])
@@ -154,7 +154,7 @@ def predictPropertyPrice():
 
         # get predict price from ML
         __init__()
-        predicted_price = load_from_db_and_predict(district, floor_start, floor_end, area, transactionDate, resale)
+        predicted_price = load_from_db_and_predict(district, floor_start, floor_end, area/100, transactionDate, resale)
         predicted_price = round(predicted_price[0][0], 2)
         print(type(predicted_price))
        

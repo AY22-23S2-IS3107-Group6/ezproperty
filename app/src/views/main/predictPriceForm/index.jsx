@@ -42,7 +42,7 @@ const PredictivePriceForm = (props) => {
       district: values.district,
       area: values.area,
       transactionDate: values.transactionDate,
-      resale: values.resale,
+      resale: values.resale.toLowerCase(),
     };
 
     try {
@@ -82,7 +82,7 @@ const PredictivePriceForm = (props) => {
       "Property should not be sold yet"
     ),
     resale: Yup.mixed()
-      .oneOf(["private", "resale"], "Has to be either resale or private")
+      .oneOf(["Private", "Resale"], "Has to be either resale or private")
       .required("Resale/ Private is required!"),
   });
 
