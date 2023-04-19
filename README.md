@@ -27,13 +27,15 @@ The project is structured by business functions.
 │   ├── etl
 │   │   ├── carparkPublic.py
 │   │   ├── ...
-│   │   └── trainStation.py     # Connects to localhost:27017
+│   │   └── trainStation.py
 │   ├── ml
 │   │   └── ...
 │   ├── app.py                  # Flask app
 │   └── utils.py                # Utility functions
-├── airflow
-│   └── tbd.py
+├── airflow/dags                # DAG bag folder
+│   ├── carparkPublic.py
+│   ├── ...
+│   └── trainstation.py 
 ├── app
 ├── notebooks
 ├── dataviz
@@ -69,19 +71,21 @@ Run this on WSL or bash
 > python -m db.etl.primarySchool.py # has to be run on your native os terminal
 
 # Start Airflow
-> airflow webserver --port 8080 -D
-> airflow scheduler -D
+<Terminal 1>
+> airflow webserver --port 8080
 
-# Run data injection
-> airflow dags init_load 2023-XX-YY
+<Terminal 2>
+> airflow scheduler
 
 # Run the backend
 # for macOS Monterey/Ventura, turn off Airplay Receiver in System Settings
+<Terminal 3>
 > export FLASK_APP=db/app
 > export FLASK_ENV=development
 > flask run
 
 # Run the frontend
+<Terminal 4>
 > cd app
 > npm install
 > npm start
@@ -136,3 +140,27 @@ for x in result:
 
 # Out[1]: {'col1': 'row1', 'col2': 'row2'}
 ```
+
+## Using Airflow
+
+Change the airflow config
+```python
+> airflow.cfg
+
+# How long before timing out a python file import
+dagbag_import_timeout = 60.0
+
+# Number of seconds after which a DAG file is parsed. The DAG file is parsed every
+# ``min_file_process_interval`` number of seconds. Updates to DAGs are reflected after
+# this interval. Keeping this number low will increase CPU usage.
+min_file_process_interval = 300
+
+# The folder where your airflow pipelines live, most likely a
+# subfolder in a code repository. This path must be absolute.
+dags_folder = /path/to/ezproperty/airflow/dags
+```
+Go to the webserver and filter by tag "is3107g6". Steps:
+1. Run `clearDatabases` to initialise database in MySQL and MongoDB
+2. Run `districtInfo` to initialise references
+3. Run all other pipelines
+4. If you run `primarySchool`, it may fail if you do not have `chromedriver` installed.

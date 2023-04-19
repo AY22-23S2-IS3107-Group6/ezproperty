@@ -20,7 +20,7 @@ export const PropertyCharts = (props) => {
                   fontSize='25px'
                   fontWeight='700'
                   lineHeight='100%'>
-                  Average Resale Prices over Time
+                  Average Property Prices over Time
                 </Text>
               </Flex>
             </Flex>
@@ -56,7 +56,7 @@ export const PropertyCharts = (props) => {
                   fontSize='25px'
                   fontWeight='700'
                   lineHeight='100%'>
-                  Top Average Resale Price by District
+                  Top Average Property Price by District
                 </Text>
               </Flex>
             </Flex>
