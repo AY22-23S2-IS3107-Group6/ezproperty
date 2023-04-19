@@ -11,6 +11,8 @@ class PropertyTransactionPipeline(Pipeline):
     schema_name = "main__PropertyTransaction"
 
     def extract(self) -> list:
+        self.dl_delete_all("main__PropertyTransactionsPrivate") # de-cache to prevent duplication
+        self.dl_delete_all("main__PropertyTransactionsPublic") # de-cache to prevent duplication
         apiHeader = getUraApiHeaders()
 
         # Private Property Transcations

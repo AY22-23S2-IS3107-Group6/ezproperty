@@ -10,6 +10,7 @@ class RentalPropertyMedianPipeline(Pipeline):
     schema_name = "main__RentalPropertyMedian"
 
     def extract(self) -> list:
+        self.dl_delete_all(self.schema_name) # de-cache to prevent duplication
         data = requests.get(
             'https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Rental_Median',
             headers=getUraApiHeaders()).json()['Result']

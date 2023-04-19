@@ -6,10 +6,12 @@ class DistrictInfoPipeline(Pipeline):
     description = "Loads District Info natively"
     schedule_interval = None
     tags = ['is3107g6','ref']
-    schema_name = "ref_DistrictInfo"
+    schema_name = "ref__DistrictInfo"
     schema_names = ["ref__District", "ref__Town", "ref__PostalCode"]
 
     def extract(self) -> list:
+        for name in self.schema_names:
+            self.dl_delete_all(name) # de-cache to prevent duplication
         
         # Data
         districts = [

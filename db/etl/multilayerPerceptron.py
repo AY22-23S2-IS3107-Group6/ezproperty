@@ -12,6 +12,6 @@ class MultilayerPerceptronPipeline(Pipeline):
     def transform(self, result: list) -> list:
         return result
 
-# if __name__ == '__main__':
-MultilayerPerceptronPipeline()
+if __name__ == '__main__':
+    MultilayerPerceptronPipeline()
     

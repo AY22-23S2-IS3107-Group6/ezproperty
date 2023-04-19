@@ -9,6 +9,7 @@ class PropertyInformationPipeline(Pipeline):
     schema_name = "ref__PropertyInformation"
 
     def extract(self) -> list:
+        self.dl_delete_all(self.schema_name) # de-cache to prevent duplication
         data = requests.request(
             "GET",
             "https://data.gov.sg/dataset/9dd41b9c-b7d7-405b-88f8-61b9ca9ba224/resource/482bfa14-2977-4035-9c61-c85f871daf4e/data"

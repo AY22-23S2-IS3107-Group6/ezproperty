@@ -10,6 +10,7 @@ class CarparkPublicPipeline(Pipeline):
     schema_name = "amn__CarparkPublic"
 
     def extract(self) -> list:
+        self.dl_delete_all(self.schema_name) # de-cache to prevent duplication
         data = requests.get(
             'https://www.ura.gov.sg/uraDataService/invokeUraDS?service=Car_Park_Details',
             headers=getUraApiHeaders()).json()['Result']

@@ -12,6 +12,7 @@ class TrainStationPipeline(Pipeline):
     schema_name = "amn__TrainStation"
 
     def extract(self) -> list:
+        self.dl_delete_all(self.schema_name) # de-cache to prevent duplication
         # make a request to the site and get it as a string
         markup = requests.get(
             f'https://github.com/hxchua/datadoubleconfirm/blob/master/datasets/mrtsg.csv'

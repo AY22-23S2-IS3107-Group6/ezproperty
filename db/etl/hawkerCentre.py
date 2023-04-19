@@ -9,6 +9,7 @@ class HawkerCentrePipeline(Pipeline):
     schema_name = "amn__HawkerCentre"
 
     def extract(self) -> list:
+        self.dl_delete_all(self.schema_name) # de-cache to prevent duplication
         # Seems to be limited by MongoDB's 100 BSON limit
         # resp = requests.get(
         #     'https://data.gov.sg/api/action/datastore_search?resource_id=8f6bba57-19fc-4f36-8dcf-c0bda382364d'
