@@ -62,7 +62,7 @@ const TransactionForm = (props) => {
       .positive("Property must have tenure left")
       .required("Tenure is required!"),
     resale: Yup.string()
-      .oneOf(["private", "resale"], "Has to be either resale or private")
+      .oneOf(["Private", "Resale"], "Has to be either Resale or Private")
       .required("Resale/ Private is required!"),
   });
 

@@ -6,7 +6,7 @@ from db.warehouse.schemas import create_queries
 import numpy as np
 import pandas as pd
 from datetime import date
-from .ml.predictPrice import __init__, load_from_db_and_predict
+from .ml.predictPrice import update_model, load_from_db_and_predict
 
 app = Flask(__name__)
 CORS(app)
@@ -84,6 +84,7 @@ def addPropertyTransaction():
         else:
             resale = False
 
+        # insert new property transaction
         propertyTransaction = [{
             "district": district,
             "street": street,
@@ -103,6 +104,9 @@ def addPropertyTransaction():
         warehouse = DataWarehouse()
         warehouse.insert_to_schema("main__PropertyTransaction",
                                    propertyTransaction)
+        
+        # update price prediction model
+        update_model()
 
         return jsonify(propertyTransaction)
 
@@ -111,12 +115,6 @@ def addPropertyTransaction():
 def predictPropertyPrice():
     if request.method == "GET":
         # retrieve data from FE
-        print(request.args.get("floor"))
-        
-        # data = request.get_json()["values"]
-        # print(data)
-
-        # separating data
         floor = int(request.args.get("floor"))
         district = int(request.args.get("district"))
         area = int(request.args.get("area"))
@@ -153,7 +151,6 @@ def predictPropertyPrice():
         print(transactionDate)
 
         # get predict price from ML
-        __init__()
         predicted_price = load_from_db_and_predict(district, floor_start, floor_end, area/100, transactionDate, resale)
         predicted_price = round(predicted_price[0][0], 2)
         print(type(predicted_price))

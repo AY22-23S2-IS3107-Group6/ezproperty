@@ -34,7 +34,7 @@ schema_name = 'ml__MultiLayerPerceptron'
 
 
 # Creates a new MLP and loads into datalake
-def __init__():
+def update_model():
     db = DataWarehouse()
 
     dataset = db.query('''

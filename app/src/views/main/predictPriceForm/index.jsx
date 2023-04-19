@@ -82,7 +82,7 @@ const PredictivePriceForm = (props) => {
       "Property should not be sold yet"
     ),
     resale: Yup.mixed()
-      .oneOf(["Private", "Resale"], "Has to be either resale or private")
+      .oneOf(["Private", "Resale"], "Has to be either Resale or Private")
       .required("Resale/ Private is required!"),
   });
 
