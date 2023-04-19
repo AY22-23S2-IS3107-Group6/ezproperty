@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
@@ -33,21 +34,21 @@ with DAG(
         log(RentalPropertyMedianPipeline, "Extract start")
         ti = kwargs['ti']
         data = RentalPropertyMedianPipelineTemp.extract()
-        ti.xcom_push('data', data)
+        ti.xcom_push('data', json.dumps(data, default=str))
         log(RentalPropertyMedianPipelineTemp, "Extract completed successfuly")
 
     def transform(**kwargs):
         log(RentalPropertyMedianPipelineTemp, "Transform Start")
         ti = kwargs['ti']
-        data = ti.xcom_pull(task_ids='extract', key='data')
+        data = json.loads(ti.xcom_pull(task_ids='extract', key='data'))
         transformed_data = RentalPropertyMedianPipelineTemp.transform(data)
-        ti.xcom_push('transformed_data', transformed_data)
+        ti.xcom_push('transformed_data', json.dumps(transformed_data, default=str))
         log(RentalPropertyMedianPipelineTemp, "Transform completed successfuly")
 
     def load(**kwargs):
         log(RentalPropertyMedianPipelineTemp, "Load Start")
         ti = kwargs['ti']
-        data = ti.xcom_pull(task_ids='transform', key='transformed_data')
+        data = json.loads(ti.xcom_pull(task_ids='transform', key='transformed_data'))
         RentalPropertyMedianPipelineTemp.load(data)
         log(RentalPropertyMedianPipelineTemp, "Load completed successfuly")
 

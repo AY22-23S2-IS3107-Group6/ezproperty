@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
@@ -33,21 +34,21 @@ with DAG(
         log(TrainStationPipeline, "Extract start")
         ti = kwargs['ti']
         data = TrainStationPipelineTemp.extract()
-        ti.xcom_push('data', data)
+        ti.xcom_push('data', json.dumps(data, default=str))
         log(TrainStationPipelineTemp, "Extract completed successfuly")
 
     def transform(**kwargs):
         log(TrainStationPipelineTemp, "Transform Start")
         ti = kwargs['ti']
-        data = ti.xcom_pull(task_ids='extract', key='data')
+        data = json.loads(ti.xcom_pull(task_ids='extract', key='data'))
         transformed_data = TrainStationPipelineTemp.transform(data)
-        ti.xcom_push('transformed_data', transformed_data)
+        ti.xcom_push('transformed_data', json.dumps(transformed_data, default=str))
         log(TrainStationPipelineTemp, "Transform completed successfuly")
 
     def load(**kwargs):
         log(TrainStationPipelineTemp, "Load Start")
         ti = kwargs['ti']
-        data = ti.xcom_pull(task_ids='transform', key='transformed_data')
+        data = json.loads(ti.xcom_pull(task_ids='transform', key='transformed_data'))
         TrainStationPipelineTemp.load(data)
         log(TrainStationPipelineTemp, "Load completed successfuly")
 
