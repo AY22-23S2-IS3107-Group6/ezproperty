@@ -23,7 +23,7 @@ main_insert['main__PropertyTransaction'] = ('''
     INSERT INTO `main__PropertyTransaction`
     (district, street, floorRangeStart, floorRangeEnd, propertyType, area, price, transactionDate, tenure, resale) 
     VALUES
-    ((SELECT id from ref__District WHERE district=%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 ''')
 
 main_create['main__RentalProject'] = ('''

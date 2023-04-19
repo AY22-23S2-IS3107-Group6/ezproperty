@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import Chart from "react-apexcharts";
+import React from "react";
+import ReactApexChart from "react-apexcharts";
 
-class ColumnChart extends Component {
+class BarChart extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       chartData: [],
       chartOptions: {},
@@ -19,10 +20,10 @@ class ColumnChart extends Component {
 
   render() {
     return (
-      <Chart
+      <ReactApexChart
         options={this.state.chartOptions}
         series={this.state.chartData}
-        type='bar'
+        type='area'
         width='100%'
         height='100%'
       />
@@ -30,4 +31,4 @@ class ColumnChart extends Component {
   }
 }
 
-export default ColumnChart;
+export default BarChart;

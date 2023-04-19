@@ -76,6 +76,7 @@ Run this on WSL or bash
 > airflow dags init_load 2023-XX-YY
 
 # Run the backend
+# for macOS Monterey/Ventura, turn off Airplay Receiver in System Settings
 > export FLASK_APP=db/app
 > export FLASK_ENV=development
 > flask run
