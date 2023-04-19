@@ -7,7 +7,7 @@ from .pipeline import Pipeline
 class PropertyTransactionPipeline(Pipeline):
     description = "Loads Property Transactions from URA API and Data.gov.sg"
     schedule_interval = "@daily"
-    tags = ['main']
+    tags = ['is3107g6','main']
     schema_name = "main__PropertyTransaction"
 
     def extract(self) -> list:
@@ -36,25 +36,25 @@ class PropertyTransactionPipeline(Pipeline):
         dataPublic = []
         dataPublic.append(
             requests.get(
-                'https://data.gov.sg/api/action/datastore_search?resource_id=f1765b54-a209-4718-8d38-a39237f502b3&limit=150000'
+                'https://data.gov.sg/api/action/datastore_search?resource_id=f1765b54-a209-4718-8d38-a39237f502b3&limit=125000'
             ).json()["result"]["records"])
         dataPublic.append(
             requests.get(
-                'https://data.gov.sg/api/action/datastore_search?resource_id=1b702208-44bf-4829-b620-4615ee19b57c'
+                'https://data.gov.sg/api/action/datastore_search?resource_id=1b702208-44bf-4829-b620-4615ee19b57c&limit=25000'
             ).json()["result"]["records"])
         dataPublic.append(
             requests.get(
-                'https://data.gov.sg/api/action/datastore_search?resource_id=83b2fc37-ce8c-4df4-968b-370fd818138b'
+                'https://data.gov.sg/api/action/datastore_search?resource_id=83b2fc37-ce8c-4df4-968b-370fd818138b&limit=25000'
             ).json()["result"]["records"])
         dataPublic.append(
             requests.get(
-                'https://data.gov.sg/api/action/datastore_search?resource_id=8c00bf08-9124-479e-aeca-7cc411d884c4'
+                'https://data.gov.sg/api/action/datastore_search?resource_id=8c00bf08-9124-479e-aeca-7cc411d884c4&limit=25000'
             ).json()["result"]["records"])
 
         for dataset in dataPrivate:
             self.dl_loader(dataset, "main__PropertyTransactionsPrivate")
         for dataset in dataPublic:
-            self.dl_loader(dataset, "main__PropertyTransactionsResale")
+            self.dl_loader(dataset, "main__PropertyTransactionsPublic")
 
         return [
             self.dl_getter("main__PropertyTransactionsPrivate"),
@@ -64,6 +64,8 @@ class PropertyTransactionPipeline(Pipeline):
     def transform(self, result: list) -> list:
         tempPrivate = result[0]
         tempResale = result[1]
+
+        townDistrictMap = { t["town"].upper() : t["district"] for t in self.dl_getter("ref__Town")}
 
         filteredResale = []
         filteredPrivateProjects = []
@@ -81,8 +83,7 @@ class PropertyTransactionPipeline(Pipeline):
 
         # Resale: Getting key/values we want
         for transaction in filteredResale:
-
-            transaction['district'] = 1  # need map town to district
+            transaction['district'] = townDistrictMap.get(transaction['town'], 1)  # need map town to district
             transaction['street'] = transaction['street_name']
             transaction['floorRangeStart'] = int(
                 transaction['storey_range'].split(" ")[0])
@@ -186,6 +187,8 @@ class PropertyTransactionPipeline(Pipeline):
                 # Calculate tenure
                 if tempTenure == "Freehold":
                     tenure = 1000000
+                elif tempTenure.split(" ")[-1] == "leasehold":
+                    tenure = tempTenure.split(" ")[0]
                 else:
                     leaseDur = int(tempTenure.split(" ")[0])
                     startYear = int(tempTenure.split(" ")[-1])
@@ -194,7 +197,7 @@ class PropertyTransactionPipeline(Pipeline):
 
                 transaction['transactionDate'] = dateSql
                 transaction['tenure'] = tenure
-                transaction['resale'] = False
+                transaction['resale'] = transaction['typeOfSale'] == 3
 
                 if ('nettPrice' in transaction):
                     del transaction['nettPrice']
@@ -206,8 +209,6 @@ class PropertyTransactionPipeline(Pipeline):
 
                 filteredPrivateTransactions.append(transaction)
 
-        combinedTransactions = filteredPrivateTransactions + filteredResale
-
         # for transaction in combinedTransactions:
         #     if ('district' in transaction) and ('street' in transaction) and ('floorRangeStart' in transaction) and ('floorRangeEnd' in transaction) and ('propertyType' in transaction) and ('area' in transaction) and ('price' in transaction) and ('transactionDate' in transaction) and ('tenure' in transaction) and ('resale' in transaction):
         #         filteredCombinedTransactions.append(transaction)
@@ -215,12 +216,19 @@ class PropertyTransactionPipeline(Pipeline):
         # print("Pre filter length", len(combinedTransactions))
         # print("Post filter length", len(filteredCombinedTransactions))
 
-        return combinedTransactions
+        return [filteredPrivateTransactions, filteredResale]
 
     def load(self, result: list) -> None:
+        # private
         chunk_nos = 10
-        chunk_generator = chunks(result, chunk_nos)
-        for i in range(chunk_nos):
+        chunk_generator = chunks(result[0], chunk_nos)
+        for _ in range(chunk_nos):
+           self.dw_loader(next(chunk_generator), self.schema_name)
+
+        # public
+        chunk_nos = 10
+        chunk_generator = chunks(result[1], chunk_nos)
+        for _ in range(chunk_nos):
            self.dw_loader(next(chunk_generator), self.schema_name)
 
 
