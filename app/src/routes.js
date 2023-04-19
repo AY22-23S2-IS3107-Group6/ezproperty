@@ -19,7 +19,7 @@ const routes = [
     component: View,
   },
   {
-    name: "Add Property Tranasction",
+    name: "Add Property Transaction",
     layout: "/admin",
     path: "/add-property",
     icon: <Icon as={MdAdd} width='20px' height='20px' color='inherit' />,
