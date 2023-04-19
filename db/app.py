@@ -5,7 +5,8 @@ from .utils import get_floor_range
 from db.warehouse.schemas import create_queries
 import numpy as np
 import pandas as pd
-from datetime import date, datetime
+from datetime import date
+from .ml.predictPrice2 import load_from_db_and_predict
 
 app = Flask(__name__)
 CORS(app)
