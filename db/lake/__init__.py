@@ -28,3 +28,10 @@ class DataLake:
             return self.cursor[schema_name].find(query)
         except:
             print(f"Failed querying")
+
+    def delete_all_entries(self, schema_name):
+        try:
+            result = self.cursor[schema_name].delete_many({})
+            print(f"Deleted {result.deleted_count} entries from {schema_name}")
+        except:
+            print(f"Failed deleting entries from {schema_name}")

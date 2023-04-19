@@ -28,3 +28,37 @@ def getUraApiHeaders():
         'Token': URA_API_TOKEN,
         'User-Agent': 'PostmanRuntime/7.30.1'
     }
+
+# prepare floor_start_range & floor_end_range
+def get_floor_range(floor):
+    floor_start_range = generate_incrementing_floor_numbers(1, 100, 5)
+    floor_end_range = generate_incrementing_floor_numbers(5, 100, 5)
+
+    if (floor == 0):
+        floor_start = 0
+        floor_end = 0
+    else:
+        floor_number_index = find_floor_number_index(floor, floor_start_range)
+        floor_start = floor_start_range[floor_number_index]
+        floor_end = floor_end_range[floor_number_index]
+
+    return {
+        "floor_start": floor_start,
+        "floor_end": floor_end,
+    }
+
+def generate_incrementing_floor_numbers(start, end, increment):
+    floor_numbers_list = []
+    current_num = start
+
+    while current_num <= end:
+        floor_numbers_list.append(current_num)
+        current_num += increment
+
+    return floor_numbers_list
+
+def find_floor_number_index(number, list_of_floor_numbers):
+    for i in range(len(list_of_floor_numbers) - 1):
+        if list_of_floor_numbers[i] <= number < list_of_floor_numbers[i + 1]:
+            return i
+

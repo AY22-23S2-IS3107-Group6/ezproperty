@@ -55,6 +55,21 @@ class Pipeline:
         except:
             self.log(schema_name, "Load process from data lake failed.")
 
+    def dl_delete_all(self, schema_name: str) -> list:
+        """ Deletes all data from schema in data lake """
+        try:
+            self.log(schema_name, "Deleting data from data lake with _id.")
+            result = self.dl.delete_all_entries(schema_name)
+            result = list(result)
+            if (len(result) > 0):
+                self.log(schema_name,
+                         f"Delete success. Delete {len(result)} documents.")
+            return result
+        except pymongo.errors.ConnectionFailure as err:
+            self.log(schema_name, f"Connection to MongoDB failed: {err}.")
+        except:
+            self.log(schema_name, "Delete process from data lake failed.")
+
     def dw_loader(self, result: list, schema_name: str) -> None:
         """ Loads data to data warehouse """
         try:

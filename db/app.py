@@ -1,8 +1,12 @@
 from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 from db import DataWarehouse
-import mysql.connector
+from .utils import get_floor_range
 from db.warehouse.schemas import create_queries
+import numpy as np
+import pandas as pd
+from datetime import date
+from .ml.predictPrice import __init__, load_from_db_and_predict
 
 app = Flask(__name__)
 CORS(app)
@@ -128,40 +132,11 @@ def addPropertyTransaction():
         tenure = data["tenure"]
         resale = data["resale"]
 
-        # preparing data to be inserted into datawarehouse
-        # prepare floor_start_range & floor_end_range
-        def find_closest_floor_number(number, list_of_floor_numbers):
-            closest_floor_number = None
-            min_difference = float("inf")
-
-            for num in list_of_floor_numbers:
-                difference = abs(number - num)
-
-                if difference < min_difference:
-                    closest_floor_number = num
-                    min_difference = difference
-
-            return closest_floor_number
-
-        def generate_incrementing_floor_numbers(start, end, increment):
-            floor_numbers_list = []
-            current_num = start
-
-            while current_num <= end:
-                floor_numbers_list.append(current_num)
-                current_num += increment
-
-            return floor_numbers_list
-
-        floor_start_range = generate_incrementing_floor_numbers(1, 100, 5)
-        floor_end_range = generate_incrementing_floor_numbers(5, 100, 5)
-
-        if (floor == 0):
-            floor_start = 0
-            floor_end = 0
-        else:
-            floor_start = find_closest_floor_number(floor, floor_start_range)
-            floor_end = find_closest_floor_number(floor, floor_end_range)
+        # prepare floor_start & floor_end to input into datawarehouse
+        # prepare floor_start & floor_end to input into datawarehouse
+        floor_range = get_floor_range(floor)
+        floor_start = floor_range["floor_start"]
+        floor_end = floor_range["floor_end"]
 
         # prepare resale boolean
         if (resale == "resale"):
@@ -185,11 +160,62 @@ def addPropertyTransaction():
             map(lambda x: tuple(x.values()), propertyTransaction))
         print(propertyTransaction)
 
-        # dummyInsert = [(14, 'WW', 46, 50, 'Apartment', 43, 900, '2023-04-10', 90, True)]
-
         warehouse = DataWarehouse()
         warehouse.insert_to_schema("main__PropertyTransaction",
                                    propertyTransaction)
 
-        # not sure what to return
-        return "hi"
+        return propertyTransaction
+
+
+@app.route('/predictpropertyprice', methods=['GET'])
+def predictPropertyPrice():
+    if request.method == "GET":
+        # retrieve data from FE
+        print(request.args.get("floor"))
+        
+        # data = request.get_json()["values"]
+        # print(data)
+
+        # separating data
+        floor = int(request.args.get("floor"))
+        district = int(request.args.get("district"))
+        area = int(request.args.get("area"))
+        transactionDate = request.args.get("transactionDate")
+        resale = request.args.get("resale")
+
+        # # prepare floor_start & floor_end 
+        floor_range = get_floor_range(floor)
+        floor_start = floor_range["floor_start"]
+        floor_end = floor_range["floor_end"]
+
+        # # prepare resale boolean
+        if (resale == "resale"):
+            resale = True
+        else:
+            resale = False
+
+        # # prepare date format
+        data = [{
+            "floor": floor,
+            "district": district,
+            "area": area,
+            "transactionDate": transactionDate,
+            "resale": resale
+        }]
+        df = pd.DataFrame(data, index=[0])
+        for column in df.columns:
+            if column == "transactionDate":
+                df[column] = pd.to_datetime(df[column])
+                df[column] = (df[column] - pd.to_datetime(date.today())) / np.timedelta64(1,'Y')
+                print(df[column][0])
+                transactionDate = df[column][0]
+
+        print(transactionDate)
+
+        # get predict price from ML
+        __init__()
+        predicted_price = load_from_db_and_predict(district, floor_start, floor_end, area, transactionDate, resale)
+        predicted_price = round(predicted_price[0][0], 2)
+        print(type(predicted_price))
+       
+        return jsonify(str(predicted_price))

@@ -10,6 +10,7 @@ import {
 import MainDashboard from "views/admin/default";
 import View from "views/main/default";
 import PropertyForm from "views/main/form";
+import PredictPriceForm from "views/main/predictPriceForm"
 import Charts from "views/main/charts";
 
 const routes = [
@@ -33,6 +34,13 @@ const routes = [
     path: "/add-property",
     icon: <Icon as={MdAdd} width='20px' height='20px' color='inherit' />,
     component: PropertyForm,
+  },
+  {
+    name: "Predict Property Tranasction Price",
+    layout: "/admin",
+    path: "/predict-property-price",
+    icon: <Icon as={MdAdd} width='20px' height='20px' color='inherit' />,
+    component: PredictPriceForm,
   },
   // {
   //   name: "Template",
