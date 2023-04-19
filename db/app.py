@@ -6,7 +6,7 @@ from db.warehouse.schemas import create_queries
 import numpy as np
 import pandas as pd
 from datetime import date
-from .ml.predictPrice2 import load_from_db_and_predict
+from .ml.predictPrice import __init__, load_from_db_and_predict
 
 app = Flask(__name__)
 CORS(app)
@@ -211,25 +211,11 @@ def predictPropertyPrice():
                 transactionDate = df[column][0]
 
         print(transactionDate)
-        data = list(
-            map(lambda x: tuple(x.values()), data))
-        print(data)
 
-        # futurePropertyTransaction = [{
-        #     "district": district,
-        #     # "street": street,
-        #     "floorRangeStart": floor_start,
-        #     "floorRangeEnd": floor_end,
-        #     "area": area,
-        #     "transactionDate": transactionDate,
-        #     "resale": resale
-        # }]
-        # futurePropertyTransaction = list(
-        #     map(lambda x: tuple(x.values()), futurePropertyTransaction))
-        # print(futurePropertyTransaction)
-
-        # predicted_price = model.predict()
-        # predicted_price = 509
-        # predicted_price = str(predicted_price)
+        # get predict price from ML
+        __init__()
+        predicted_price = load_from_db_and_predict(district, floor_start, floor_end, area, transactionDate, resale)
+        predicted_price = round(predicted_price[0][0], 2)
+        print(type(predicted_price))
        
-        return jsonify(6.5)
+        return jsonify(str(predicted_price))

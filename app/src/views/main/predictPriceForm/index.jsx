@@ -31,9 +31,11 @@ const PredictivePriceForm = (props) => {
         resale: ""
     }
     const [predictedPrice, setPredictedPrice] = useState(null);
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [submitted, setSubmitted] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const onSubmit = async (values) => {
+        setSubmitted(true);
         const params = {
             "floor": values.floor,
             "district": values.district,
@@ -48,7 +50,7 @@ const PredictivePriceForm = (props) => {
             })
                 .then((response) => response.data)
                 .then((json) => {
-                    if (typeof json === "number") {
+                    if (typeof json === "string") {
                         json = JSON.parse(json);
                         console.log(json)
                     }
@@ -60,10 +62,6 @@ const PredictivePriceForm = (props) => {
             console.error("Error:", error);
         }
     }
-
-    // useEffect(() => {
-    //     onOpen();
-    // }, [predictedPrice]);
 
     const validationSchema = Yup.object({
         street: Yup.string().required("Street is required!"),
@@ -190,7 +188,7 @@ const PredictivePriceForm = (props) => {
                             <Button
                                 mt={4}
                                 colorScheme="brand"
-                                // isLoading={props.isSubmitting}
+                                isLoading={submitted && predictedPrice == null}
                                 type="submit">
                                 Submit
                             </Button>
@@ -207,7 +205,7 @@ const PredictivePriceForm = (props) => {
                             <ModalCloseButton />
                             <ModalBody>
                                 <div>
-                                    {predictedPrice}
+                                    {predictedPrice} Million
                                 </div>
                             </ModalBody>
                             <ModalFooter>

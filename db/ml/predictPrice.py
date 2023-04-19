@@ -20,7 +20,7 @@ print(module_path)
 if module_path not in sys.path:
     sys.path.append(module_path) 
 
-from warehouse import DataWarehouse
+from db.warehouse import DataWarehouse
 
 module_path = os.path.abspath(os.path.join('../..'))
 print(module_path)
@@ -109,6 +109,8 @@ def load_from_db_and_predict(district, floorRangeStart, floorRangeEnd, area, tra
     input_data  = np.array([[district, floorRangeStart, floorRangeEnd, area, transactionDate, resale]])
     pred_price = model.predict(input_data)
     print(pred_price)
+
+    return pred_price
 
     # load_from_db_and_predict(3.0, 6.0, 10.0, 1.06, 1.579772, 0.0)    
 
